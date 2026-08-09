@@ -5,9 +5,14 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const TokenContext = createContext(null);
 
 export function TokenProvider({ children }) {
+  // 1. Fixed Welcome Bonus logic
   const [balance, setBalance] = useState(() => {
     const saved = localStorage.getItem('vtry_tokens');
-    return saved ? parseInt(saved, 10) : Infinity; // Default: unlimited for demo
+    if (saved) return parseInt(saved, 10);
+    // Explicitly save the welcome bonus for new users immediately
+    localStorage.setItem('vtry_tokens', '5');
+    console.log('Tokens updated (Welcome Bonus):', 5);
+    return 5;
   });
 
   const [adsWatched, setAdsWatched] = useState(() => {
@@ -19,13 +24,9 @@ export function TokenProvider({ children }) {
     return localStorage.getItem('vtry_last_reward') || null;
   });
 
-  // Persist token state to localStorage
+  // We can keep these effect syncs as a fallback, but primary logic will use sync updates
   useEffect(() => {
-    if (balance === Infinity) {
-      localStorage.setItem('vtry_tokens', 'Infinity');
-    } else {
-      localStorage.setItem('vtry_tokens', String(balance));
-    }
+    localStorage.setItem('vtry_tokens', String(balance));
   }, [balance]);
 
   useEffect(() => {
@@ -42,26 +43,41 @@ export function TokenProvider({ children }) {
   const spendTokens = (amount = 5) => {
     if (balance === Infinity) return true;
     if (balance >= amount) {
-      setBalance(prev => prev - amount);
+      const newBalance = balance - amount;
+      setBalance(newBalance);
+      localStorage.setItem('vtry_tokens', String(newBalance));
+      console.log('Tokens updated:', newBalance);
       return true;
     }
     return false;
   };
 
   // Add tokens (from purchase or earning)
+  // Uses synchronous state and localStorage updates with debug logs
   const addTokens = (amount) => {
-    setBalance(prev => (prev === Infinity ? Infinity : prev + amount));
+    setBalance(prev => {
+      const newBalance = prev + amount;
+      localStorage.setItem('vtry_tokens', String(newBalance));
+      console.log('Tokens updated:', newBalance);
+      return newBalance;
+    });
   };
 
   // Set specific balance (for admin management)
   const setTokenBalance = (amount) => {
     setBalance(amount);
+    localStorage.setItem('vtry_tokens', String(amount));
+    console.log('Tokens updated:', amount);
   };
 
   // Watch ad to earn token
   const watchAd = () => {
     if (adsWatched < 5) {
-      setAdsWatched(prev => prev + 1);
+      setAdsWatched(prev => {
+        const newTotal = prev + 1;
+        localStorage.setItem('vtry_ads_watched', String(newTotal));
+        return newTotal;
+      });
       addTokens(1);
       return true;
     }
@@ -78,29 +94,20 @@ export function TokenProvider({ children }) {
   const claimDailyReward = () => {
     const now = new Date().toISOString();
     setLastRewardClaim(now);
+    localStorage.setItem('vtry_last_reward', now);
     addTokens(5);
   };
 
-  // Check if daily reward is available (24 hours since last claim)
+  // Check if daily reward is available (once per calendar day)
   const canClaimReward = () => {
     if (!lastRewardClaim) return true;
-    const last = new Date(lastRewardClaim);
-    const now = new Date();
-    return (now - last) >= 24 * 60 * 60 * 1000;
-  };
-
-  // Get time remaining until next reward (in seconds)
-  const getRewardTimeRemaining = () => {
-    if (!lastRewardClaim) return 0;
-    const last = new Date(lastRewardClaim);
-    const next = new Date(last.getTime() + 24 * 60 * 60 * 1000);
-    const now = new Date();
-    const remaining = Math.max(0, Math.floor((next - now) / 1000));
-    return remaining;
+    const last = new Date(lastRewardClaim).toDateString();
+    const now = new Date().toDateString();
+    return last !== now;
   };
 
   // Format balance for display
-  const displayBalance = balance === Infinity ? '∞' : balance.toLocaleString();
+  const displayBalance = balance.toLocaleString();
 
   return (
     <TokenContext.Provider value={{
@@ -115,7 +122,6 @@ export function TokenProvider({ children }) {
       lastRewardClaim,
       claimDailyReward,
       canClaimReward,
-      getRewardTimeRemaining,
     }}>
       {children}
     </TokenContext.Provider>

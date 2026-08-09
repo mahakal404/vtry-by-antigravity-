@@ -68,7 +68,7 @@ export const THEME_PRESETS = {
   },
 };
 
-const DEFAULT_THEME_KEY = 'dark-purple';
+const DEFAULT_THEME_KEY = 'light-purple';
 
 export function ThemeProvider({ children }) {
   const [currentPreset, setCurrentPreset] = useState(() => {
@@ -86,7 +86,7 @@ export function ThemeProvider({ children }) {
 
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('vtry_dark_mode');
-    return saved !== null ? saved === 'true' : true;
+    return saved !== null ? saved === 'true' : false;
   });
 
   // Apply CSS variables whenever theme changes
@@ -126,12 +126,11 @@ export function ThemeProvider({ children }) {
     setCustomColors(colors);
   };
 
-  // Reset to default theme
   const resetToDefault = () => {
     setCurrentPreset(DEFAULT_THEME_KEY);
     setCustomColors(null);
     setUseGradient(false);
-    setDarkMode(true);
+    setDarkMode(false);
   };
 
   // Get current active colors (custom or preset)

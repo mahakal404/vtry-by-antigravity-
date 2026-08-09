@@ -23,7 +23,7 @@ export default function Layout() {
          style={{ backgroundColor: useGradient ? undefined : 'var(--color-bg)' }}>
       <Sidebar />
       {/* Main Content Area — offset by sidebar width on desktop */}
-      <main className="lg:ml-[170px] min-h-screen p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+      <main className="lg:ml-[170px] min-h-screen p-4 sm:p-6 lg:p-8 pb-32 lg:pb-8 pt-20 lg:pt-8">
         <div className="max-w-5xl mx-auto fade-in">
           <Outlet />
         </div>
