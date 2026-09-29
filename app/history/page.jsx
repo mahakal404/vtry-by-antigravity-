@@ -1,5 +1,6 @@
-import { useHistory } from '../contexts/HistoryContext';
-import { useNavigate } from 'react-router-dom';
+'use client';
+import { useHistory } from '@/contexts/HistoryContext';
+import { useRouter } from 'next/navigation';
 import { Sparkles, ArrowRight, Trash2 } from 'lucide-react';
 
 /**
@@ -10,7 +11,7 @@ import { Sparkles, ArrowRight, Trash2 } from 'lucide-react';
  */
 export default function History() {
   const { history, removeFromHistory, clearHistory } = useHistory();
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   return (
     <div className="space-y-6">

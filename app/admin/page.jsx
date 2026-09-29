@@ -1,6 +1,7 @@
+'use client';
 import { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 import {
   RefreshCw, Megaphone, Users, Plus, Minus, Trash2,
   Save, ArrowLeft, ShieldCheck
@@ -23,7 +24,7 @@ const INITIAL_USERS = [
 
 export default function Admin() {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   // Marketing state
   const [saleName, setSaleName] = useState('Mega Launch Party');
@@ -38,7 +39,7 @@ export default function Admin() {
 
   // Protect route: Only admin can access
   if (!user?.isAdmin) {
-    return <Navigate to="/studio" replace />;
+    return redirect('/studio');
   }
 
   // Update token input for a specific user

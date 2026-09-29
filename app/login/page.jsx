@@ -1,7 +1,8 @@
+'use client';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { User } from 'lucide-react';
 
 /**
@@ -17,7 +18,7 @@ export default function Login() {
   
   const { enterApp } = useAuth();
   const { useGradient } = useTheme();
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();

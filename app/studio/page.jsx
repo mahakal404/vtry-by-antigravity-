@@ -1,8 +1,9 @@
+'use client';
 import { useState, useRef } from 'react';
-import { useHistory } from '../contexts/HistoryContext';
-import { useTokens } from '../contexts/TokenContext';
+import { useHistory } from '@/contexts/HistoryContext';
+import { useTokens } from '@/contexts/TokenContext';
 import { User, Shirt, Upload, Sparkles, Loader2, Coins } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 /**
  * Studio Page — Core virtual try-on functionality
@@ -20,7 +21,7 @@ export default function Studio() {
   const clothInputRef = useRef(null);
   const { addToHistory } = useHistory();
   const { displayBalance } = useTokens();
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   // Handle image selection and convert to data URL for preview
   const handleImageUpload = (e, type) => {

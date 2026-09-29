@@ -1,5 +1,6 @@
+'use client';
 import { useState, useEffect } from 'react';
-import { useTokens } from '../contexts/TokenContext';
+import { useTokens } from '@/contexts/TokenContext';
 import { Gift, Zap, Star, Crown, Play, Shield, Clock, Circle, Loader, CheckCircle } from 'lucide-react';
 
 /**

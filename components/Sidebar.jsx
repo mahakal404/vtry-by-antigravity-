@@ -1,5 +1,7 @@
+'use client';
 import { useState, useRef, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { useTokens } from '../contexts/TokenContext';
 import {
@@ -22,8 +24,8 @@ export default function Sidebar() {
   
   const { user, logout } = useAuth();
   const { displayBalance } = useTokens();
-  const navigate = useNavigate();
-
+  const navigate = useRouter();
+  const pathname = usePathname();
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -137,43 +139,43 @@ export default function Sidebar() {
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 mt-2">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <NavLink
+        {navItems.map(({ to, label, icon: Icon }) => {
+          const isActive = pathname === to || pathname.startsWith(to + '/');
+          return (
+          <Link
             key={to}
-            to={to}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-all duration-200 ${
-                isActive ? 'text-white' : 'hover:bg-white/5'
-              }`
-            }
-            style={({ isActive }) => ({
+            href={to}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-all duration-200 ${
+              isActive ? 'text-white' : 'hover:bg-white/5'
+            }`}
+            style={{
               backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
               color: isActive ? '#fff' : 'var(--color-muted)',
-            })}
+            }}
           >
             <Icon size={18} />
             {label}
-          </NavLink>
-        ))}
+          </Link>
+        )})}
 
         {/* Admin link */}
-        {user?.isAdmin && (
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-all duration-200 ${
-                isActive ? 'text-white' : 'hover:bg-white/5'
-              }`
-            }
-            style={({ isActive }) => ({
+        {user?.isAdmin && (() => {
+          const isActive = pathname === '/admin' || pathname.startsWith('/admin/');
+          return (
+          <Link
+            href="/admin"
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-all duration-200 ${
+              isActive ? 'text-white' : 'hover:bg-white/5'
+            }`}
+            style={{
               backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
               color: isActive ? '#fff' : 'var(--color-muted)',
-            })}
+            }}
           >
             <ShieldCheck size={18} />
             Admin
-          </NavLink>
-        )}
+          </Link>
+        )})}
       </nav>
 
       {/* Bottom User Section */}
@@ -279,50 +281,46 @@ export default function Sidebar() {
       <div className="px-2 py-3">
         {/* Strictly Primary Navigation Links */}
         <nav className="flex justify-around items-center">
-          {navItems.map(({ to, label, icon: Icon }) => (
-            <NavLink
+          {navItems.map(({ to, label, icon: Icon }) => {
+            const isActive = pathname === to || pathname.startsWith(to + '/');
+            return (
+            <Link
               key={to}
-              to={to}
+              href={to}
               className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all"
             >
-              {({ isActive }) => (
-                <>
-                  <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-lg scale-110' : ''}`}
-                       style={{ 
-                         backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                         color: isActive ? '#fff' : 'var(--color-muted)'
-                       }}>
-                    <Icon size={20} />
-                  </div>
-                  <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'}`}>
-                    {label}
-                  </span>
-                </>
-              )}
-            </NavLink>
-          ))}
+              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-lg scale-110' : ''}`}
+                   style={{ 
+                     backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
+                     color: isActive ? '#fff' : 'var(--color-muted)'
+                   }}>
+                <Icon size={20} />
+              </div>
+              <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'}`}>
+                {label}
+              </span>
+            </Link>
+          )})}
           
-          {user?.isAdmin && (
-            <NavLink
-              to="/admin"
+          {user?.isAdmin && (() => {
+            const isActive = pathname === '/admin' || pathname.startsWith('/admin/');
+            return (
+            <Link
+              href="/admin"
               className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all"
             >
-              {({ isActive }) => (
-                <>
-                  <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-lg scale-110' : ''}`}
-                       style={{ 
-                         backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                         color: isActive ? '#fff' : 'var(--color-muted)'
-                       }}>
-                    <ShieldCheck size={20} />
-                  </div>
-                  <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'}`}>
-                    Admin
-                  </span>
-                </>
-              )}
-            </NavLink>
-          )}
+              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-lg scale-110' : ''}`}
+                   style={{ 
+                     backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
+                     color: isActive ? '#fff' : 'var(--color-muted)'
+                   }}>
+                <ShieldCheck size={20} />
+              </div>
+              <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'}`}>
+                Admin
+              </span>
+            </Link>
+          )})}
         </nav>
       </div>
     </div>

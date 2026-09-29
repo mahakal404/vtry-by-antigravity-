@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 // ThemeContext manages global theming with CSS variables and localStorage persistence
@@ -72,20 +73,23 @@ const DEFAULT_THEME_KEY = 'light-purple';
 
 export function ThemeProvider({ children }) {
   const [currentPreset, setCurrentPreset] = useState(() => {
-    return localStorage.getItem('vtry_theme_preset') || DEFAULT_THEME_KEY;
+    if (typeof window !== 'undefined') {
+      return (typeof window !== 'undefined' ? localStorage.getItem('vtry_theme_preset') : null) || DEFAULT_THEME_KEY;
+    }
+    return DEFAULT_THEME_KEY;
   });
 
   const [customColors, setCustomColors] = useState(() => {
-    const saved = localStorage.getItem('vtry_custom_colors');
+    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_custom_colors') : null);
     return saved ? JSON.parse(saved) : null;
   });
 
   const [useGradient, setUseGradient] = useState(() => {
-    return localStorage.getItem('vtry_gradient') === 'true';
+    return (typeof window !== 'undefined' ? localStorage.getItem('vtry_gradient') : null) === 'true';
   });
 
   const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('vtry_dark_mode');
+    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_dark_mode') : null);
     return saved !== null ? saved === 'true' : false;
   });
 

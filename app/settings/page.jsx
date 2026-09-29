@@ -1,5 +1,6 @@
+'use client';
 import { useState } from 'react';
-import { useTheme, THEME_PRESETS } from '../contexts/ThemeContext';
+import { useTheme, THEME_PRESETS } from '@/contexts/ThemeContext';
 import { Palette, ChevronUp, ChevronDown, Save, RotateCcw, Sparkles } from 'lucide-react';
 
 /**

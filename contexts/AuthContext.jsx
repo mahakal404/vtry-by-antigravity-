@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 // AuthContext manages a simple guest-mode authentication state
@@ -5,9 +6,12 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    // Restore user session from localStorage on mount
-    const saved = localStorage.getItem('vtry_current_user');
-    return saved ? JSON.parse(saved) : null;
+    // Restore user session from localStorage on mount (client-only)
+    if (typeof window !== 'undefined') {
+      const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_current_user') : null);
+      return saved ? JSON.parse(saved) : null;
+    }
+    return null;
   });
 
   // Persist user state to localStorage whenever it changes  

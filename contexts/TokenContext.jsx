@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 // TokenContext manages V-Token balance, earning, spending, and daily rewards
@@ -7,7 +8,7 @@ const TokenContext = createContext(null);
 export function TokenProvider({ children }) {
   // 1. Fixed Welcome Bonus logic
   const [balance, setBalance] = useState(() => {
-    const saved = localStorage.getItem('vtry_tokens');
+    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_tokens') : null);
     if (saved) return parseInt(saved, 10);
     // Explicitly save the welcome bonus for new users immediately
     localStorage.setItem('vtry_tokens', '5');
@@ -16,12 +17,12 @@ export function TokenProvider({ children }) {
   });
 
   const [adsWatched, setAdsWatched] = useState(() => {
-    const saved = localStorage.getItem('vtry_ads_watched');
+    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_ads_watched') : null);
     return saved ? parseInt(saved, 10) : 0;
   });
 
   const [lastRewardClaim, setLastRewardClaim] = useState(() => {
-    return localStorage.getItem('vtry_last_reward') || null;
+    return (typeof window !== 'undefined' ? localStorage.getItem('vtry_last_reward') : null) || null;
   });
 
   // We can keep these effect syncs as a fallback, but primary logic will use sync updates

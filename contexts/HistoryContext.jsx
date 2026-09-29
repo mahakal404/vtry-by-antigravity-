@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 // HistoryContext manages try-on results with localStorage persistence
@@ -6,7 +7,7 @@ const HistoryContext = createContext(null);
 
 export function HistoryProvider({ children }) {
   const [history, setHistory] = useState(() => {
-    const saved = localStorage.getItem('vtry_history');
+    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_history') : null);
     return saved ? JSON.parse(saved) : [];
   });
 

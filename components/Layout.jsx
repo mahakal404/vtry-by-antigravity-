@@ -1,4 +1,5 @@
-import { Outlet, Navigate } from 'react-router-dom';
+'use client';
+import { redirect } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Sidebar from './Sidebar';
@@ -15,7 +16,7 @@ export default function Layout() {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return redirect('/login');
   }
 
   return (
