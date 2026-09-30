@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -8,12 +9,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        'vtry-bg': 'var(--color-bg, #1b0f2e)',
-        'vtry-card': 'var(--color-card, #291943)',
-        'vtry-primary': 'var(--color-primary, #8852e0)',
-        'vtry-border': 'var(--color-border, #3b2d53)',
-        'vtry-text': 'var(--color-text, #fafafa)',
-        'vtry-muted': 'var(--color-muted, #a294b8)',
+        'app-bg': '#F8F7FF',
+        'surface': '#FFFFFF',
+        'surface-soft': '#FCFBFF',
+        'preview-bg': '#FAF8FF',
+        'brand-purple': '#7C3AED',
+        'brand-dark': '#6D28D9',
+        'brand-pink': '#EC4899',
+        'brand-indigo': '#6366F1',
+        'text-main': '#111827',
+        'text-muted': '#667085',
+        'border-soft': '#E7E3F4',
+        'border-active': '#B9A7E8',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

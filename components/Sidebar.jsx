@@ -6,15 +6,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTokens } from '../contexts/TokenContext';
 import {
   Wand2, History, Coins, Settings, ShieldCheck,
-  LogOut, Sparkles, ChevronLeft, ChevronRight
+  LogOut, Sparkles, ChevronLeft, ChevronRight, Crown
 } from 'lucide-react';
 
-/**
- * Sidebar Component
- * - Desktop: Persistent sidebar navigation on the left
- * - Mobile: Top header with profile dropdown + Clean Bottom Navigation bar
- * - Includes Sign Out Confirmation Modal
- */
 export default function Sidebar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
@@ -28,7 +22,6 @@ export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Close dropdown when clicking outside — runs unconditionally (Rules of Hooks)
   useEffect(() => {
     if (pathname === '/login') return;
     const handleClickOutside = (event) => {
@@ -44,7 +37,6 @@ export default function Sidebar() {
     };
   }, [pathname]);
 
-  // Close logout modal when clicking outside — runs unconditionally (Rules of Hooks)
   useEffect(() => {
     if (pathname === '/login') return;
     const handleClickOutsideModal = (event) => {
@@ -64,10 +56,8 @@ export default function Sidebar() {
     };
   }, [isLogoutModalOpen, pathname]);
 
-  // Hide Sidebar entirely on the login page — AFTER all hooks (Rules of Hooks)
   if (pathname === '/login') return null;
 
-  // Navigation items configuration
   const navItems = [
     { to: '/studio', label: 'Studio', icon: Wand2 },
     { to: '/history', label: 'History', icon: History },
@@ -75,48 +65,40 @@ export default function Sidebar() {
     { to: '/settings', label: 'Settings', icon: Settings },
   ];
 
-  // Intercept Sign Out
   const handleSignOutClick = () => {
     setIsLogoutModalOpen(true);
-    setProfileOpen(false); // Close mobile dropdown if open
+    setProfileOpen(false);
   };
 
-  // Actual Sign Out execution
   const confirmSignOut = () => {
     setIsLogoutModalOpen(false);
     logout();
     router.push('/login');
   };
 
-  // -------------------------
-  // Sign Out Confirmation Modal
-  // -------------------------
   const LogoutModal = () => {
     if (!isLogoutModalOpen) return null;
 
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-sm bg-black/50 p-4 fade-in">
         <div ref={logoutModalRef} 
-             className="w-full max-w-sm rounded-3xl p-7 shadow-2xl"
-             style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-          <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--color-text)' }}>
+             className="w-full max-w-sm rounded-3xl p-7 shadow-2xl bg-surface border border-border-soft">
+          <h2 className="text-xl font-bold mb-2 text-text-main">
             Sign Out
           </h2>
-          <p className="text-sm mb-8" style={{ color: 'var(--color-muted)' }}>
+          <p className="text-sm mb-8 text-text-muted">
             Are you sure you want to sign out of your V-Try account?
           </p>
           <div className="flex gap-3">
             <button
               onClick={() => setIsLogoutModalOpen(false)}
-              className="flex-1 py-3.5 rounded-xl text-sm font-semibold transition-all hover:opacity-70"
-              style={{ color: 'var(--color-text)', border: '1px solid var(--color-border)', backgroundColor: 'transparent' }}
+              className="flex-1 py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-surface-soft text-text-main border border-border-soft bg-transparent"
             >
               Cancel
             </button>
             <button
               onClick={confirmSignOut}
-              className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 shadow-md"
-              style={{ backgroundColor: '#dc2626' }}
+              className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 shadow-md bg-brand-pink"
             >
               Yes, Sign Out
             </button>
@@ -126,43 +108,33 @@ export default function Sidebar() {
     );
   };
 
-  // -------------------------
-  // Desktop Sidebar (static flex item — no fixed positioning)
-  // -------------------------
   const DesktopSidebar = () => (
     <aside
-      className={`hidden lg:flex flex-col h-full flex-shrink-0 transition-all duration-300 ease-in-out ${
-        isCollapsed ? 'w-20' : 'w-64'
-      }`}
-      style={{ backgroundColor: 'var(--color-card)', borderRight: '1px solid var(--color-border)' }}
+      className={`hidden lg:flex flex-col h-full flex-shrink-0 transition-all duration-300 ease-in-out shadow-[0_4px_20px_rgba(31,16,64,0.06)] ${
+        isCollapsed ? 'w-20' : 'w-[230px]'
+      } bg-surface border-r border-border-soft`}
     >
-      {/* Logo + Collapse Toggle */}
       <div className={`flex items-center py-5 px-4 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
         <div className="flex items-center gap-3 min-w-0">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-lg flex-shrink-0"
-            style={{ backgroundColor: 'var(--color-primary)' }}
-          >
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-lg flex-shrink-0 bg-gradient-to-br from-brand-indigo to-brand-purple shadow-sm">
             V
           </div>
           {!isCollapsed && (
-            <span className="font-bold text-lg tracking-wide overflow-hidden whitespace-nowrap" style={{ color: 'var(--color-text)' }}>
+            <span className="font-bold text-lg tracking-wide overflow-hidden whitespace-nowrap text-text-main">
               V-TRY
             </span>
           )}
         </div>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
-          style={{ color: 'var(--color-muted)' }}
+          className="p-1.5 rounded-lg hover:bg-surface-soft transition-colors flex-shrink-0 text-text-muted"
           title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 px-2 mt-2 space-y-0.5">
+      <nav className="flex-1 px-3 mt-2 space-y-1 overflow-y-auto scrollbar-hide">
         {navItems.map(({ to, label, icon: Icon }) => {
           const isActive = pathname === to || pathname.startsWith(to + '/');
           return (
@@ -171,12 +143,8 @@ export default function Sidebar() {
               href={to}
               title={isCollapsed ? label : undefined}
               className={`flex items-center py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                isCollapsed ? 'justify-center px-2' : 'gap-3 px-4'
-              } ${isActive ? 'text-white' : 'hover:bg-white/5'}`}
-              style={{
-                backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                color: isActive ? '#fff' : 'var(--color-muted)',
-              }}
+                isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'
+              } ${isActive ? 'bg-[#F0E9FF] text-brand-purple shadow-sm' : 'text-text-muted hover:bg-surface-soft hover:text-brand-purple'}`}
             >
               <Icon size={18} className="flex-shrink-0" />
               {!isCollapsed && <span className="truncate">{label}</span>}
@@ -184,7 +152,6 @@ export default function Sidebar() {
           );
         })}
 
-        {/* Admin link */}
         {user?.isAdmin && (() => {
           const isActive = pathname === '/admin' || pathname.startsWith('/admin/');
           return (
@@ -192,12 +159,8 @@ export default function Sidebar() {
               href="/admin"
               title={isCollapsed ? 'Admin' : undefined}
               className={`flex items-center py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                isCollapsed ? 'justify-center px-2' : 'gap-3 px-4'
-              } ${isActive ? 'text-white' : 'hover:bg-white/5'}`}
-              style={{
-                backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                color: isActive ? '#fff' : 'var(--color-muted)',
-              }}
+                isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'
+              } ${isActive ? 'bg-[#F0E9FF] text-brand-purple shadow-sm' : 'text-text-muted hover:bg-surface-soft hover:text-brand-purple'}`}
             >
               <ShieldCheck size={18} className="flex-shrink-0" />
               {!isCollapsed && <span className="truncate">Admin</span>}
@@ -206,40 +169,27 @@ export default function Sidebar() {
         })()}
       </nav>
 
-      {/* Bottom User Section */}
-      <div className={`pb-5 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-        {/* Token Balance */}
-        {!isCollapsed ? (
-          <div
-            className="flex items-center justify-between px-3 py-2.5 rounded-xl mb-3"
-            style={{ backgroundColor: 'rgba(136,82,224,0.1)', border: '1px solid var(--color-border)' }}
-          >
-            <div className="flex items-center gap-2 text-xs font-medium" style={{ color: 'var(--color-muted)' }}>
-              <Sparkles size={13} style={{ color: 'var(--color-primary)' }} />
-              BALANCE
+      <div className={`pb-5 flex flex-col gap-3 mt-auto ${isCollapsed ? 'px-2' : 'px-4'}`}>
+        {!isCollapsed && (
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-[#F5EEFF] to-[#FFF0FA] text-center border border-[#F0E5FF] shadow-sm">
+            <div className="mx-auto w-8 h-8 rounded-full bg-brand-purple flex items-center justify-center mb-2 shadow-sm text-white">
+              <Crown size={16} />
             </div>
-            <span className="text-base font-bold" style={{ color: 'var(--color-primary)' }}>
-              {displayBalance}
-            </span>
-          </div>
-        ) : (
-          <div className="flex justify-center mb-3" title={`Balance: ${displayBalance}`}>
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(136,82,224,0.1)', border: '1px solid var(--color-border)' }}
-            >
-              <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
+            <div className="font-bold text-brand-purple text-sm mb-1">Go Pro</div>
+            <div className="text-left text-[10px] text-brand-purple/70 space-y-1 mb-3">
+              <div className="flex items-center gap-1"><Sparkles size={10} /> More tokens</div>
+              <div className="flex items-center gap-1"><Sparkles size={10} /> High quality</div>
+              <div className="flex items-center gap-1"><Sparkles size={10} /> Priority gen</div>
             </div>
+            <button className="w-full py-2 bg-gradient-to-r from-brand-indigo to-brand-pink text-white rounded-lg text-xs font-bold shadow-md hover:opacity-90 transition-opacity">
+              Upgrade
+            </button>
           </div>
         )}
 
-        {/* User Info */}
         {!isCollapsed ? (
-          <div className="flex items-center gap-3 mb-3 px-1">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0 overflow-hidden"
-              style={{ backgroundColor: 'var(--color-primary)' }}
-            >
+          <div className="flex items-center gap-3 px-1 mt-2">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0 overflow-hidden bg-brand-indigo shadow-sm">
               {user?.avatar?.startsWith('http') ? (
                 <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
@@ -247,54 +197,41 @@ export default function Sidebar() {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold truncate" style={{ color: 'var(--color-text)' }}>
+              <div className="text-sm font-semibold truncate text-text-main">
                 {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}
               </div>
             </div>
+            <button onClick={handleSignOutClick} className="text-text-muted hover:text-brand-pink transition-colors">
+              <LogOut size={16} />
+            </button>
           </div>
         ) : (
-          <div className="flex justify-center mb-3">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white overflow-hidden"
-              style={{ backgroundColor: 'var(--color-primary)' }}
-              title={user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}
-            >
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white overflow-hidden bg-brand-indigo shadow-sm"
+                 title={user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}>
               {user?.avatar?.startsWith('http') ? (
                 <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
                 user?.avatar || 'U'
               )}
             </div>
+            <button onClick={handleSignOutClick} className="text-text-muted hover:text-brand-pink p-2">
+              <LogOut size={18} />
+            </button>
           </div>
         )}
-
-        {/* Sign Out */}
-        <button
-          onClick={handleSignOutClick}
-          title={isCollapsed ? 'Sign Out' : undefined}
-          className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-white/5`}
-          style={{ color: 'var(--color-muted)', border: '1px solid var(--color-border)' }}
-        >
-          <LogOut size={16} />
-          {!isCollapsed && 'Sign Out'}
-        </button>
       </div>
     </aside>
   );
 
-  // -------------------------
-  // Mobile Top Header & Dropdown
-  // -------------------------
   const MobileTopHeader = () => (
     <>
-      <header className="lg:hidden fixed top-0 left-0 w-full z-40 px-4 py-3 flex items-center justify-between backdrop-blur-xl"
-              style={{ backgroundColor: 'var(--color-card)', borderBottom: '1px solid var(--color-border)' }}>
+      <header className="lg:hidden fixed top-0 left-0 w-full z-40 px-4 py-3 flex items-center justify-between backdrop-blur-xl bg-surface/90 border-b border-border-soft shadow-sm">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-sm shadow-lg"
-               style={{ backgroundColor: 'var(--color-primary)' }}>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-sm shadow-lg bg-gradient-to-br from-brand-indigo to-brand-purple">
             V
           </div>
-          <span className="font-bold text-sm tracking-wide" style={{ color: 'var(--color-text)' }}>
+          <span className="font-bold text-sm tracking-wide text-text-main">
             V-TRY
           </span>
         </div>
@@ -302,8 +239,7 @@ export default function Sidebar() {
         <div className="relative z-50" ref={dropdownRef}>
           <button
             onClick={() => setProfileOpen(!profileOpen)}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg transition-transform active:scale-95 overflow-hidden"
-            style={{ backgroundColor: 'var(--color-primary)', border: '2px solid rgba(255,255,255,0.1)' }}
+            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg transition-transform active:scale-95 overflow-hidden bg-brand-indigo border-2 border-white"
           >
             {user?.avatar?.startsWith('http') ? (
               <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -312,25 +248,23 @@ export default function Sidebar() {
             )}
           </button>
 
-          {/* Profile Dropdown Modal */}
           {profileOpen && (
-            <div className="absolute top-12 right-0 w-56 rounded-2xl shadow-2xl p-2 z-50 fade-in"
-                 style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
+            <div className="absolute top-12 right-0 w-56 rounded-2xl shadow-[0_4px_20px_rgba(31,16,64,0.1)] p-2 z-50 fade-in bg-surface border border-border-soft">
               <div className="p-3 mb-1">
-                <div className="text-sm font-bold truncate" style={{ color: 'var(--color-text)' }}>
+                <div className="text-sm font-bold truncate text-text-main">
                   {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'Guest User'}
                 </div>
-                <div className="flex items-center gap-1.5 mt-2 text-xs font-medium" style={{ color: 'var(--color-muted)' }}>
-                  <Sparkles size={12} style={{ color: 'var(--color-primary)' }} />
-                  Tokens: <span style={{ color: 'var(--color-primary)' }}>{displayBalance}</span>
+                <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-text-muted">
+                  <Coins size={12} className="text-brand-pink" />
+                  Tokens: <span className="text-brand-purple font-bold">{displayBalance}</span>
                 </div>
               </div>
               
-              <div className="h-px w-full my-1 opacity-20" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="h-px w-full my-1 bg-border-soft" />
               
               <button
                 onClick={handleSignOutClick}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-white/10 text-red-400 mt-1"
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-surface-soft text-brand-pink mt-1"
               >
                 <LogOut size={16} />
                 Sign Out
@@ -342,15 +276,9 @@ export default function Sidebar() {
     </>
   );
 
-  // -------------------------
-  // Mobile Bottom Navigation
-  // -------------------------
   const MobileBottomNav = () => (
-    <div className="lg:hidden fixed bottom-0 left-0 w-full z-40 shadow-2xl rounded-t-3xl backdrop-blur-xl pb-safe"
-         style={{ backgroundColor: 'var(--color-card)', borderTop: '1px solid var(--color-border)' }}>
-      
+    <div className="lg:hidden fixed bottom-0 left-0 w-full z-40 shadow-[0_-4px_20px_rgba(31,16,64,0.06)] rounded-t-3xl backdrop-blur-xl pb-safe bg-surface/90 border-t border-border-soft">
       <div className="px-2 py-3">
-        {/* Strictly Primary Navigation Links */}
         <nav className="flex justify-around items-center">
           {navItems.map(({ to, label, icon: Icon }) => {
             const isActive = pathname === to || pathname.startsWith(to + '/');
@@ -360,14 +288,10 @@ export default function Sidebar() {
               href={to}
               className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all"
             >
-              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-lg scale-110' : ''}`}
-                   style={{ 
-                     backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                     color: isActive ? '#fff' : 'var(--color-muted)'
-                   }}>
+              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-sm scale-110 bg-[#F0E9FF] text-brand-purple' : 'text-text-muted'}`}>
                 <Icon size={20} />
               </div>
-              <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'}`}>
+              <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-brand-purple font-bold' : 'text-text-muted'}`}>
                 {label}
               </span>
             </Link>
@@ -380,14 +304,10 @@ export default function Sidebar() {
               href="/admin"
               className="flex flex-col items-center gap-1 p-2 rounded-xl transition-all"
             >
-              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-lg scale-110' : ''}`}
-                   style={{ 
-                     backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-                     color: isActive ? '#fff' : 'var(--color-muted)'
-                   }}>
+              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'shadow-sm scale-110 bg-[#F0E9FF] text-brand-purple' : 'text-text-muted'}`}>
                 <ShieldCheck size={20} />
               </div>
-              <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-[var(--color-text)]' : 'text-[var(--color-muted)]'}`}>
+              <span className={`hidden md:block text-[10px] font-medium transition-colors ${isActive ? 'text-brand-purple font-bold' : 'text-text-muted'}`}>
                 Admin
               </span>
             </Link>
