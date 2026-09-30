@@ -10,12 +10,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning className="bg-purple-900 text-white min-h-screen flex antialiased overflow-hidden">
+      <body suppressHydrationWarning className="h-screen overflow-hidden antialiased">
         <ClientProviders>
-          <Sidebar />
-          <main className="flex-1 p-6 lg:p-12 h-screen overflow-y-auto bg-gradient-to-br from-purple-900 to-indigo-900">
-            {children}
-          </main>
+          {/* Flex row: Sidebar (static) + Main (fills remaining space) */}
+          <div className="flex h-screen w-full overflow-hidden">
+            <Sidebar />
+            <main className="flex-1 h-screen overflow-y-auto
+                            pt-16 pb-24 px-4
+                            lg:pt-8 lg:pb-8 lg:px-10
+                            bg-gradient-to-br from-purple-900 to-indigo-900">
+              {children}
+            </main>
+          </div>
         </ClientProviders>
       </body>
     </html>

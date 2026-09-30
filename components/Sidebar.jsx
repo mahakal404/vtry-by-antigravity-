@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTokens } from '../contexts/TokenContext';
 import {
   Wand2, History, Coins, Settings, ShieldCheck,
-  LogOut, Sparkles
+  LogOut, Sparkles, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 /**
@@ -18,6 +18,7 @@ import {
 export default function Sidebar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   
   const dropdownRef = useRef(null);
   const logoutModalRef = useRef(null);
@@ -126,97 +127,148 @@ export default function Sidebar() {
   };
 
   // -------------------------
-  // Desktop Sidebar
+  // Desktop Sidebar (static flex item — no fixed positioning)
   // -------------------------
   const DesktopSidebar = () => (
     <aside
-      className="hidden lg:flex fixed top-0 left-0 h-full w-[170px] z-40 flex-col"
+      className={`hidden lg:flex flex-col h-full flex-shrink-0 transition-all duration-300 ease-in-out ${
+        isCollapsed ? 'w-20' : 'w-64'
+      }`}
       style={{ backgroundColor: 'var(--color-card)', borderRight: '1px solid var(--color-border)' }}
     >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-6">
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-lg"
-             style={{ backgroundColor: 'var(--color-primary)' }}>
-          V
+      {/* Logo + Collapse Toggle */}
+      <div className={`flex items-center py-5 px-4 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-white text-lg flex-shrink-0"
+            style={{ backgroundColor: 'var(--color-primary)' }}
+          >
+            V
+          </div>
+          {!isCollapsed && (
+            <span className="font-bold text-lg tracking-wide overflow-hidden whitespace-nowrap" style={{ color: 'var(--color-text)' }}>
+              V-TRY
+            </span>
+          )}
         </div>
-        <span className="font-bold text-lg tracking-wide" style={{ color: 'var(--color-text)' }}>
-          V-TRY
-        </span>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+          style={{ color: 'var(--color-muted)' }}
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 px-3 mt-2">
+      <nav className="flex-1 px-2 mt-2 space-y-0.5">
         {navItems.map(({ to, label, icon: Icon }) => {
           const isActive = pathname === to || pathname.startsWith(to + '/');
           return (
-          <Link
-            key={to}
-            href={to}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-all duration-200 ${
-              isActive ? 'text-white' : 'hover:bg-white/5'
-            }`}
-            style={{
-              backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-              color: isActive ? '#fff' : 'var(--color-muted)',
-            }}
-          >
-            <Icon size={18} />
-            {label}
-          </Link>
-        )})}
+            <Link
+              key={to}
+              href={to}
+              title={isCollapsed ? label : undefined}
+              className={`flex items-center py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                isCollapsed ? 'justify-center px-2' : 'gap-3 px-4'
+              } ${isActive ? 'text-white' : 'hover:bg-white/5'}`}
+              style={{
+                backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
+                color: isActive ? '#fff' : 'var(--color-muted)',
+              }}
+            >
+              <Icon size={18} className="flex-shrink-0" />
+              {!isCollapsed && <span className="truncate">{label}</span>}
+            </Link>
+          );
+        })}
 
         {/* Admin link */}
         {user?.isAdmin && (() => {
           const isActive = pathname === '/admin' || pathname.startsWith('/admin/');
           return (
-          <Link
-            href="/admin"
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-1 text-sm font-medium transition-all duration-200 ${
-              isActive ? 'text-white' : 'hover:bg-white/5'
-            }`}
-            style={{
-              backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
-              color: isActive ? '#fff' : 'var(--color-muted)',
-            }}
-          >
-            <ShieldCheck size={18} />
-            Admin
-          </Link>
-        )})}
+            <Link
+              href="/admin"
+              title={isCollapsed ? 'Admin' : undefined}
+              className={`flex items-center py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                isCollapsed ? 'justify-center px-2' : 'gap-3 px-4'
+              } ${isActive ? 'text-white' : 'hover:bg-white/5'}`}
+              style={{
+                backgroundColor: isActive ? 'var(--color-primary)' : 'transparent',
+                color: isActive ? '#fff' : 'var(--color-muted)',
+              }}
+            >
+              <ShieldCheck size={18} className="flex-shrink-0" />
+              {!isCollapsed && <span className="truncate">Admin</span>}
+            </Link>
+          );
+        })()}
       </nav>
 
       {/* Bottom User Section */}
-      <div className="px-4 pb-5">
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl mb-4"
-             style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-          <div className="flex items-center gap-2 text-xs font-medium" style={{ color: 'var(--color-muted)' }}>
-            <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
-            BALANCE
+      <div className={`pb-5 ${isCollapsed ? 'px-2' : 'px-4'}`}>
+        {/* Token Balance */}
+        {!isCollapsed ? (
+          <div
+            className="flex items-center justify-between px-3 py-2.5 rounded-xl mb-3"
+            style={{ backgroundColor: 'rgba(136,82,224,0.1)', border: '1px solid var(--color-border)' }}
+          >
+            <div className="flex items-center gap-2 text-xs font-medium" style={{ color: 'var(--color-muted)' }}>
+              <Sparkles size={13} style={{ color: 'var(--color-primary)' }} />
+              BALANCE
+            </div>
+            <span className="text-base font-bold" style={{ color: 'var(--color-primary)' }}>
+              {displayBalance}
+            </span>
           </div>
-          <span className="text-lg font-bold" style={{ color: 'var(--color-primary)' }}>
-            {displayBalance}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white"
-               style={{ backgroundColor: 'var(--color-primary)' }}>
-            {user?.avatar || 'U'}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold truncate" style={{ color: 'var(--color-text)' }}>
-              {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}
+        ) : (
+          <div className="flex justify-center mb-3" title={`Balance: ${displayBalance}`}>
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ backgroundColor: 'rgba(136,82,224,0.1)', border: '1px solid var(--color-border)' }}
+            >
+              <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
             </div>
           </div>
-        </div>
+        )}
 
+        {/* User Info */}
+        {!isCollapsed ? (
+          <div className="flex items-center gap-3 mb-3 px-1">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+            >
+              {user?.avatar || 'U'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold truncate" style={{ color: 'var(--color-text)' }}>
+                {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center mb-3">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white"
+              style={{ backgroundColor: 'var(--color-primary)' }}
+              title={user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}
+            >
+              {user?.avatar || 'U'}
+            </div>
+          </div>
+        )}
+
+        {/* Sign Out */}
         <button
           onClick={handleSignOutClick}
-          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-white/5"
+          title={isCollapsed ? 'Sign Out' : undefined}
+          className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-white/5`}
           style={{ color: 'var(--color-muted)', border: '1px solid var(--color-border)' }}
         >
           <LogOut size={16} />
-          Sign Out
+          {!isCollapsed && 'Sign Out'}
         </button>
       </div>
     </aside>
