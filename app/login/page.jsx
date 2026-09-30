@@ -18,7 +18,7 @@ export default function Login() {
   
   const { enterApp } = useAuth();
   const { useGradient } = useTheme();
-  const navigate = useRouter();
+  const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ export default function Login() {
 
     try {
       enterApp(firstName.trim(), lastName.trim());
-      navigate('/studio');
+      router.push('/studio');
     } catch (err) {
       setError(err.message || 'An error occurred.');
     }

@@ -5,14 +5,18 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    // Restore user session from localStorage on mount (client-only)
-    if (typeof window !== 'undefined') {
-      const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_current_user') : null);
-      return saved ? JSON.parse(saved) : null;
+  // Always start as null — same on server & client (prevents hydration mismatch)
+  const [user, setUser] = useState(null);
+
+  // Hydrate from localStorage only on client after first mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('vtry_current_user');
+      if (saved) setUser(JSON.parse(saved));
+    } catch {
+      localStorage.removeItem('vtry_current_user');
     }
-    return null;
-  });
+  }, []);
 
   // Persist user state to localStorage whenever it changes  
   useEffect(() => {

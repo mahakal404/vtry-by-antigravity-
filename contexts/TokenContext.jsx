@@ -6,26 +6,30 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const TokenContext = createContext(null);
 
 export function TokenProvider({ children }) {
-  // 1. Fixed Welcome Bonus logic
-  const [balance, setBalance] = useState(() => {
-    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_tokens') : null);
-    if (saved) return parseInt(saved, 10);
-    // Explicitly save the welcome bonus for new users immediately
-    localStorage.setItem('vtry_tokens', '5');
-    console.log('Tokens updated (Welcome Bonus):', 5);
-    return 5;
-  });
+  // Always start with consistent defaults — same on server & client (prevents hydration mismatch)
+  const [balance, setBalance] = useState(5);
+  const [adsWatched, setAdsWatched] = useState(0);
+  const [lastRewardClaim, setLastRewardClaim] = useState(null);
 
-  const [adsWatched, setAdsWatched] = useState(() => {
-    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_ads_watched') : null);
-    return saved ? parseInt(saved, 10) : 0;
-  });
+  // Hydrate all token state from localStorage only on client after first mount
+  useEffect(() => {
+    const savedBalance = localStorage.getItem('vtry_tokens');
+    if (savedBalance) {
+      setBalance(parseInt(savedBalance, 10));
+    } else {
+      // New user — save welcome bonus
+      localStorage.setItem('vtry_tokens', '5');
+      console.log('Tokens updated (Welcome Bonus):', 5);
+    }
 
-  const [lastRewardClaim, setLastRewardClaim] = useState(() => {
-    return (typeof window !== 'undefined' ? localStorage.getItem('vtry_last_reward') : null) || null;
-  });
+    const savedAds = localStorage.getItem('vtry_ads_watched');
+    if (savedAds) setAdsWatched(parseInt(savedAds, 10));
 
-  // We can keep these effect syncs as a fallback, but primary logic will use sync updates
+    const savedReward = localStorage.getItem('vtry_last_reward');
+    if (savedReward) setLastRewardClaim(savedReward);
+  }, []);
+
+  // Sync balance to localStorage on every change (after hydration)
   useEffect(() => {
     localStorage.setItem('vtry_tokens', String(balance));
   }, [balance]);

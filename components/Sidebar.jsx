@@ -24,10 +24,12 @@ export default function Sidebar() {
   
   const { user, logout } = useAuth();
   const { displayBalance } = useTokens();
-  const navigate = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
-  // Close dropdown when clicking outside
+
+  // Close dropdown when clicking outside — runs unconditionally (Rules of Hooks)
   useEffect(() => {
+    if (pathname === '/login') return;
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setProfileOpen(false);
@@ -39,10 +41,11 @@ export default function Sidebar() {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, []);
+  }, [pathname]);
 
-  // Close logout modal when clicking outside
+  // Close logout modal when clicking outside — runs unconditionally (Rules of Hooks)
   useEffect(() => {
+    if (pathname === '/login') return;
     const handleClickOutsideModal = (event) => {
       if (logoutModalRef.current && !logoutModalRef.current.contains(event.target)) {
         setIsLogoutModalOpen(false);
@@ -58,7 +61,10 @@ export default function Sidebar() {
       document.removeEventListener('mousedown', handleClickOutsideModal);
       document.removeEventListener('touchstart', handleClickOutsideModal);
     };
-  }, [isLogoutModalOpen]);
+  }, [isLogoutModalOpen, pathname]);
+
+  // Hide Sidebar entirely on the login page — AFTER all hooks (Rules of Hooks)
+  if (pathname === '/login') return null;
 
   // Navigation items configuration
   const navItems = [
@@ -76,8 +82,9 @@ export default function Sidebar() {
 
   // Actual Sign Out execution
   const confirmSignOut = () => {
+    setIsLogoutModalOpen(false);
     logout();
-    navigate('/login');
+    router.push('/login');
   };
 
   // -------------------------

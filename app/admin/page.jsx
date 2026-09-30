@@ -24,7 +24,7 @@ const INITIAL_USERS = [
 
 export default function Admin() {
   const { user } = useAuth();
-  const navigate = useRouter();
+  const router = useRouter();
 
   // Marketing state
   const [saleName, setSaleName] = useState('Mega Launch Party');
@@ -84,7 +84,7 @@ export default function Admin() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/studio')} className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+          <button onClick={() => router.push('/studio')} className="p-2 rounded-lg hover:bg-white/5 transition-colors"
                   style={{ color: 'var(--color-muted)' }}>
             <ArrowLeft size={20} />
           </button>

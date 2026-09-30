@@ -21,7 +21,7 @@ export default function Studio() {
   const clothInputRef = useRef(null);
   const { addToHistory } = useHistory();
   const { displayBalance } = useTokens();
-  const navigate = useRouter();
+  const router = useRouter();
 
   // Handle image selection and convert to data URL for preview
   const handleImageUpload = (e, type) => {

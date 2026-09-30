@@ -10,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-purple-900 text-white min-h-screen flex antialiased overflow-hidden">
+      <body suppressHydrationWarning className="bg-purple-900 text-white min-h-screen flex antialiased overflow-hidden">
         <ClientProviders>
           <Sidebar />
           <main className="flex-1 p-6 lg:p-12 h-screen overflow-y-auto bg-gradient-to-br from-purple-900 to-indigo-900">

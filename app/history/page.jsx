@@ -11,7 +11,7 @@ import { Sparkles, ArrowRight, Trash2 } from 'lucide-react';
  */
 export default function History() {
   const { history, removeFromHistory, clearHistory } = useHistory();
-  const navigate = useRouter();
+  const router = useRouter();
 
   return (
     <div className="space-y-6">
@@ -33,7 +33,7 @@ export default function History() {
             No generations yet. Visit the Studio to start.
           </p>
           <button
-            onClick={() => navigate('/studio')}
+            onClick={() => router.push('/studio')}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
             style={{ backgroundColor: 'var(--color-primary)' }}
           >
