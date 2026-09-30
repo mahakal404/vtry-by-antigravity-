@@ -237,10 +237,14 @@ export default function Sidebar() {
         {!isCollapsed ? (
           <div className="flex items-center gap-3 mb-3 px-1">
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0 overflow-hidden"
               style={{ backgroundColor: 'var(--color-primary)' }}
             >
-              {user?.avatar || 'U'}
+              {user?.avatar?.startsWith('http') ? (
+                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                user?.avatar || 'U'
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-semibold truncate" style={{ color: 'var(--color-text)' }}>
@@ -251,11 +255,15 @@ export default function Sidebar() {
         ) : (
           <div className="flex justify-center mb-3">
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white overflow-hidden"
               style={{ backgroundColor: 'var(--color-primary)' }}
               title={user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'User'}
             >
-              {user?.avatar || 'U'}
+              {user?.avatar?.startsWith('http') ? (
+                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                user?.avatar || 'U'
+              )}
             </div>
           </div>
         )}
@@ -294,10 +302,14 @@ export default function Sidebar() {
         <div className="relative z-50" ref={dropdownRef}>
           <button
             onClick={() => setProfileOpen(!profileOpen)}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg transition-transform active:scale-95"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg transition-transform active:scale-95 overflow-hidden"
             style={{ backgroundColor: 'var(--color-primary)', border: '2px solid rgba(255,255,255,0.1)' }}
           >
-            {user?.avatar || 'U'}
+            {user?.avatar?.startsWith('http') ? (
+              <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            ) : (
+              user?.avatar || 'U'
+            )}
           </button>
 
           {/* Profile Dropdown Modal */}
