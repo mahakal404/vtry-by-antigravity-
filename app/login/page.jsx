@@ -3,28 +3,23 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { User, Mail, Lock } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, Sparkles, Image as ImageIcon, Layers, CheckCircle, Sun, Moon, ChevronDown } from 'lucide-react';
 
-/**
- * Authentication Page
- * - Responsive to global theme
- * - Features Email/Password Auth & Google Login
- */
 export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   
   const { loginWithGoogle, signUpWithEmail, loginWithEmail } = useAuth();
-  const { useGradient } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const router = useRouter();
 
-  // Avoid hydration mismatch by waiting for mount
   useEffect(() => setMounted(true), []);
 
   const handleEmailAuth = async (e) => {
@@ -43,7 +38,6 @@ export default function Login() {
       }
       router.push('/studio');
     } catch (err) {
-      // Clean up Firebase error messages for the user
       let message = err.message || 'An error occurred.';
       if (message.includes('auth/invalid-credential')) message = 'Invalid email or password.';
       if (message.includes('auth/email-already-in-use')) message = 'Email is already in use.';
@@ -70,174 +64,229 @@ export default function Login() {
     }
   };
 
-  return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${mounted && useGradient ? 'gradient-bg' : ''}`}
-         style={{
-           backgroundColor: mounted && useGradient ? undefined : 'var(--color-bg)',
-         }}>
-      {/* Decorative background elements using theme primary color */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-15 blur-3xl"
-             style={{ backgroundColor: 'var(--color-primary)' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full opacity-15 blur-3xl"
-             style={{ backgroundColor: 'var(--color-primary)' }} />
-      </div>
+  if (!mounted) return null;
 
-      <div className="w-full max-w-md relative fade-in z-10">
-        {/* Top Logo */}
-        <div className="flex justify-center mb-8">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold text-white shadow-xl"
-               style={{ backgroundColor: 'var(--color-primary)' }}>
-            V
+  return (
+    <div className="min-h-screen w-full flex bg-app-bg dark:bg-[#0B0F1A] transition-colors duration-200 fade-in">
+      {/* Left Column (Hero/Branding) */}
+      <div className="hidden lg:flex lg:w-[60%] flex-col justify-between p-12 relative overflow-hidden bg-gradient-to-br from-[#F8F7FF] via-[#F3EFFF] to-[#FDF2F8] dark:from-[#0B0F1A] dark:via-[#130B24] dark:to-[#1A0B1E] border-r border-border-soft dark:border-[#2D2A45] transition-colors duration-200">
+        
+        {/* Absolute Top-Left Logo */}
+        <div className="absolute top-8 left-12 z-20 flex items-center gap-2 cursor-default">
+          <div className="w-12 h-12 rounded-xl bg-brand-purple flex items-center justify-center text-white font-bold text-3xl">V</div>
+          <span className="text-3xl font-extrabold tracking-wider text-[#0F172A] dark:text-white">V-TRY</span>
+        </div>
+
+        {/* Text Container restricted to the left */}
+        <div className="max-w-md xl:max-w-lg relative z-20 mt-12 pointer-events-auto">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-purple/10 rounded-full mb-6">
+            <Sparkles size={14} className="text-brand-purple" />
+            <span className="text-xs font-bold text-brand-purple tracking-wide">AI Powered</span>
+          </div>
+
+          <h1 className="text-5xl xl:text-6xl font-bold leading-tight text-text-main dark:text-[#FBFAFC] mb-6">
+            See it. <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-purple to-brand-pink">Try it.</span><br />Love it.
+          </h1>
+          <p className="text-lg text-text-muted dark:text-[#94A3B8] mb-12">
+            Try on outfits virtually with AI and find your perfect style before you buy.
+          </p>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#1E1B2E] p-3 shadow-sm flex items-center justify-center flex-shrink-0">
+                <ImageIcon size={24} className="text-blue-500" />
+              </div>
+              <div>
+                <h3 className="font-bold text-text-main dark:text-[#FBFAFC] text-lg">Upload & Try On</h3>
+                <p className="text-sm text-text-muted dark:text-[#94A3B8] mt-1">Upload your photo and a clothing item to see an instant, photorealistic preview.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#1E1B2E] p-3 shadow-sm flex items-center justify-center flex-shrink-0">
+                <Layers size={24} className="text-brand-purple" />
+              </div>
+              <div>
+                <h3 className="font-bold text-text-main dark:text-[#FBFAFC] text-lg">Multiple Outfits</h3>
+                <p className="text-sm text-text-muted dark:text-[#94A3B8] mt-1">Easily switch between different styles, colors, and garments in seconds.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#1E1B2E] p-3 shadow-sm flex items-center justify-center flex-shrink-0">
+                <CheckCircle size={24} className="text-brand-pink" />
+              </div>
+              <div>
+                <h3 className="font-bold text-text-main dark:text-[#FBFAFC] text-lg">Realistic Results</h3>
+                <p className="text-sm text-text-muted dark:text-[#94A3B8] mt-1">Our advanced AI ensures accurate fitting, draping, and lighting.</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Entry Card */}
-        <div className="rounded-3xl p-8 shadow-2xl backdrop-blur-xl flex flex-col items-center"
-             style={{
-               backgroundColor: 'var(--color-card)',
-               border: '1px solid var(--color-border)',
-             }}>
-          <h1 className="text-2xl font-bold text-center mb-2" style={{ color: 'var(--color-text)' }}>
-            Welcome to V-Try
-          </h1>
-          <p className="text-center text-sm mb-6" style={{ color: 'var(--color-muted)' }}>
-            {isSignUp ? 'Create an account to continue.' : 'Sign in to access your premium virtual try-on studio.'}
-          </p>
+        {/* Footer Stats */}
+        <div className="relative z-20 flex items-center gap-8 pt-12 mt-12 border-t border-border-soft dark:border-[#2D2A45]">
+          <div>
+            <div className="text-2xl font-black text-brand-purple">100K+</div>
+            <div className="text-xs font-bold text-text-muted dark:text-[#94A3B8] uppercase tracking-wider mt-1">Happy Users</div>
+          </div>
+          <div>
+            <div className="text-2xl font-black text-brand-pink">500K+</div>
+            <div className="text-xs font-bold text-text-muted dark:text-[#94A3B8] uppercase tracking-wider mt-1">Outfits Tried</div>
+          </div>
+          <div>
+            <div className="text-2xl font-black text-brand-indigo">99%</div>
+            <div className="text-xs font-bold text-text-muted dark:text-[#94A3B8] uppercase tracking-wider mt-1">Satisfaction</div>
+          </div>
+        </div>
+        
+        {/* 3D Transparent Image */}
+        <img 
+          src="/vtry.png" 
+          alt="V-Try 3D Model" 
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
+          className="absolute right-[-10%] lg:-right-4 xl:-right-12 top-1/2 -translate-y-1/2 w-[80%] max-w-[700px] h-auto object-contain pointer-events-none z-0 opacity-95" 
+        />
+      </div>
+
+      {/* Right Column (Auth Form) */}
+      <div className="w-full lg:w-[40%] xl:w-[45%] flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
+        {/* Top Nav (Theme & Language) */}
+        <div className="absolute top-8 right-8 flex items-center gap-4 z-20">
+          <button 
+            onClick={toggleTheme}
+            className="p-2 bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] rounded-full text-text-muted hover:text-brand-purple transition-colors shadow-sm"
+          >
+            {isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
+          <button className="flex items-center gap-2 px-3 py-1.5 bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] rounded-full text-xs font-bold text-text-muted hover:text-brand-purple transition-colors shadow-sm">
+            English <ChevronDown size={14} />
+          </button>
+        </div>
+
+        {/* Mobile decorative blobs */}
+        <div className="lg:hidden absolute top-0 right-0 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="lg:hidden absolute bottom-0 left-0 w-64 h-64 bg-brand-pink/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        
+        <div className="w-full max-w-md bg-surface dark:bg-[#1E1B2E] rounded-[24px] p-8 shadow-2xl border border-border-soft dark:border-[#2D2A45] relative z-10 transition-colors duration-200">
+          
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-3xl font-bold text-white bg-brand-purple shadow-lg mb-6">
+              V
+            </div>
+            <h1 className="text-2xl font-bold text-text-main dark:text-[#FBFAFC]">
+              Welcome to V-Try
+            </h1>
+            <p className="text-sm text-text-muted dark:text-[#94A3B8] mt-2 text-center">
+              {isSignUp ? 'Create a new account to get started.' : 'Sign in to access your premium virtual try-on studio.'}
+            </p>
+          </div>
 
           {error && (
-            <div className="w-full mb-6 p-4 rounded-xl text-sm font-medium border" 
-                 style={{ backgroundColor: 'rgba(220, 38, 38, 0.05)', color: '#dc2626', borderColor: 'rgba(220, 38, 38, 0.2)' }}>
+            <div className="w-full mb-6 p-4 rounded-xl text-sm font-medium bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleEmailAuth} className="w-full space-y-4">
+          <form onSubmit={handleEmailAuth} className="w-full space-y-5">
             {isSignUp && (
               <div className="flex gap-4 flex-col sm:flex-row">
-                {/* First Name */}
-                <div className="flex-1">
+                <div className="flex-1 space-y-1.5">
+                  <label className="text-xs font-bold text-text-main dark:text-[#FBFAFC] uppercase tracking-wide">First Name</label>
                   <div className="relative group">
-                    <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-[var(--color-primary)]" style={{ color: 'var(--color-muted)' }} />
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-[#94A3B8] group-focus-within:text-brand-purple transition-colors" />
                     <input
                       type="text"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="First Name"
+                      placeholder="John"
                       required
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-                      style={{
-                        backgroundColor: 'var(--color-bg)',
-                        border: '1px solid var(--color-border)',
-                        color: 'var(--color-text)'
-                      }}
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm bg-gray-50 dark:bg-[#161324] border border-transparent text-text-main dark:text-[#FBFAFC] placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple transition-all"
                     />
                   </div>
                 </div>
-                {/* Last Name */}
-                <div className="flex-1">
+                <div className="flex-1 space-y-1.5">
+                  <label className="text-xs font-bold text-text-main dark:text-[#FBFAFC] uppercase tracking-wide">Last Name</label>
                   <div className="relative group">
-                    <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-[var(--color-primary)]" style={{ color: 'var(--color-muted)' }} />
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-[#94A3B8] group-focus-within:text-brand-purple transition-colors" />
                     <input
                       type="text"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      placeholder="Last Name"
+                      placeholder="Doe"
                       required
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-                      style={{
-                        backgroundColor: 'var(--color-bg)',
-                        border: '1px solid var(--color-border)',
-                        color: 'var(--color-text)'
-                      }}
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm bg-gray-50 dark:bg-[#161324] border border-transparent text-text-main dark:text-[#FBFAFC] placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple transition-all"
                     />
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Email Field */}
-            <div className="relative group">
-              <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-[var(--color-primary)]" style={{ color: 'var(--color-muted)' }} />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email Address"
-                required
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-                style={{
-                  backgroundColor: 'var(--color-bg)',
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-text)'
-                }}
-              />
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-text-main dark:text-[#FBFAFC] uppercase tracking-wide">Email Address</label>
+              <div className="relative group">
+                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-[#94A3B8] group-focus-within:text-brand-purple transition-colors" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  required
+                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm bg-gray-50 dark:bg-[#161324] border border-transparent text-text-main dark:text-[#FBFAFC] placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple transition-all"
+                />
+              </div>
             </div>
 
-            {/* Password Field */}
-            <div className="relative group">
-              <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 transition-colors group-focus-within:text-[var(--color-primary)]" style={{ color: 'var(--color-muted)' }} />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm transition-all focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
-                style={{
-                  backgroundColor: 'var(--color-bg)',
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-text)'
-                }}
-              />
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-text-main dark:text-[#FBFAFC] uppercase tracking-wide">Password</label>
+              <div className="relative group">
+                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-[#94A3B8] group-focus-within:text-brand-purple transition-colors" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-11 pr-12 py-3.5 rounded-xl text-sm bg-gray-50 dark:bg-[#161324] border border-transparent text-text-main dark:text-[#FBFAFC] placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-[#94A3B8] hover:text-brand-purple dark:hover:text-brand-purple transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
-            {/* Submit Button */}
+            {!isSignUp && (
+              <div className="flex justify-end">
+                <button type="button" className="text-xs font-bold text-brand-purple hover:text-brand-pink transition-colors">
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 hover:shadow-lg active:scale-[0.98] mt-2 shadow-md disabled:opacity-50"
-              style={{
-                backgroundColor: 'var(--color-primary)',
-              }}
+              className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#6366F1] via-[#7C3AED] to-[#EC4899] hover:opacity-90 shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
             >
-              {isLoading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
+              {isLoading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')} {!isLoading && <span>&rarr;</span>}
             </button>
           </form>
 
-          {/* Toggle Form Type */}
-          <button
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError('');
-            }}
-            className="mt-6 text-sm font-medium transition-colors hover:opacity-80"
-            style={{ color: 'var(--color-text)' }}
-          >
-            {isSignUp ? (
-              <>Already have an account? <span style={{ color: 'var(--color-primary)' }}>Log In</span></>
-            ) : (
-              <>Don't have an account? <span style={{ color: 'var(--color-primary)' }}>Sign Up</span></>
-            )}
-          </button>
-
-          {/* Divider */}
           <div className="w-full flex items-center gap-4 my-6">
-            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }}></div>
-            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-muted)' }}>OR</span>
-            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--color-border)' }}></div>
+            <div className="flex-1 h-px bg-border-soft dark:bg-[#2D2A45]" />
+            <span className="text-xs font-semibold text-text-muted dark:text-[#94A3B8] uppercase tracking-wider">OR</span>
+            <div className="flex-1 h-px bg-border-soft dark:bg-[#2D2A45]" />
           </div>
 
           <button
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 hover:shadow-lg active:scale-[0.98] shadow-md disabled:opacity-50"
-            style={{
-              background: 'linear-gradient(135deg, var(--color-primary), #9333ea)',
-            }}
+            className="w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl text-sm font-bold text-text-main dark:text-[#FBFAFC] bg-white dark:bg-[#161324] border border-border-soft dark:border-[#2D2A45] hover:bg-gray-50 dark:hover:bg-[#1E1B2E] transition-all shadow-sm active:scale-[0.98] disabled:opacity-50"
           >
-            {/* Simple Google G icon SVG */}
-            <svg className="w-5 h-5 bg-white rounded-full p-0.5" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -245,6 +294,22 @@ export default function Login() {
             </svg>
             Continue with Google
           </button>
+
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError('');
+              }}
+              className="text-sm font-medium text-text-muted dark:text-[#94A3B8] hover:text-brand-purple dark:hover:text-brand-purple transition-colors"
+            >
+              {isSignUp ? (
+                <>Already have an account? <span className="font-bold text-brand-purple">Sign In</span></>
+              ) : (
+                <>Don't have an account? <span className="font-bold text-brand-purple">Sign Up</span></>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

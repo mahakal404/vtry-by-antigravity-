@@ -4,31 +4,31 @@ import { useTokens } from '@/contexts/TokenContext';
 import { Gift, Zap, Star, Crown, Play, Shield, Clock, CheckCircle, Calendar, Check, Lock, Zap as Lightning, RefreshCw, Headset, Circle } from 'lucide-react';
 
 export default function VTokens() {
-  const { addTokens, adsWatched, watchAd, claimDailyReward, canClaimReward } = useTokens();
-  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
-  const [adCooldown, setAdCooldown] = useState(0);
+  const { addTokens, claimDailyReward, canClaimReward } = useTokens();
+  const [adsWatched, setAdsWatched] = useState(1);
+  const [isAdPlaying, setIsAdPlaying] = useState(false);
+  const [adCountdown, setAdCountdown] = useState(3);
 
-  // Handle ad cooldown timer
-  useEffect(() => {
-    if (adCooldown > 0) {
-      const timer = setInterval(() => {
-        setAdCooldown(prev => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
+  const handleWatchAd = async () => {
+    if (adsWatched >= 5) {
+      alert("You have reached your daily limit!");
+      return;
     }
-  }, [adCooldown]);
-
-  // Simulate watching an ad with modal and 4-second delay
-  const handleWatchAd = () => {
-    if (adsWatched >= 5 || adCooldown > 0 || isAdModalOpen) return;
-    setIsAdModalOpen(true);
+    setIsAdPlaying(true);
+    setAdCountdown(3);
     
-    setTimeout(() => {
-      watchAd();
-      setIsAdModalOpen(false);
-      setAdCooldown(30); // 30 second cooldown
-      alert('Success! You earned 1 V-Token.');
-    }, 4000);
+    let currentCount = 3;
+    const interval = setInterval(() => {
+      currentCount -= 1;
+      setAdCountdown(currentCount);
+      
+      if (currentCount <= 0) {
+        clearInterval(interval);
+        setAdsWatched(prev => prev + 1);
+        setIsAdPlaying(false);
+        alert('+1 V-Token Added!');
+      }
+    }, 1000);
   };
 
   // Simulate buying tokens
@@ -281,7 +281,7 @@ export default function VTokens() {
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs font-bold mb-3 uppercase tracking-wider text-text-muted dark:text-[#94A3B8]">
               <span>5 Ads = 1 Free Try-On (5 Tokens)</span>
-              <span className="text-text-main dark:text-[#FBFAFC]">{adsWatched} / 5 Ads Watched</span>
+              <span className="text-text-main dark:text-[#FBFAFC]">{adsWatched} / 5 ADS WATCHED</span>
             </div>
             <div className="w-full h-3 rounded-full overflow-hidden bg-gray-200 dark:bg-[#2D2A45]">
               <div
@@ -292,13 +292,13 @@ export default function VTokens() {
           </div>
           <button
             onClick={handleWatchAd}
-            disabled={adsWatched >= 5 || adCooldown > 0}
+            disabled={isAdPlaying || adsWatched >= 5}
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
           >
-            {adsWatched >= 5 ? (
+            {isAdPlaying ? (
+              <span className="flex items-center gap-2"><Play size={18} fill="currentColor" /> Playing Ad...</span>
+            ) : adsWatched >= 5 ? (
               <span className="flex items-center gap-2"><CheckCircle size={18} /> Limit Reached</span>
-            ) : adCooldown > 0 ? (
-              <span className="flex items-center gap-2"><Clock size={18} /> Wait {adCooldown}s...</span>
             ) : (
               <span className="flex items-center gap-2"><Play size={18} fill="currentColor" /> Watch Ad</span>
             )}
@@ -322,12 +322,21 @@ export default function VTokens() {
         ))}
       </div>
 
-      {/* Mock Ad Modal Overlay */}
-      {isAdModalOpen && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-md bg-black/80 fade-in">
-          <div className="w-12 h-12 rounded-full border-4 border-brand-purple border-t-transparent animate-spin mb-6" />
-          <h2 className="text-2xl font-bold text-white tracking-wide mb-2">Watching Ad...</h2>
-          <p className="text-sm font-medium opacity-80 text-white">Please wait to earn your reward.</p>
+      {/* Test Ad Video Modal */}
+      {isAdPlaying && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="w-[90%] max-w-lg rounded-2xl overflow-hidden shadow-2xl bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45]">
+            <div className="p-4 flex items-center justify-between border-b border-border-soft dark:border-[#2D2A45]">
+              <span className="text-sm font-semibold text-text-main dark:text-white">Sponsored Advertisement</span>
+              <span className="text-sm font-bold text-brand-purple">Reward in {adCountdown}s</span>
+            </div>
+            <div className="aspect-video bg-black relative flex items-center justify-center">
+              <video src="https://www.w3schools.com/html/mov_bbb.mp4" autoPlay loop muted className="w-full h-full object-cover" />
+            </div>
+            <div className="p-4">
+              <p className="text-xs text-text-muted dark:text-[#94A3B8] text-center">Please wait for the ad to finish to receive your reward.</p>
+            </div>
+          </div>
         </div>
       )}
     </div>
