@@ -73,10 +73,10 @@ export default function Studio() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-main flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-main dark:text-[#F8FAFC] flex items-center gap-2 transition-colors duration-200">
             Virtual <span className="text-brand-purple">Try-On</span> Studio
           </h1>
-          <p className="text-sm mt-1 text-text-muted">
+          <p className="text-sm mt-1 text-text-muted dark:text-[#94A3B8] transition-colors duration-200">
             See it. Try it. Love it.
           </p>
         </div>
@@ -103,13 +103,13 @@ export default function Studio() {
         <div className="lg:col-span-5 space-y-6">
           
           {/* Card 1: Your Photo */}
-          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft">
+          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-brand-indigo text-white flex items-center justify-center font-bold text-sm">1</div>
                 <div>
-                  <h2 className="font-bold text-text-main text-base">Your Photo</h2>
-                  <p className="text-xs text-text-muted">Upload a clear photo of yourself</p>
+                  <h2 className="font-bold text-text-main dark:text-[#F8FAFC] text-base transition-colors duration-200">Your Photo</h2>
+                  <p className="text-xs text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Upload a clear photo of yourself</p>
                 </div>
               </div>
               <div className="px-3 py-1 bg-[#FFFBEB] text-[#D97706] rounded-full text-[10px] font-bold border border-[#FEF3C7] flex items-center gap-1 shadow-sm">
@@ -119,7 +119,7 @@ export default function Studio() {
 
             <div 
               onClick={() => personInputRef.current?.click()}
-              className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-purple rounded-xl p-6 text-center cursor-pointer transition-colors group relative overflow-hidden"
+              className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-purple rounded-xl p-6 text-center cursor-pointer transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] hover:dark:border-[#8B5CF6] group relative overflow-hidden"
             >
               <input ref={personInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'person')} />
               {personImage ? (
@@ -130,8 +130,8 @@ export default function Studio() {
                     <User size={24} className="text-text-main" />
                     <div className="absolute ml-8 mt-8 w-5 h-5 bg-brand-purple rounded-full flex items-center justify-center border-2 border-white text-white"><span className="text-[10px] font-bold">+</span></div>
                   </div>
-                  <h3 className="font-semibold text-sm text-text-main mb-1">Drag & drop your photo here</h3>
-                  <p className="text-xs text-text-muted mb-4">or click to upload</p>
+                  <h3 className="font-semibold text-sm text-text-main dark:text-[#F8FAFC] mb-1 transition-colors duration-200">Drag & drop your photo here</h3>
+                  <p className="text-xs text-text-muted dark:text-[#94A3B8] mb-4 transition-colors duration-200">or click to upload</p>
                   <button className="px-5 py-2 rounded-lg bg-brand-indigo text-white text-xs font-semibold shadow-sm hover:opacity-90 flex items-center gap-2 mx-auto">
                     <Upload size={14} /> Choose Photo
                   </button>
@@ -139,7 +139,7 @@ export default function Studio() {
               )}
             </div>
 
-            <div className="flex items-center justify-center gap-4 mt-4 text-[10px] text-text-muted font-medium">
+            <div className="flex items-center justify-center gap-4 mt-4 text-[10px] text-text-muted dark:text-[#94A3B8] font-medium transition-colors duration-200">
                <span className="flex items-center gap-1"><User size={12}/> Clear face</span>
                <span className="flex items-center gap-1"><Sparkles size={12}/> Good lighting</span>
                <span className="flex items-center gap-1"><User size={12}/> Full/half body</span>
@@ -147,18 +147,18 @@ export default function Studio() {
           </div>
 
           {/* Card 2: Clothing */}
-          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft">
+          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-full bg-brand-pink text-white flex items-center justify-center font-bold text-sm">2</div>
               <div>
-                <h2 className="font-bold text-text-main text-base">Clothing</h2>
-                <p className="text-xs text-text-muted">Upload a clothing item</p>
+                <h2 className="font-bold text-text-main dark:text-[#F8FAFC] text-base transition-colors duration-200">Clothing</h2>
+                <p className="text-xs text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Upload a clothing item</p>
               </div>
             </div>
 
             <div 
               onClick={() => clothInputRef.current?.click()}
-              className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-pink rounded-xl p-6 text-center cursor-pointer transition-colors group relative overflow-hidden mb-4"
+              className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-pink rounded-xl p-6 text-center cursor-pointer transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] hover:dark:border-[#8B5CF6] group relative overflow-hidden mb-4"
             >
               <input ref={clothInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'cloth')} />
               {clothImage ? (
@@ -169,8 +169,8 @@ export default function Studio() {
                     <Shirt size={24} className="text-text-main" />
                     <div className="absolute ml-8 mt-8 w-5 h-5 bg-brand-pink rounded-full flex items-center justify-center border-2 border-white text-white"><span className="text-[10px] font-bold">+</span></div>
                   </div>
-                  <h3 className="font-semibold text-sm text-text-main mb-1">Drag & drop clothing image</h3>
-                  <p className="text-xs text-text-muted mb-4">or click to upload</p>
+                  <h3 className="font-semibold text-sm text-text-main dark:text-[#F8FAFC] mb-1 transition-colors duration-200">Drag & drop clothing image</h3>
+                  <p className="text-xs text-text-muted dark:text-[#94A3B8] mb-4 transition-colors duration-200">or click to upload</p>
                   <button className="px-5 py-2 rounded-lg bg-brand-indigo text-white text-xs font-semibold shadow-sm hover:opacity-90 flex items-center gap-2 mx-auto">
                     <Upload size={14} /> Choose Photo
                   </button>
@@ -184,7 +184,7 @@ export default function Studio() {
                  <button 
                    key={cat} 
                    onClick={() => setActiveCategory(cat)}
-                   className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors border ${activeCategory === cat ? 'border-brand-purple bg-[#F0E9FF] text-brand-purple' : 'border-border-soft bg-surface hover:bg-surface-soft text-text-muted'}`}
+                   className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-200 border ${activeCategory === cat ? 'border-brand-purple bg-[#F0E9FF] text-brand-purple dark:bg-[#8B5CF6] dark:border-[#8B5CF6] dark:text-[#FFFFFF]' : 'border-border-soft bg-surface hover:bg-surface-soft text-text-muted dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#E2EBF0]'}`}
                  >
                    {cat}
                  </button>
@@ -220,15 +220,15 @@ export default function Studio() {
         <div className="lg:col-span-7 flex flex-col gap-6">
           
           {/* Preview Card */}
-          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft flex flex-col flex-1 min-h-[500px]">
+          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] flex flex-col flex-1 min-h-[500px] transition-colors duration-200">
              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#F0E9FF] text-brand-purple flex items-center justify-center">
                     <Sparkles size={16} />
                   </div>
                   <div>
-                    <h2 className="font-bold text-text-main text-base">Try-On Preview</h2>
-                    <p className="text-xs text-text-muted">Your AI fashion studio result will appear here</p>
+                    <h2 className="font-bold text-text-main dark:text-[#F8FAFC] text-base transition-colors duration-200">Try-On Preview</h2>
+                    <p className="text-xs text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Your AI fashion studio result will appear here</p>
                   </div>
                 </div>
                 <div className="px-2 py-1 bg-surface border border-border-soft rounded flex items-center gap-1 text-[10px] font-bold text-brand-indigo shadow-sm">
@@ -236,14 +236,14 @@ export default function Studio() {
                 </div>
              </div>
 
-             <div className="flex-1 bg-preview-bg rounded-xl border border-border-soft flex flex-col items-center justify-center relative overflow-hidden">
+             <div className="flex-1 bg-preview-bg rounded-xl border border-border-soft dark:bg-[#161324] flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-200">
                 {isProcessing ? (
                   <div className="text-center animate-pulse">
                     <div className="w-20 h-20 mx-auto rounded-full bg-brand-purple/10 flex items-center justify-center mb-4">
                       <Loader2 size={32} className="animate-spin text-brand-purple" />
                     </div>
-                    <h3 className="font-bold text-text-main mb-1">Generating Magic...</h3>
-                    <p className="text-sm text-text-muted">Fitting the clothes perfectly to your body</p>
+                    <h3 className="font-bold text-text-main dark:text-[#F8FAFC] mb-1 transition-colors duration-200">Generating Magic...</h3>
+                    <p className="text-sm text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Fitting the clothes perfectly to your body</p>
                   </div>
                 ) : resultImage ? (
                   <div className="relative w-full h-full flex flex-col items-center justify-center p-4">
@@ -261,19 +261,19 @@ export default function Studio() {
                           <Shirt size={64} className="text-brand-purple opacity-50" />
                        </div>
                      </div>
-                     <h3 className="font-bold text-lg text-text-main mb-2">Upload your photo and clothing</h3>
-                     <p className="text-sm text-text-muted">Then click "Generate Try-On" to see the result here</p>
+                     <h3 className="font-bold text-lg text-text-main dark:text-[#F8FAFC] mb-2 transition-colors duration-200">Upload your photo and clothing</h3>
+                     <p className="text-sm text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Then click "Generate Try-On" to see the result here</p>
                   </div>
                 )}
              </div>
           </div>
 
           {/* Recent Try-Ons */}
-          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft">
+          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <HistoryIcon size={16} className="text-text-main" />
-                  <h3 className="font-bold text-text-main text-sm">Recent Try-Ons</h3>
+                  <HistoryIcon size={16} className="text-text-main dark:text-[#F8FAFC]" />
+                  <h3 className="font-bold text-text-main dark:text-[#F8FAFC] text-sm transition-colors duration-200">Recent Try-Ons</h3>
                 </div>
                 <button className="text-xs font-bold text-brand-purple flex items-center gap-1 hover:opacity-80">
                   View All <ArrowRight size={14}/>
@@ -283,7 +283,7 @@ export default function Studio() {
              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                 {/* Empty placeholders for recent items */}
                 {[1,2,3,4,5].map(i => (
-                  <div key={i} className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-preview-bg rounded-xl border border-border-soft flex items-center justify-center text-border-active/40">
+                  <div key={i} className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-preview-bg rounded-xl border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200 flex items-center justify-center text-border-active/40">
                     <User size={24} />
                   </div>
                 ))}

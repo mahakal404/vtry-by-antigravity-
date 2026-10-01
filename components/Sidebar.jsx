@@ -112,7 +112,7 @@ export default function Sidebar() {
     <aside
       className={`hidden lg:flex flex-col h-full flex-shrink-0 transition-all duration-300 ease-in-out shadow-[0_4px_20px_rgba(31,16,64,0.06)] ${
         isCollapsed ? 'w-20' : 'w-[230px]'
-      } bg-surface border-r border-border-soft`}
+      } bg-surface border-r border-border-soft dark:bg-[#111827] dark:border-[#2D2A45] transition-colors duration-200`}
     >
       <div className={`flex items-center py-5 px-4 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
         <div className="flex items-center gap-3 min-w-0">
@@ -120,7 +120,7 @@ export default function Sidebar() {
             V
           </div>
           {!isCollapsed && (
-            <span className="font-bold text-lg tracking-wide overflow-hidden whitespace-nowrap text-text-main">
+            <span className="font-bold text-lg tracking-wide overflow-hidden whitespace-nowrap text-text-main dark:text-[#FBFAFC] transition-colors duration-200">
               V-TRY
             </span>
           )}
@@ -144,7 +144,7 @@ export default function Sidebar() {
               title={isCollapsed ? label : undefined}
               className={`flex items-center py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                 isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'
-              } ${isActive ? 'bg-[#F0E9FF] text-brand-purple shadow-sm' : 'text-text-muted hover:bg-surface-soft hover:text-brand-purple'}`}
+              } ${isActive ? 'bg-[#F0E9FF] text-brand-purple shadow-sm dark:bg-[#1E1B2E] dark:border-l-2 dark:border-[#8B5CF6] dark:text-[#C4B5FD]' : 'text-text-muted hover:bg-surface-soft hover:text-brand-purple dark:text-[#94A3B8] hover:dark:text-[#FBFAFC]'} transition-colors duration-200`}
             >
               <Icon size={18} className="flex-shrink-0" />
               {!isCollapsed && <span className="truncate">{label}</span>}
@@ -160,7 +160,7 @@ export default function Sidebar() {
               title={isCollapsed ? 'Admin' : undefined}
               className={`flex items-center py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                 isCollapsed ? 'justify-center px-2' : 'gap-3 px-3'
-              } ${isActive ? 'bg-[#F0E9FF] text-brand-purple shadow-sm' : 'text-text-muted hover:bg-surface-soft hover:text-brand-purple'}`}
+              } ${isActive ? 'bg-[#F0E9FF] text-brand-purple shadow-sm dark:bg-[#1E1B2E] dark:border-l-2 dark:border-[#8B5CF6] dark:text-[#C4B5FD]' : 'text-text-muted hover:bg-surface-soft hover:text-brand-purple dark:text-[#94A3B8] hover:dark:text-[#FBFAFC]'} transition-colors duration-200`}
             >
               <ShieldCheck size={18} className="flex-shrink-0" />
               {!isCollapsed && <span className="truncate">Admin</span>}

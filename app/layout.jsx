@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
             <main className="flex-1 h-screen overflow-y-auto
                             pt-16 pb-24 px-4
                             lg:pt-8 lg:pb-8 lg:px-10
-                            bg-gradient-to-br from-purple-900 to-indigo-900">
+                            bg-app-bg text-text-main dark:bg-slate-900 dark:text-white">
               {children}
             </main>
           </div>

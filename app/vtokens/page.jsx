@@ -1,15 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTokens } from '@/contexts/TokenContext';
-import { Gift, Zap, Star, Crown, Play, Shield, Clock, Circle, Loader, CheckCircle } from 'lucide-react';
+import { Gift, Zap, Star, Crown, Play, Shield, Clock, CheckCircle, Calendar, Check, Lock, Zap as Lightning, RefreshCw, Headset, Circle } from 'lucide-react';
 
-/**
- * V-Tokens Store Page
- * - Daily login reward (calendar based)
- * - Three pricing cards (Starter, Value, Pro)
- * - Earn free tokens by "watching ads" with cooldown and modal
- * - Secure payment processing footer
- */
 export default function VTokens() {
   const { addTokens, adsWatched, watchAd, claimDailyReward, canClaimReward } = useTokens();
   const [isAdModalOpen, setIsAdModalOpen] = useState(false);
@@ -44,7 +37,6 @@ export default function VTokens() {
     alert(`Successfully purchased ${amount} V-Tokens!`);
   };
 
-  // Pricing card data
   const pricingPlans = [
     {
       name: 'Starter Pack',
@@ -54,10 +46,9 @@ export default function VTokens() {
       originalUSD: '$1.99',
       priceINR: 'Rs. 49',
       originalINR: 'Rs. 99',
-      tryons: '~10 Try-Ons',
+      tryons: '10 Try-Ons',
       icon: Zap,
       badge: 'SAVE 50%',
-      badgeColor: '#22c55e',
       featured: false,
     },
     {
@@ -68,11 +59,10 @@ export default function VTokens() {
       originalUSD: '$5.99',
       priceINR: 'Rs. 199',
       originalINR: 'Rs. 399',
-      tryons: '~50 Try-Ons',
+      tryons: '50 Try-Ons',
       extra: 'Most popular choice',
       icon: Star,
       badge: 'BESTSELLER',
-      badgeGradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
       featured: true,
     },
     {
@@ -83,142 +73,185 @@ export default function VTokens() {
       originalUSD: '$13.99',
       priceINR: 'Rs. 449',
       originalINR: 'Rs. 999',
-      tryons: '~160 Try-Ons',
+      tryons: '160 Try-Ons',
       icon: Crown,
       badge: 'SAVE 50%',
-      badgeColor: '#22c55e',
       featured: false,
     },
   ];
 
+  const days = [
+    { day: 1, status: 'completed' }, // active/completed
+    { day: 2, status: 'locked' },
+    { day: 3, status: 'locked' },
+    { day: 4, status: 'locked' },
+    { day: 5, status: 'locked' },
+    { day: 6, status: 'locked' },
+    { day: 7, status: 'locked' },
+  ];
+
   return (
-    <div className="space-y-8 fade-in relative">
+    <div className="space-y-8 fade-in relative pb-10">
       {/* Page Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: 'var(--color-text)', fontFamily: 'serif' }}>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-main dark:text-[#FBFAFC] font-serif transition-colors duration-200">
           V-Store
         </h1>
-        <p className="text-sm mt-3 max-w-md mx-auto" style={{ color: 'var(--color-muted)' }}>
-          Purchase V-Tokens to generate high-fidelity virtual try-ons. Each token grants one generation.
+        <p className="text-sm mt-3 max-w-md mx-auto text-text-muted dark:text-[#94A3B8] transition-colors duration-200">
+          Purchase V-Tokens to generate high-fidelity virtual try-ons. Each try-on costs 5 V-Tokens.
         </p>
       </div>
 
-      {/* Daily Login Reward Banner */}
-      <div className="rounded-3xl p-6 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm hover:shadow-md transition-shadow"
-           style={{
-             background: 'linear-gradient(135deg, rgba(136,82,224,0.1), rgba(180,122,255,0.05))',
-             border: '1px solid var(--color-primary)',
-           }}>
-        <div className="flex items-center gap-5 w-full sm:w-auto">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner"
-               style={{ backgroundColor: 'rgba(136,82,224,0.15)' }}>
-            <Gift size={28} style={{ color: 'var(--color-primary)' }} />
+      {/* 1. Daily Login Reward Section */}
+      <div className="rounded-[24px] p-6 sm:p-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-[#1E1B2E] dark:to-[#2D2A45] border border-brand-purple/20 shadow-sm transition-colors duration-200">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#161324] flex items-center justify-center shadow-sm">
+              <Gift size={24} className="text-brand-purple" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-text-main dark:text-[#FBFAFC]">Daily Login Reward</h3>
+              <p className="text-sm text-text-muted dark:text-[#94A3B8]">Claim 2 Free V-Tokens every calendar day! Come back daily to save up for free try-ons.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-lg" style={{ color: 'var(--color-text)' }}>
-              Daily Login Reward
-            </h3>
-            <p className="text-sm mt-1" style={{ color: 'var(--color-muted)' }}>
-              Claim free tokens every calendar day!
-            </p>
+          <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#161324] rounded-full border border-border-soft dark:border-[#2D2A45] shadow-sm">
+            <Calendar size={14} className="text-brand-pink" />
+            <span className="text-xs font-bold text-brand-pink">12h 41m left</span>
           </div>
         </div>
-        <div className="text-center sm:text-right w-full sm:w-auto bg-black/5 sm:bg-transparent rounded-2xl p-4 sm:p-0">
-          <div className="text-2xl sm:text-3xl font-bold font-mono" style={{ color: 'var(--color-text)' }}>
-            {canClaimReward() ? (
-              <button
-                onClick={claimDailyReward}
-                className="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-lg"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                Claim +5
-              </button>
-            ) : (
-              <button
-                disabled
-                className="px-6 py-2.5 rounded-xl text-sm font-bold transition-all opacity-50 cursor-not-allowed"
-                style={{ backgroundColor: 'var(--color-card)', color: 'var(--color-text)', border: '1px solid var(--color-border)' }}
-              >
-                Come back tomorrow
-              </button>
-            )}
+        
+        {/* 7-Day Tracker */}
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 justify-between">
+          {days.map((d) => (
+            <div key={d.day} className={`flex-1 flex flex-col items-center justify-center py-4 rounded-2xl transition-colors duration-200 ${
+              d.status === 'completed' 
+                ? 'bg-white border-2 border-brand-purple shadow-sm dark:bg-[#161324] dark:border-brand-purple' 
+                : 'bg-white/60 border border-gray-200 dark:bg-[#161324]/60 dark:border-[#2D2A45] opacity-70'
+            }`}>
+              <div className="text-xs font-bold mb-2 text-text-muted dark:text-[#94A3B8]">Day {d.day}</div>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                d.status === 'completed' 
+                  ? 'bg-brand-purple text-white' 
+                  : 'bg-gray-100 text-gray-400 dark:bg-[#1E1B2E] dark:text-gray-500'
+              }`}>
+                {d.status === 'completed' ? <Check size={16} /> : <Lock size={16} />}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 2. Token Pack Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mt-12 mb-6">
+        <div>
+          <h2 className="text-xl font-bold text-text-main dark:text-[#FBFAFC] mb-1">Choose a Token Pack</h2>
+          <p className="text-sm text-text-muted dark:text-[#94A3B8]">Save more with value bundles and get instant access.</p>
+        </div>
+        <div className="flex gap-3">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full text-xs font-bold border border-green-100 dark:border-green-900/30">
+            <Shield size={12} /> 100% Secure Payment
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-purple/10 text-brand-purple dark:text-brand-purple rounded-full text-xs font-bold border border-brand-purple/20">
+            <Zap size={12} /> Instant Delivery
           </div>
         </div>
       </div>
 
-      {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* 3. Pricing Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {pricingPlans.map((plan) => {
           const Icon = plan.icon;
+          
+          if (plan.featured) {
+            return (
+              <div key={plan.name} className="relative rounded-2xl bg-gradient-to-r from-brand-indigo via-brand-purple to-brand-pink p-[2px] shadow-lg hover:-translate-y-1 transition-transform">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-extrabold text-white tracking-wider bg-gradient-to-r from-brand-indigo to-brand-pink shadow-md border-2 border-white dark:border-[#1E1B2E]">
+                  {plan.badge}
+                </span>
+                <div className="h-full bg-white dark:bg-[#1E1B2E] rounded-[22px] p-6 flex flex-col transition-colors duration-200">
+                  <div className="w-12 h-12 rounded-full bg-brand-purple/10 flex items-center justify-center mb-5">
+                    <Icon size={22} className="text-brand-purple" />
+                  </div>
+                  <h3 className="font-extrabold text-xl tracking-tight text-text-main dark:text-[#FBFAFC]">{plan.name}</h3>
+                  <p className="text-sm mb-5 font-medium text-text-muted dark:text-[#94A3B8]">{plan.subtitle}</p>
+
+                  <div className="mb-1 flex items-baseline gap-2">
+                    <span className="text-sm font-semibold line-through text-text-muted opacity-60 dark:text-[#94A3B8]">{plan.originalUSD}</span>
+                    <span className="text-4xl font-black tracking-tight text-text-main dark:text-[#FBFAFC]">{plan.priceUSD}</span>
+                  </div>
+                  <div className="text-sm mb-5 font-medium text-text-muted dark:text-[#94A3B8]">
+                    <span className="line-through mr-2 opacity-60">{plan.originalINR}</span>
+                    <span>{plan.priceINR}</span>
+                  </div>
+
+                  <div className="h-px w-full my-4 bg-border-soft dark:bg-[#2D2A45]" />
+
+                  <div className="flex flex-col gap-3 flex-1 mb-6">
+                    <div className="flex items-center gap-2 text-sm font-bold text-text-main dark:text-[#FBFAFC]">
+                      <Circle size={16} className="text-brand-purple fill-brand-purple" />
+                      {plan.tokens} V-Tokens
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-text-muted dark:text-[#94A3B8]">
+                      <Zap size={16} className="text-text-muted dark:text-[#94A3B8]" />
+                      {plan.tryons}
+                    </div>
+                    {plan.extra && (
+                      <div className="flex items-center gap-2 text-sm font-medium text-brand-purple">
+                        <Star size={16} className="text-brand-purple" />
+                        {plan.extra}
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => handleBuy(plan.tokens)}
+                    className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 shadow-md transition-opacity"
+                  >
+                    Buy {plan.tokens} Tokens
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          
           return (
-            <div
-              key={plan.name}
-              className="rounded-3xl p-6 relative transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 flex flex-col"
-              style={{
-                backgroundColor: 'var(--color-card)',
-                border: plan.featured ? '2px solid var(--color-primary)' : '1px solid var(--color-border)',
-                boxShadow: plan.featured ? '0 10px 40px -10px rgba(136,82,224,0.2)' : undefined
-              }}
-            >
-              {/* Badge */}
+            <div key={plan.name} className="relative rounded-2xl bg-white dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col">
               {plan.badge && (
-                <span className="absolute -top-3 right-6 px-3 py-1 rounded-full text-[10px] font-extrabold text-white tracking-wider shadow-md"
-                      style={{ 
-                        background: plan.badgeGradient || plan.badgeColor,
-                        border: '2px solid var(--color-bg)'
-                      }}>
+                <span className="absolute -top-3 right-6 px-3 py-1 rounded-full text-[10px] font-extrabold text-white tracking-wider bg-green-500 shadow-sm border-2 border-white dark:border-[#1E1B2E]">
                   {plan.badge}
                 </span>
               )}
-
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5"
-                   style={{ backgroundColor: plan.featured ? 'var(--color-primary)' : 'rgba(136,82,224,0.1)' }}>
-                <Icon size={22} style={{ color: plan.featured ? '#fff' : 'var(--color-primary)' }} />
+              <div className="w-12 h-12 rounded-full bg-surface-soft dark:bg-[#161324] flex items-center justify-center mb-5 border border-border-soft dark:border-[#2D2A45]">
+                <Icon size={22} className="text-text-muted dark:text-[#94A3B8]" />
               </div>
+              <h3 className="font-extrabold text-xl tracking-tight text-text-main dark:text-[#FBFAFC]">{plan.name}</h3>
+              <p className="text-sm mb-5 font-medium text-text-muted dark:text-[#94A3B8]">{plan.subtitle}</p>
 
-              <h3 className="font-extrabold text-xl tracking-tight" style={{ color: 'var(--color-text)' }}>{plan.name}</h3>
-              <p className="text-sm mb-5 font-medium" style={{ color: 'var(--color-muted)' }}>{plan.subtitle}</p>
-
-              {/* Pricing */}
               <div className="mb-1 flex items-baseline gap-2">
-                <span className="text-sm font-semibold line-through opacity-60" style={{ color: 'var(--color-muted)' }}>{plan.originalUSD}</span>
-                <span className="text-4xl font-black tracking-tight" style={{ color: 'var(--color-text)' }}>{plan.priceUSD}</span>
+                <span className="text-sm font-semibold line-through text-text-muted opacity-60 dark:text-[#94A3B8]">{plan.originalUSD}</span>
+                <span className="text-4xl font-black tracking-tight text-text-main dark:text-[#FBFAFC]">{plan.priceUSD}</span>
               </div>
-              <div className="text-sm mb-5 font-medium" style={{ color: 'var(--color-muted)' }}>
+              <div className="text-sm mb-5 font-medium text-text-muted dark:text-[#94A3B8]">
                 <span className="line-through mr-2 opacity-60">{plan.originalINR}</span>
-                <span style={{ color: 'var(--color-text)' }}>{plan.priceINR}</span>
+                <span>{plan.priceINR}</span>
               </div>
 
-              <div className="h-px w-full my-4 opacity-30" style={{ backgroundColor: 'var(--color-border)' }} />
+              <div className="h-px w-full my-4 bg-border-soft dark:bg-[#2D2A45]" />
 
-              {/* Token count */}
               <div className="flex flex-col gap-3 flex-1 mb-6">
-                <div className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text)' }}>
-                  <Circle size={16} fill="var(--color-primary)" style={{ color: 'var(--color-primary)' }} />
+                <div className="flex items-center gap-2 text-sm font-bold text-text-main dark:text-[#FBFAFC]">
+                  <Circle size={16} className="text-brand-purple fill-brand-purple" />
                   {plan.tokens} V-Tokens
                 </div>
-                <div className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--color-muted)' }}>
-                  <Zap size={16} style={{ color: 'var(--color-muted)' }} />
+                <div className="flex items-center gap-2 text-sm font-medium text-text-muted dark:text-[#94A3B8]">
+                  <Zap size={16} className="text-text-muted dark:text-[#94A3B8]" />
                   {plan.tryons}
                 </div>
-                {plan.extra && (
-                  <div className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
-                    <Star size={16} style={{ color: 'var(--color-primary)' }} />
-                    {plan.extra}
-                  </div>
-                )}
               </div>
 
-              {/* Buy Button */}
               <button
                 onClick={() => handleBuy(plan.tokens)}
-                className="w-full py-3.5 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98]"
-                style={{
-                  backgroundColor: plan.featured ? 'var(--color-primary)' : 'transparent',
-                  border: plan.featured ? 'none' : '1px solid var(--color-border)',
-                  color: plan.featured ? '#fff' : 'var(--color-text)',
-                }}
+                className="w-full py-3.5 rounded-xl text-sm font-bold border border-brand-purple text-brand-purple hover:bg-purple-50 dark:hover:bg-brand-purple/10 transition-colors"
               >
                 Buy {plan.tokens} Tokens
               </button>
@@ -227,79 +260,72 @@ export default function VTokens() {
         })}
       </div>
 
-      {/* Earn Free Tokens Section */}
-      <div className="rounded-3xl p-6 sm:p-8 hover:shadow-md transition-shadow mt-6"
-           style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
-               style={{ backgroundColor: 'rgba(136,82,224,0.1)' }}>
-            <Gift size={24} style={{ color: 'var(--color-primary)' }} />
+      {/* 4. Earn Free Tokens (Ads) Banner */}
+      <div className="mt-8 rounded-[20px] bg-white dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] shadow-sm p-6 sm:p-8 transition-colors duration-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+              <Play size={20} className="text-red-500" fill="currentColor" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-text-main dark:text-[#FBFAFC]">Earn Free Tokens</h3>
+              <p className="text-sm text-text-muted dark:text-[#94A3B8]">Watch short ads to earn V-Tokens instantly.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-lg" style={{ color: 'var(--color-text)' }}>Earn Free Tokens</h3>
-            <p className="text-sm mt-1" style={{ color: 'var(--color-muted)' }}>Watch short ads to earn V-Tokens instantly</p>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-6 bg-black/5 rounded-2xl p-4 border" style={{ borderColor: 'var(--color-border)' }}>
-          <div className="flex items-center justify-between text-xs font-bold mb-3 uppercase tracking-wider" style={{ color: 'var(--color-muted)' }}>
-            <span>Daily Progress</span>
-            <span style={{ color: 'var(--color-text)' }}>{adsWatched} / 5 ads watched</span>
-          </div>
-          <div className="w-full h-3 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}>
-            <div
-              className="h-full rounded-full transition-all duration-700 ease-out"
-              style={{
-                width: `${(adsWatched / 5) * 100}%`,
-                background: 'linear-gradient(90deg, var(--color-primary), #b47aff)',
-              }}
-            />
+          <div className="px-3 py-1.5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/30 rounded-lg text-xs font-bold text-yellow-700 dark:text-yellow-500 shadow-sm">
+            +1 Token per Ad
           </div>
         </div>
 
-        {/* Watch Ad Button */}
-        <button
-          onClick={handleWatchAd}
-          disabled={adsWatched >= 5 || adCooldown > 0}
-          className="w-full py-4 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none active:scale-[0.98]"
-          style={{
-            backgroundColor: 'var(--color-primary)',
-          }}
-        >
-          {adsWatched >= 5 ? (
-            <>
-              <CheckCircle size={18} /> Daily Limit Reached
-            </>
-          ) : adCooldown > 0 ? (
-            <>
-              <Clock size={18} /> Wait {adCooldown}s...
-            </>
-          ) : (
-            <>
-              <Play size={18} fill="currentColor" /> Watch Ad (+1 Token)
-            </>
-          )}
-        </button>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-surface-soft dark:bg-[#161324] p-5 rounded-xl border border-border-soft dark:border-[#2D2A45]">
+          <div className="flex-1">
+            <div className="flex items-center justify-between text-xs font-bold mb-3 uppercase tracking-wider text-text-muted dark:text-[#94A3B8]">
+              <span>5 Ads = 1 Free Try-On (5 Tokens)</span>
+              <span className="text-text-main dark:text-[#FBFAFC]">{adsWatched} / 5 Ads Watched</span>
+            </div>
+            <div className="w-full h-3 rounded-full overflow-hidden bg-gray-200 dark:bg-[#2D2A45]">
+              <div
+                className="h-full rounded-full transition-all duration-700 ease-out bg-brand-purple"
+                style={{ width: `${(adsWatched / 5) * 100}%` }}
+              />
+            </div>
+          </div>
+          <button
+            onClick={handleWatchAd}
+            disabled={adsWatched >= 5 || adCooldown > 0}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          >
+            {adsWatched >= 5 ? (
+              <span className="flex items-center gap-2"><CheckCircle size={18} /> Limit Reached</span>
+            ) : adCooldown > 0 ? (
+              <span className="flex items-center gap-2"><Clock size={18} /> Wait {adCooldown}s...</span>
+            ) : (
+              <span className="flex items-center gap-2"><Play size={18} fill="currentColor" /> Watch Ad</span>
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Secure Payment Footer */}
-      <div className="text-center pt-4 pb-8">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <Shield size={18} style={{ color: '#22c55e' }} />
-          <span className="text-sm font-bold" style={{ color: 'var(--color-text)' }}>
-            Secure Payment Processing
-          </span>
-        </div>
-        <p className="text-xs max-w-lg mx-auto leading-relaxed" style={{ color: 'var(--color-muted)' }}>
-          Transactions are processed securely. V-Tokens are non-refundable. If you encounter issues with generation quality, please contact support for a credit refund.
-        </p>
+      {/* 5. Bottom Trust Badges */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        {[
+          { icon: Lightning, title: 'Instant Delivery', sub: 'Tokens added immediately' },
+          { icon: Shield, title: 'Secure Payment', sub: '256-bit encryption' },
+          { icon: RefreshCw, title: 'Satisfaction', sub: 'Guaranteed quality' },
+          { icon: Headset, title: '24/7 Support', sub: 'Always here to help' }
+        ].map((item, i) => (
+          <div key={i} className="flex flex-col items-center text-center p-5 rounded-2xl bg-[#F8F9FE] dark:bg-[#161324] border border-[#F1F5FF] dark:border-[#2D2A45] transition-colors duration-200">
+            <item.icon size={24} className="text-brand-purple mb-3 opacity-80" />
+            <h4 className="text-sm font-bold text-text-main dark:text-[#FBFAFC] mb-1">{item.title}</h4>
+            <p className="text-xs text-text-muted dark:text-[#94A3B8]">{item.sub}</p>
+          </div>
+        ))}
       </div>
 
       {/* Mock Ad Modal Overlay */}
       {isAdModalOpen && (
         <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center backdrop-blur-md bg-black/80 fade-in">
-          <Loader size={48} className="animate-spin text-white mb-6" style={{ color: 'var(--color-primary)' }} />
+          <div className="w-12 h-12 rounded-full border-4 border-brand-purple border-t-transparent animate-spin mb-6" />
           <h2 className="text-2xl font-bold text-white tracking-wide mb-2">Watching Ad...</h2>
           <p className="text-sm font-medium opacity-80 text-white">Please wait to earn your reward.</p>
         </div>
