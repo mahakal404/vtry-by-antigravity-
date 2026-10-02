@@ -3,16 +3,17 @@ import { useState, useEffect } from 'react';
 import { useTokens } from '@/contexts/TokenContext';
 import { Gift, Zap, Star, Crown, Play, Shield, Clock, CheckCircle, Calendar, Check, Lock, Zap as Lightning, RefreshCw, Headset, Circle } from 'lucide-react';
 import VTokenIcon from "@/components/VTokenIcon";
+import { toast } from 'react-hot-toast';
 
 export default function VTokens() {
-  const { addTokens, claimDailyReward, canClaimReward } = useTokens();
+  const { addTokens, claimDailyReward, canClaimReward, watchAd } = useTokens();
   const [adsWatched, setAdsWatched] = useState(1);
   const [isAdPlaying, setIsAdPlaying] = useState(false);
   const [adCountdown, setAdCountdown] = useState(3);
 
   const handleWatchAd = async () => {
     if (adsWatched >= 5) {
-      alert("You have reached your daily limit!");
+      toast.error("You have reached your daily limit!");
       return;
     }
     setIsAdPlaying(true);
@@ -27,15 +28,14 @@ export default function VTokens() {
         clearInterval(interval);
         setAdsWatched(prev => prev + 1);
         setIsAdPlaying(false);
-        alert('+1 V-Token Added!');
+        watchAd();
       }
     }, 1000);
   };
 
   // Simulate buying tokens
-  const handleBuy = (amount) => {
-    addTokens(amount);
-    alert(`Successfully purchased ${amount} V-Tokens!`);
+  const handleBuy = async (amount) => {
+    await addTokens(amount);
   };
 
   const pricingPlans = [

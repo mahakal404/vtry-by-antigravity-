@@ -1,117 +1,144 @@
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
-
-// TokenContext manages V-Token balance, earning, spending, and daily rewards
+import { doc, onSnapshot, updateDoc, increment } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useAuth } from './AuthContext';
+import { toast } from 'react-hot-toast';
 
 const TokenContext = createContext(null);
 
 export function TokenProvider({ children }) {
-  // Always start with consistent defaults — same on server & client (prevents hydration mismatch)
-  const [balance, setBalance] = useState(5);
+  const { user } = useAuth();
+  const [balance, setBalance] = useState(0);
+  const [lastLoginDate, setLastLoginDate] = useState(null);
+  const [loginStreak, setLoginStreak] = useState(0);
   const [adsWatched, setAdsWatched] = useState(0);
-  const [lastRewardClaim, setLastRewardClaim] = useState(null);
-
-  // Hydrate all token state from localStorage only on client after first mount
+  
   useEffect(() => {
-    const savedBalance = localStorage.getItem('vtry_tokens');
-    if (savedBalance) {
-      setBalance(parseInt(savedBalance, 10));
-    } else {
-      // New user — save welcome bonus
-      localStorage.setItem('vtry_tokens', '5');
-      console.log('Tokens updated (Welcome Bonus):', 5);
+    if (!user) {
+      setBalance(0);
+      return;
     }
 
-    const savedAds = localStorage.getItem('vtry_ads_watched');
-    if (savedAds) setAdsWatched(parseInt(savedAds, 10));
-
-    const savedReward = localStorage.getItem('vtry_last_reward');
-    if (savedReward) setLastRewardClaim(savedReward);
-  }, []);
-
-  // Sync balance to localStorage on every change (after hydration)
-  useEffect(() => {
-    localStorage.setItem('vtry_tokens', String(balance));
-  }, [balance]);
-
-  useEffect(() => {
-    localStorage.setItem('vtry_ads_watched', String(adsWatched));
-  }, [adsWatched]);
-
-  useEffect(() => {
-    if (lastRewardClaim) {
-      localStorage.setItem('vtry_last_reward', lastRewardClaim);
-    }
-  }, [lastRewardClaim]);
-
-  // Spend tokens for a try-on (returns true if successful)
-  const spendTokens = (amount = 5) => {
-    if (balance === Infinity) return true;
-    if (balance >= amount) {
-      const newBalance = balance - amount;
-      setBalance(newBalance);
-      localStorage.setItem('vtry_tokens', String(newBalance));
-      console.log('Tokens updated:', newBalance);
-      return true;
-    }
-    return false;
-  };
-
-  // Add tokens (from purchase or earning)
-  // Uses synchronous state and localStorage updates with debug logs
-  const addTokens = (amount) => {
-    setBalance(prev => {
-      const newBalance = prev + amount;
-      localStorage.setItem('vtry_tokens', String(newBalance));
-      console.log('Tokens updated:', newBalance);
-      return newBalance;
+    const userRef = doc(db, 'users', user.uid);
+    const unsubscribe = onSnapshot(userRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setBalance(data.vTokens || 0);
+        setLastLoginDate(data.lastLoginDate);
+        setLoginStreak(data.loginStreak || 0);
+      }
     });
-  };
 
-  // Set specific balance (for admin management)
-  const setTokenBalance = (amount) => {
-    setBalance(amount);
-    localStorage.setItem('vtry_tokens', String(amount));
-    console.log('Tokens updated:', amount);
-  };
+    return () => unsubscribe();
+  }, [user]);
 
-  // Watch ad to earn token
-  const watchAd = () => {
-    if (adsWatched < 5) {
-      setAdsWatched(prev => {
-        const newTotal = prev + 1;
-        localStorage.setItem('vtry_ads_watched', String(newTotal));
-        return newTotal;
-      });
-      addTokens(1);
-      return true;
-    }
-    return false;
-  };
-
-  // Reset daily ads counter
-  const resetDailyAds = () => {
-    setAdsWatched(0);
-    localStorage.setItem('vtry_ads_watched', '0');
-  };
-
-  // Claim daily reward
-  const claimDailyReward = () => {
-    const now = new Date().toISOString();
-    setLastRewardClaim(now);
-    localStorage.setItem('vtry_last_reward', now);
-    addTokens(5);
-  };
-
-  // Check if daily reward is available (once per calendar day)
   const canClaimReward = () => {
-    if (!lastRewardClaim) return true;
-    const last = new Date(lastRewardClaim).toDateString();
+    if (!lastLoginDate) return true;
+    const last = new Date(lastLoginDate).toDateString();
     const now = new Date().toDateString();
     return last !== now;
   };
 
-  // Format balance for display
+  const claimDailyReward = async () => {
+    if (!user) {
+      toast.error("Please login to claim rewards");
+      return;
+    }
+    if (!canClaimReward()) {
+      toast.error("You've already claimed your daily reward!");
+      return;
+    }
+    
+    let newStreak = 1;
+    if (lastLoginDate) {
+      const last = new Date(lastLoginDate);
+      const now = new Date();
+      const diffTime = Math.abs(now - last);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 2 && diffDays > 0 && last.toDateString() !== now.toDateString()) {
+         newStreak = loginStreak + 1;
+      }
+    }
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        vTokens: increment(2),
+        loginStreak: newStreak,
+        lastLoginDate: new Date().toISOString()
+      });
+      toast.success(`Claimed 2 V-Tokens! Daily streak: ${newStreak} 🔥`);
+    } catch (e) {
+      toast.error("Failed to claim daily reward");
+    }
+  };
+
+  const spendTokens = async (amount = 5) => {
+    if (balance === Infinity) return true;
+    if (balance >= amount && user) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        await updateDoc(userRef, {
+          vTokens: increment(-amount)
+        });
+        return true;
+      } catch (e) {
+        toast.error("Failed to spend tokens");
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const addTokens = async (amount) => {
+    if (!user) {
+      toast.error("Please login to purchase tokens");
+      return;
+    }
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        vTokens: increment(amount)
+      });
+      toast.success(`Successfully purchased ${amount} V-Tokens! 🚀`);
+    } catch (e) {
+      toast.error("Purchase failed");
+    }
+  };
+
+  const watchAd = async () => {
+    if (!user) {
+      toast.error("Please login to earn rewards");
+      return false;
+    }
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        vTokens: increment(1)
+      });
+      toast.success('+1 V-Token earned! 📺');
+      return true;
+    } catch (e) {
+      toast.error('Failed to claim reward');
+      return false;
+    }
+  };
+
+  const setTokenBalance = async (amount) => {
+    if (!user) return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        vTokens: amount
+      });
+      toast.success(`Balance updated to ${amount}`);
+    } catch (e) {
+      toast.error('Failed to update balance');
+    }
+  };
+
   const displayBalance = balance.toLocaleString();
 
   return (
@@ -121,12 +148,11 @@ export function TokenProvider({ children }) {
       spendTokens,
       addTokens,
       setTokenBalance,
-      adsWatched,
       watchAd,
-      resetDailyAds,
-      lastRewardClaim,
       claimDailyReward,
       canClaimReward,
+      adsWatched,
+      loginStreak
     }}>
       {children}
     </TokenContext.Provider>

@@ -8,19 +8,18 @@ import {
   signInWithEmailAndPassword,
   updateProfile
 } from 'firebase/auth';
-import { auth, googleProvider } from '@/lib/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, googleProvider, db } from '@/lib/firebase';
+import { toast } from 'react-hot-toast';
 
-// AuthContext manages Firebase authentication state
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Listen for Firebase auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Format the user object to match expected structure
         const names = firebaseUser.displayName ? firebaseUser.displayName.split(' ') : ['User'];
         const firstName = names[0];
         const lastName = names.length > 1 ? names.slice(1).join(' ') : '';
@@ -31,8 +30,25 @@ export function AuthProvider({ children }) {
           firstName,
           lastName,
           avatar: firebaseUser.photoURL || firstName.charAt(0).toUpperCase(),
-          isAdmin: false, // Defaulting to false, can be extended later
+          isAdmin: false, 
         });
+
+        // Check and create user doc in Firestore
+        const userRef = doc(db, 'users', firebaseUser.uid);
+        try {
+          const userSnap = await getDoc(userRef);
+          if (!userSnap.exists()) {
+            await setDoc(userRef, {
+              vTokens: 5,
+              lastLoginDate: null,
+              loginStreak: 0,
+              createdAt: serverTimestamp()
+            });
+            toast.success('Welcome! 5 Free V-Tokens credited. 🎉');
+          }
+        } catch (error) {
+          console.error("Error creating user document", error);
+        }
       } else {
         setUser(null);
       }
@@ -44,8 +60,10 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      toast.success('Logged in successfully!');
     } catch (error) {
       console.error("Google login failed", error);
+      toast.error('Login failed.');
       throw error;
     }
   };
@@ -56,8 +74,6 @@ export function AuthProvider({ children }) {
       await updateProfile(userCredential.user, {
         displayName: `${firstName} ${lastName}`.trim()
       });
-      // Updating profile doesn't automatically trigger onAuthStateChanged with the new name,
-      // so we manually refresh the user state by fetching the current user
       setUser({
         uid: userCredential.user.uid,
         email: userCredential.user.email,
@@ -66,8 +82,10 @@ export function AuthProvider({ children }) {
         avatar: firstName.charAt(0).toUpperCase(),
         isAdmin: false
       });
+      toast.success('Signed up successfully!');
     } catch (error) {
       console.error("Email sign up failed", error);
+      toast.error('Sign up failed.');
       throw error;
     }
   };
@@ -75,8 +93,10 @@ export function AuthProvider({ children }) {
   const loginWithEmail = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('Logged in successfully!');
     } catch (error) {
       console.error("Email login failed", error);
+      toast.error('Login failed.');
       throw error;
     }
   };
@@ -84,8 +104,10 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await signOut(auth);
+      toast.success('Logged out.');
     } catch (error) {
       console.error("Logout failed", error);
+      toast.error('Logout failed.');
     }
   };
 

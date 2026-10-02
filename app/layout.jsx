@@ -1,6 +1,7 @@
 import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import ClientProviders from '@/components/ClientProviders';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata = {
   title: 'V-Try | Premium Virtual Try-On',
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body suppressHydrationWarning className="h-screen overflow-hidden antialiased">
+        <Toaster position="top-center" />
         <ClientProviders>
           {/* Flex row: Sidebar (static) + Main (fills remaining space) */}
           <div className="flex h-screen w-full overflow-hidden">

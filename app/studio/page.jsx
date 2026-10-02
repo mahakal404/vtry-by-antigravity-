@@ -1,16 +1,18 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useHistory } from '@/contexts/HistoryContext';
 import { useTokens } from '@/contexts/TokenContext';
-import { User, Shirt, Upload, Sparkles, Loader2, Coins, ChevronDown, CheckCircle2, History as HistoryIcon, ArrowRight, ChevronRight } from 'lucide-react';
+import { User, Shirt, Upload, Sparkles, Loader2, Coins, ChevronDown, CheckCircle2, History as HistoryIcon, ArrowRight, ChevronRight, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import VTokenIcon from "@/components/VTokenIcon";
 import Link from "next/link";
 
 export default function Studio() {
-  const [personImage, setPersonImage] = useState(null);
-  const [clothImage, setClothImage] = useState(null);
+  const [userPhoto, setUserPhoto] = useState(null);
+  const [clothingPhoto, setClothingPhoto] = useState(null);
+  const [userPreview, setUserPreview] = useState(null);
+  const [clothingPreview, setClothingPreview] = useState(null);
   const [resultImage, setResultImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeCategory, setActiveCategory] = useState('T-Shirt');
@@ -22,19 +24,32 @@ export default function Studio() {
   const { user } = useAuth();
   const router = useRouter();
 
+  useEffect(() => {
+    return () => {
+      if (userPreview) URL.revokeObjectURL(userPreview);
+      if (clothingPreview) URL.revokeObjectURL(clothingPreview);
+    };
+  }, [userPreview, clothingPreview]);
+
   const handleImageUpload = (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (type === 'person') setPersonImage(reader.result);
-      else setClothImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+    
+    const previewUrl = URL.createObjectURL(file);
+    
+    if (type === 'person') {
+      if (userPreview) URL.revokeObjectURL(userPreview);
+      setUserPhoto(file);
+      setUserPreview(previewUrl);
+    } else {
+      if (clothingPreview) URL.revokeObjectURL(clothingPreview);
+      setClothingPhoto(file);
+      setClothingPreview(previewUrl);
+    }
   };
 
   const handleTryOn = async () => {
-    if (!personImage || !clothImage) return;
+    if (!userPreview || !clothingPreview) return;
     setIsProcessing(true);
     setResultImage(null);
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -43,10 +58,10 @@ export default function Studio() {
     canvas.height = 500;
     const ctx = canvas.getContext('2d');
     const personImg = new Image();
-    personImg.src = personImage;
+    personImg.src = userPreview;
     await new Promise(resolve => { personImg.onload = resolve; });
     const clothImg = new Image();
-    clothImg.src = clothImage;
+    clothImg.src = clothingPreview;
     await new Promise(resolve => { clothImg.onload = resolve; });
     ctx.drawImage(personImg, 0, 0, 400, 500);
     ctx.globalAlpha = 0.7;
@@ -62,8 +77,8 @@ export default function Studio() {
     setResultImage(resultDataUrl);
     setIsProcessing(false);
     addToHistory({
-      personImage,
-      clothImage,
+      personImage: userPreview,
+      clothImage: clothingPreview,
       resultImage: resultDataUrl,
     });
   };
@@ -126,8 +141,8 @@ export default function Studio() {
               className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-purple rounded-xl p-6 text-center cursor-pointer transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] hover:dark:border-[#8B5CF6] group relative overflow-hidden"
             >
               <input ref={personInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'person')} />
-              {personImage ? (
-                <img src={personImage} alt="Person" className="max-h-40 mx-auto rounded-lg object-contain" />
+              {userPreview ? (
+                <img src={userPreview} alt="Person" className="max-h-40 mx-auto rounded-lg object-contain" />
               ) : (
                 <div className="py-4">
                   <div className="w-14 h-14 mx-auto rounded-full bg-white border border-border-soft flex items-center justify-center mb-3 shadow-sm group-hover:scale-105 transition-transform">
@@ -165,8 +180,8 @@ export default function Studio() {
               className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-pink rounded-xl p-6 text-center cursor-pointer transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] hover:dark:border-[#8B5CF6] group relative overflow-hidden mb-4"
             >
               <input ref={clothInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'cloth')} />
-              {clothImage ? (
-                <img src={clothImage} alt="Cloth" className="max-h-40 mx-auto rounded-lg object-contain" />
+              {clothingPreview ? (
+                <img src={clothingPreview} alt="Cloth" className="max-h-40 mx-auto rounded-lg object-contain" />
               ) : (
                 <div className="py-4">
                   <div className="w-14 h-14 mx-auto rounded-full bg-white border border-border-soft flex items-center justify-center mb-3 shadow-sm group-hover:scale-105 transition-transform">
@@ -198,11 +213,18 @@ export default function Studio() {
 
           {/* Action Button */}
           <div>
+            <div className="mb-4 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900/30 rounded-xl p-3 flex items-start gap-3 shadow-sm transition-colors duration-200">
+              <ShieldCheck className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p className="text-xs font-medium text-green-800 dark:text-green-400/90 leading-relaxed">
+                <strong className="block mb-0.5">100% Private & Secure</strong>
+                Your photos stay on your local device and are never stored in the cloud.
+              </p>
+            </div>
             <button
               onClick={handleTryOn}
-              disabled={!personImage || !clothImage || isProcessing}
+              disabled={!userPreview || !clothingPreview || isProcessing}
               className={`w-full h-14 rounded-xl text-base font-bold text-white flex items-center justify-center gap-2 transition-all shadow-md group ${
-                !personImage || !clothImage || isProcessing
+                !userPreview || !clothingPreview || isProcessing
                   ? 'bg-gray-300 opacity-50 cursor-not-allowed shadow-none'
                   : 'bg-gradient-to-r from-brand-indigo via-brand-purple to-brand-pink hover:opacity-90 hover:shadow-lg'
               }`}
