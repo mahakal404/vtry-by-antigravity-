@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useTokens } from '@/contexts/TokenContext';
 import { Gift, Zap, Star, Crown, Play, Shield, Clock, CheckCircle, Calendar, Check, Lock, Zap as Lightning, RefreshCw, Headset, Circle } from 'lucide-react';
+import VTokenIcon from "@/components/VTokenIcon";
 
 export default function VTokens() {
   const { addTokens, claimDailyReward, canClaimReward } = useTokens();
@@ -188,7 +189,7 @@ export default function VTokens() {
 
                   <div className="flex flex-col gap-3 flex-1 mb-6">
                     <div className="flex items-center gap-2 text-sm font-bold text-text-main dark:text-[#FBFAFC]">
-                      <Circle size={16} className="text-brand-purple fill-brand-purple" />
+                      <VTokenIcon size={28} />
                       {plan.tokens} V-Tokens
                     </div>
                     <div className="flex items-center gap-2 text-sm font-medium text-text-muted dark:text-[#94A3B8]">
@@ -240,7 +241,7 @@ export default function VTokens() {
 
               <div className="flex flex-col gap-3 flex-1 mb-6">
                 <div className="flex items-center gap-2 text-sm font-bold text-text-main dark:text-[#FBFAFC]">
-                  <Circle size={16} className="text-brand-purple fill-brand-purple" />
+                  <VTokenIcon size={28} />
                   {plan.tokens} V-Tokens
                 </div>
                 <div className="flex items-center gap-2 text-sm font-medium text-text-muted dark:text-[#94A3B8]">

@@ -5,6 +5,8 @@ import { useTokens } from '@/contexts/TokenContext';
 import { User, Shirt, Upload, Sparkles, Loader2, Coins, ChevronDown, CheckCircle2, History as HistoryIcon, ArrowRight, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import VTokenIcon from "@/components/VTokenIcon";
+import Link from "next/link";
 
 export default function Studio() {
   const [personImage, setPersonImage] = useState(null);
@@ -82,9 +84,11 @@ export default function Studio() {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border-soft shadow-sm text-sm font-medium">
-            <Coins size={16} className="text-brand-pink" />
+            <VTokenIcon size={24} className="mr-2" />
             <span className="text-text-main font-bold">{displayBalance} <span className="font-normal text-text-muted hidden sm:inline">V-Tokens</span></span>
-            <button className="w-6 h-6 rounded-full bg-brand-purple text-white flex items-center justify-center text-lg font-bold ml-1 hover:opacity-90 transition-opacity">+</button>
+            <Link href="/vtokens">
+              <button className="w-6 h-6 rounded-full bg-brand-purple text-white flex items-center justify-center text-lg font-bold ml-1 hover:opacity-90 transition-opacity cursor-pointer">+</button>
+            </Link>
           </div>
           <div className="hidden sm:flex items-center gap-2 px-2 py-1.5 rounded-full bg-surface border border-border-soft shadow-sm cursor-pointer hover:bg-surface-soft transition-colors">
              <div className="w-7 h-7 rounded-full bg-brand-indigo text-white flex items-center justify-center text-xs font-bold overflow-hidden">

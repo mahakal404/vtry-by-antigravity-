@@ -181,9 +181,11 @@ export default function Sidebar() {
               <div className="flex items-center gap-1"><Sparkles size={10} /> High quality</div>
               <div className="flex items-center gap-1"><Sparkles size={10} /> Priority gen</div>
             </div>
-            <button className="w-full py-2 bg-gradient-to-r from-brand-indigo to-brand-pink text-white rounded-lg text-xs font-bold shadow-md hover:opacity-90 transition-opacity">
-              Upgrade
-            </button>
+            <Link href="/vtokens" className="block w-full">
+              <button className="w-full py-2 bg-gradient-to-r from-brand-indigo to-brand-pink text-white rounded-lg text-xs font-bold shadow-md hover:opacity-90 transition-opacity cursor-pointer">
+                Upgrade
+              </button>
+            </Link>
           </div>
         )}
 
