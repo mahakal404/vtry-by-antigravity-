@@ -11,7 +11,28 @@ import { useStudio } from '@/contexts/StudioContext';
 import VTokenIcon from "@/components/VTokenIcon";
 import Link from "next/link";
 import { toast } from 'react-hot-toast';
-
+const uploadToImgBB = async (base64String) => {
+  try {
+    const base64Data = base64String.split(',')[1] || base64String;
+    const formData = new FormData();
+    formData.append('image', base64Data);
+    
+    const response = await fetch('https://api.imgbb.com/1/upload?expiration=60&key=fa825ab975e3fcb424464ee54e7d9b17', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      return data.data.url;
+    } else {
+      throw new Error(data.error?.message || 'Failed to upload image securely.');
+    }
+  } catch (error) {
+    console.error('Upload Error:', error);
+    throw error;
+  }
+};
 export default function Studio() {
   const { userPhotoBase64, setUserPhotoBase64, clothingPhotoBase64, setClothingPhotoBase64, currentResult, setCurrentResult } = useStudio();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -56,44 +77,47 @@ export default function Studio() {
     }
     toast.success("5 V-Tokens deducted. Generating try-on...");
     
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const personImg = await loadImage(userPhotoBase64);
-    const clothingImg = await loadImage(clothingPhotoBase64);
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = personImg.width;
-    canvas.height = personImg.height;
-    const ctx = canvas.getContext('2d');
-    
-    // Draw person first
-    ctx.drawImage(personImg, 0, 0, canvas.width, canvas.height);
-    
-    // Draw clothing slightly smaller and centered
-    ctx.globalAlpha = 0.85;
-    const clothW = canvas.width * 0.6;
-    const clothH = clothingImg.height * (clothW / clothingImg.width);
-    ctx.drawImage(clothingImg, (canvas.width - clothW) / 2, (canvas.height - clothH) / 2, clothW, clothH);
-    ctx.globalAlpha = 1.0;
-    
-    // Watermark
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.font = 'bold 32px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('V-Try Result', canvas.width / 2, canvas.height - 40);
-    
-    // Export as compressed base64 JPEG
-    const simulatedResult = canvas.toDataURL('image/jpeg', 0.8);
-    
-    setCurrentResult(simulatedResult);
-    setIsProcessing(false);
-    
-    addToHistory({
-      personImage: userPhotoBase64,
-      clothImage: clothingPhotoBase64,
-      resultImage: simulatedResult,
-      type: activeCategory
-    });
+    try {
+      // 1. Upload to ImgBB
+      toast.success("Uploading secure images...");
+      const userImageUrl = await uploadToImgBB(userPhotoBase64);
+      const clothingImageUrl = await uploadToImgBB(clothingPhotoBase64);
+
+      toast.success("Generating magic...");
+
+      // 2. Call API
+      const response = await fetch('/api/try-on', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userImageUrl,
+          clothingImageUrl
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate try-on');
+      }
+
+      const data = await response.json();
+      const actualResult = data.result;
+
+      setCurrentResult(actualResult);
+      
+      addToHistory({
+        personImage: userPhotoBase64,
+        clothImage: clothingPhotoBase64,
+        resultImage: actualResult,
+        type: activeCategory
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || 'Error generating try-on. Please try again.');
+      // Optionally refund the tokens here if API fails
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const categories = ['T-Shirt', 'Shirt', 'Hoodie', 'Dress', 'Jacket'];
