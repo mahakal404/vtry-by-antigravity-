@@ -1,22 +1,46 @@
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
-
-// HistoryContext manages try-on results with localStorage persistence
+import localforage from 'localforage';
+import { toast } from 'react-hot-toast';
 
 const HistoryContext = createContext(null);
 
 export function HistoryProvider({ children }) {
-  const [history, setHistory] = useState(() => {
-    const saved = (typeof window !== 'undefined' ? localStorage.getItem('vtry_history') : null);
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [history, setHistory] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  // Persist history to localStorage
   useEffect(() => {
-    localStorage.setItem('vtry_history', JSON.stringify(history));
-  }, [history]);
+    const loadHistory = async () => {
+      try {
+        const storedHistory = await localforage.getItem('vtry_history');
+        if (storedHistory) {
+          setHistory(storedHistory);
+        }
+      } catch (error) {
+        console.error("Failed to load history from IndexedDB", error);
+      } finally {
+        setIsLoaded(true);
+        setIsHistoryLoading(false);
+      }
+    };
+    loadHistory();
+  }, []);
 
-  // Add a new try-on result to history
+  useEffect(() => {
+    const saveHistory = async () => {
+      if (isLoaded) {
+        try {
+          await localforage.setItem('vtry_history', history);
+        } catch (error) {
+          console.error("Failed to save history to IndexedDB", error);
+          toast.error("Local storage is full. Please delete some history items.");
+        }
+      }
+    };
+    saveHistory();
+  }, [history, isLoaded]);
+
   const addToHistory = (entry) => {
     const newEntry = {
       id: Date.now(),
@@ -26,18 +50,16 @@ export function HistoryProvider({ children }) {
     setHistory(prev => [newEntry, ...prev]);
   };
 
-  // Remove a specific entry
   const removeFromHistory = (id) => {
     setHistory(prev => prev.filter(item => item.id !== id));
   };
 
-  // Clear all history
   const clearHistory = () => {
     setHistory([]);
   };
 
   return (
-    <HistoryContext.Provider value={{ history, addToHistory, removeFromHistory, clearHistory }}>
+    <HistoryContext.Provider value={{ history, isHistoryLoading, addToHistory, removeFromHistory, clearHistory }}>
       {children}
     </HistoryContext.Provider>
   );

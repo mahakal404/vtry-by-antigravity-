@@ -2,84 +2,97 @@
 import { useState, useRef, useEffect } from 'react';
 import { useHistory } from '@/contexts/HistoryContext';
 import { useTokens } from '@/contexts/TokenContext';
-import { User, Shirt, Upload, Sparkles, Loader2, Coins, ChevronDown, CheckCircle2, History as HistoryIcon, ArrowRight, ChevronRight, ShieldCheck } from 'lucide-react';
+import { User, Shirt, Upload, Sparkles, Loader2, Coins, ChevronDown, CheckCircle2, History as HistoryIcon, ArrowRight, ChevronRight, ShieldCheck, Download, X } from 'lucide-react';
+import { handleDownload } from '@/utils/download';
+import { fileToBase64, loadImage } from '@/utils/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStudio } from '@/contexts/StudioContext';
 import VTokenIcon from "@/components/VTokenIcon";
 import Link from "next/link";
+import { toast } from 'react-hot-toast';
 
 export default function Studio() {
-  const [userPhoto, setUserPhoto] = useState(null);
-  const [clothingPhoto, setClothingPhoto] = useState(null);
-  const [userPreview, setUserPreview] = useState(null);
-  const [clothingPreview, setClothingPreview] = useState(null);
-  const [resultImage, setResultImage] = useState(null);
+  const { userPhotoBase64, setUserPhotoBase64, clothingPhotoBase64, setClothingPhotoBase64, currentResult, setCurrentResult } = useStudio();
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeCategory, setActiveCategory] = useState('T-Shirt');
   
   const personInputRef = useRef(null);
   const clothInputRef = useRef(null);
-  const { addToHistory } = useHistory();
-  const { displayBalance } = useTokens();
+  const { addToHistory, history, isHistoryLoading } = useHistory();
+  const { displayBalance, balance: vTokens, spendTokens } = useTokens();
   const { user } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    return () => {
-      if (userPreview) URL.revokeObjectURL(userPreview);
-      if (clothingPreview) URL.revokeObjectURL(clothingPreview);
-    };
-  }, [userPreview, clothingPreview]);
-
-  const handleImageUpload = (e, type) => {
+  const handleImageUpload = async (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
     
-    const previewUrl = URL.createObjectURL(file);
-    
-    if (type === 'person') {
-      if (userPreview) URL.revokeObjectURL(userPreview);
-      setUserPhoto(file);
-      setUserPreview(previewUrl);
-    } else {
-      if (clothingPreview) URL.revokeObjectURL(clothingPreview);
-      setClothingPhoto(file);
-      setClothingPreview(previewUrl);
+    try {
+      const base64 = await fileToBase64(file);
+      if (type === 'person') {
+        setUserPhotoBase64(base64);
+      } else {
+        setClothingPhotoBase64(base64);
+      }
+    } catch (error) {
+      toast.error('Failed to process image');
     }
   };
 
   const handleTryOn = async () => {
-    if (!userPreview || !clothingPreview) return;
+    if (!userPhotoBase64 || !clothingPhotoBase64) return;
+    if (vTokens < 5) {
+      toast.error("Not enough V-Tokens!");
+      return;
+    }
     setIsProcessing(true);
-    setResultImage(null);
+    setCurrentResult(null);
+    
+    const success = await spendTokens(5);
+    if (!success) {
+      setIsProcessing(false);
+      return;
+    }
+    toast.success("5 V-Tokens deducted. Generating try-on...");
+    
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const personImg = await loadImage(userPhotoBase64);
+    const clothingImg = await loadImage(clothingPhotoBase64);
+    
     const canvas = document.createElement('canvas');
-    canvas.width = 400;
-    canvas.height = 500;
+    canvas.width = personImg.width;
+    canvas.height = personImg.height;
     const ctx = canvas.getContext('2d');
-    const personImg = new Image();
-    personImg.src = userPreview;
-    await new Promise(resolve => { personImg.onload = resolve; });
-    const clothImg = new Image();
-    clothImg.src = clothingPreview;
-    await new Promise(resolve => { clothImg.onload = resolve; });
-    ctx.drawImage(personImg, 0, 0, 400, 500);
-    ctx.globalAlpha = 0.7;
-    const clothW = 200;
-    const clothH = 250;
-    ctx.drawImage(clothImg, 100, 120, clothW, clothH);
+    
+    // Draw person first
+    ctx.drawImage(personImg, 0, 0, canvas.width, canvas.height);
+    
+    // Draw clothing slightly smaller and centered
+    ctx.globalAlpha = 0.85;
+    const clothW = canvas.width * 0.6;
+    const clothH = clothingImg.height * (clothW / clothingImg.width);
+    ctx.drawImage(clothingImg, (canvas.width - clothW) / 2, (canvas.height - clothH) / 2, clothW, clothH);
     ctx.globalAlpha = 1.0;
-    ctx.fillStyle = 'rgba(124, 58, 237, 0.3)';
-    ctx.font = 'bold 24px Inter, sans-serif';
+    
+    // Watermark
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.font = 'bold 32px Inter, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('V-Try Result', 200, 480);
-    const resultDataUrl = canvas.toDataURL('image/png');
-    setResultImage(resultDataUrl);
+    ctx.fillText('V-Try Result', canvas.width / 2, canvas.height - 40);
+    
+    // Export as compressed base64 JPEG
+    const simulatedResult = canvas.toDataURL('image/jpeg', 0.8);
+    
+    setCurrentResult(simulatedResult);
     setIsProcessing(false);
+    
     addToHistory({
-      personImage: userPreview,
-      clothImage: clothingPreview,
-      resultImage: resultDataUrl,
+      personImage: userPhotoBase64,
+      clothImage: clothingPhotoBase64,
+      resultImage: simulatedResult,
+      type: activeCategory
     });
   };
 
@@ -141,8 +154,8 @@ export default function Studio() {
               className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-purple rounded-xl p-6 text-center cursor-pointer transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] hover:dark:border-[#8B5CF6] group relative overflow-hidden"
             >
               <input ref={personInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'person')} />
-              {userPreview ? (
-                <img src={userPreview} alt="Person" className="max-h-40 mx-auto rounded-lg object-contain" />
+              {userPhotoBase64 ? (
+                <img src={userPhotoBase64} alt="Person" className="max-h-40 mx-auto rounded-lg object-contain" />
               ) : (
                 <div className="py-4">
                   <div className="w-14 h-14 mx-auto rounded-full bg-white border border-border-soft flex items-center justify-center mb-3 shadow-sm group-hover:scale-105 transition-transform">
@@ -180,8 +193,8 @@ export default function Studio() {
               className="bg-surface-soft border-2 border-dashed border-[#D8D2EE] hover:border-brand-pink rounded-xl p-6 text-center cursor-pointer transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] hover:dark:border-[#8B5CF6] group relative overflow-hidden mb-4"
             >
               <input ref={clothInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'cloth')} />
-              {clothingPreview ? (
-                <img src={clothingPreview} alt="Cloth" className="max-h-40 mx-auto rounded-lg object-contain" />
+              {clothingPhotoBase64 ? (
+                <img src={clothingPhotoBase64} alt="Cloth" className="max-h-40 mx-auto rounded-lg object-contain" />
               ) : (
                 <div className="py-4">
                   <div className="w-14 h-14 mx-auto rounded-full bg-white border border-border-soft flex items-center justify-center mb-3 shadow-sm group-hover:scale-105 transition-transform">
@@ -222,9 +235,9 @@ export default function Studio() {
             </div>
             <button
               onClick={handleTryOn}
-              disabled={!userPreview || !clothingPreview || isProcessing}
+              disabled={!userPhotoBase64 || !clothingPhotoBase64 || vTokens < 5 || isProcessing}
               className={`w-full h-14 rounded-xl text-base font-bold text-white flex items-center justify-center gap-2 transition-all shadow-md group ${
-                !userPreview || !clothingPreview || isProcessing
+                !userPhotoBase64 || !clothingPhotoBase64 || vTokens < 5 || isProcessing
                   ? 'bg-gray-300 opacity-50 cursor-not-allowed shadow-none'
                   : 'bg-gradient-to-r from-brand-indigo via-brand-purple to-brand-pink hover:opacity-90 hover:shadow-lg'
               }`}
@@ -232,12 +245,20 @@ export default function Studio() {
               {isProcessing ? (
                 <><Loader2 size={20} className="animate-spin" /> Generating...</>
               ) : (
-                <><Sparkles size={20} /> Generate Try-On <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" /></>
+                <>
+                  <Sparkles size={20} /> Generate Try-On <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  <div className="flex items-center bg-white/20 px-3 py-1 rounded-full text-sm ml-2">
+                    <span className="mr-1">- 5</span>
+                    <VTokenIcon size={18}/>
+                  </div>
+                </>
               )}
             </button>
-            <p className="text-center text-[10px] font-bold text-text-muted mt-3 flex items-center justify-center gap-1">
-              <Coins size={12} className="text-brand-pink"/> 1 V-Token per try-on
-            </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500 font-medium mt-3">
+              <span>Current Balance:</span>
+              <span className="font-bold text-brand-purple">{vTokens}</span>
+              <VTokenIcon size={20}/>
+            </div>
           </div>
 
         </div>
@@ -271,11 +292,26 @@ export default function Studio() {
                     <h3 className="font-bold text-text-main dark:text-[#F8FAFC] mb-1 transition-colors duration-200">Generating Magic...</h3>
                     <p className="text-sm text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Fitting the clothes perfectly to your body</p>
                   </div>
-                ) : resultImage ? (
+                ) : currentResult ? (
                   <div className="relative w-full h-full flex flex-col items-center justify-center p-4">
-                    <img src={resultImage} alt="Result" className="max-h-full max-w-full rounded-lg object-contain shadow-md" />
+                    <img src={currentResult} alt="Result" className="max-h-full max-w-full rounded-lg object-contain shadow-md" />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-green-600 flex items-center gap-1 shadow-sm">
                        <CheckCircle2 size={14}/> Success
+                    </div>
+                    <button 
+                      onClick={() => setCurrentResult(null)}
+                      className="absolute top-4 left-4 bg-white/90 backdrop-blur p-1.5 rounded-full text-gray-500 hover:text-red-500 hover:bg-white shadow-sm transition-colors"
+                      title="Clear Result"
+                    >
+                      <X size={16} />
+                    </button>
+                    <div className="mt-4">
+                      <button 
+                        onClick={() => handleDownload(currentResult, 'vtry-result.png')}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-brand-purple text-white rounded-xl font-bold shadow-lg hover:opacity-90 transition-opacity"
+                      >
+                        <Download size={18} /> Download Result
+                      </button>
                     </div>
                   </div>
                 ) : (
@@ -296,23 +332,36 @@ export default function Studio() {
 
           {/* Recent Try-Ons */}
           <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
-             <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <HistoryIcon size={16} className="text-text-main dark:text-[#F8FAFC]" />
                   <h3 className="font-bold text-text-main dark:text-[#F8FAFC] text-sm transition-colors duration-200">Recent Try-Ons</h3>
                 </div>
-                <button className="text-xs font-bold text-brand-purple flex items-center gap-1 hover:opacity-80">
-                  View All <ArrowRight size={14}/>
-                </button>
+                <Link href="/history">
+                  <button className="text-xs font-bold text-brand-purple flex items-center gap-1 hover:opacity-80">
+                    View All <ArrowRight size={14}/>
+                  </button>
+                </Link>
              </div>
              
              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                {/* Empty placeholders for recent items */}
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-preview-bg rounded-xl border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200 flex items-center justify-center text-border-active/40">
-                    <User size={24} />
+                {isHistoryLoading ? (
+                  <div className="w-full flex justify-center py-4">
+                    <div className="w-6 h-6 border-2 border-brand-purple border-t-transparent rounded-full animate-spin"></div>
                   </div>
-                ))}
+                ) : history.length > 0 ? (
+                  history.slice(0, 10).map(result => (
+                    <div key={result.id} className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-xl overflow-hidden border border-border-soft shadow-sm group relative">
+                      <img src={result.resultImage} alt={result.type || 'Result'} className="w-full h-full object-cover" />
+                    </div>
+                  ))
+                ) : (
+                  [1,2,3,4,5].map(i => (
+                    <div key={i} className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-preview-bg rounded-xl border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200 flex items-center justify-center text-border-active/40">
+                      <User size={24} />
+                    </div>
+                  ))
+                )}
              </div>
           </div>
 

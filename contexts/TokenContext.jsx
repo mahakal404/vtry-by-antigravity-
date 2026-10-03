@@ -12,7 +12,7 @@ export function TokenProvider({ children }) {
   const [balance, setBalance] = useState(0);
   const [lastLoginDate, setLastLoginDate] = useState(null);
   const [loginStreak, setLoginStreak] = useState(0);
-  const [adsWatched, setAdsWatched] = useState(0);
+  const [dailyAdsWatched, setDailyAdsWatched] = useState(0);
   
   useEffect(() => {
     if (!user) {
@@ -21,12 +21,32 @@ export function TokenProvider({ children }) {
     }
 
     const userRef = doc(db, 'users', user.uid);
-    const unsubscribe = onSnapshot(userRef, (docSnap) => {
+    const unsubscribe = onSnapshot(userRef, async (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setBalance(data.vTokens || 0);
         setLastLoginDate(data.lastLoginDate);
         setLoginStreak(data.loginStreak || 0);
+        
+        let currentAdsWatched = data.dailyAdsWatched || 0;
+        const dbLastAdDate = data.lastAdDate;
+        
+        if (dbLastAdDate) {
+          const lastAd = new Date(dbLastAdDate).toDateString();
+          const today = new Date().toDateString();
+          if (lastAd !== today) {
+            currentAdsWatched = 0;
+            try {
+              await updateDoc(userRef, {
+                dailyAdsWatched: 0,
+                lastAdDate: new Date().toISOString()
+              });
+            } catch (e) {
+              console.error("Failed to reset ads", e);
+            }
+          }
+        }
+        setDailyAdsWatched(currentAdsWatched);
       }
     });
 
@@ -113,10 +133,16 @@ export function TokenProvider({ children }) {
       toast.error("Please login to earn rewards");
       return false;
     }
+    if (dailyAdsWatched >= 5) {
+      toast.error("Daily limit reached");
+      return false;
+    }
     try {
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        vTokens: increment(1)
+        vTokens: increment(1),
+        dailyAdsWatched: increment(1),
+        lastAdDate: new Date().toISOString()
       });
       toast.success('+1 V-Token earned! 📺');
       return true;
@@ -151,7 +177,7 @@ export function TokenProvider({ children }) {
       watchAd,
       claimDailyReward,
       canClaimReward,
-      adsWatched,
+      dailyAdsWatched,
       loginStreak
     }}>
       {children}

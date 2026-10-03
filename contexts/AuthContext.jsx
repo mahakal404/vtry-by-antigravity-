@@ -42,6 +42,8 @@ export function AuthProvider({ children }) {
               vTokens: 5,
               lastLoginDate: null,
               loginStreak: 0,
+              dailyAdsWatched: 0,
+              lastAdDate: null,
               createdAt: serverTimestamp()
             });
             toast.success('Welcome! 5 Free V-Tokens credited. 🎉');

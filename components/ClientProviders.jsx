@@ -4,6 +4,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { ThemeProvider } from '../contexts/ThemeContext';
 import { TokenProvider } from '../contexts/TokenContext';
 import { HistoryProvider } from '../contexts/HistoryContext';
+import { StudioProvider } from '../contexts/StudioContext';
 
 export default function ClientProviders({ children }) {
   return (
@@ -11,7 +12,9 @@ export default function ClientProviders({ children }) {
       <ThemeProvider>
         <TokenProvider>
           <HistoryProvider>
-            {children}
+            <StudioProvider>
+              {children}
+            </StudioProvider>
           </HistoryProvider>
         </TokenProvider>
       </ThemeProvider>

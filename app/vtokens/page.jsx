@@ -6,13 +6,12 @@ import VTokenIcon from "@/components/VTokenIcon";
 import { toast } from 'react-hot-toast';
 
 export default function VTokens() {
-  const { addTokens, claimDailyReward, canClaimReward, watchAd } = useTokens();
-  const [adsWatched, setAdsWatched] = useState(1);
+  const { addTokens, claimDailyReward, canClaimReward, watchAd, balance: vTokens, dailyAdsWatched } = useTokens();
   const [isAdPlaying, setIsAdPlaying] = useState(false);
   const [adCountdown, setAdCountdown] = useState(3);
 
   const handleWatchAd = async () => {
-    if (adsWatched >= 5) {
+    if (dailyAdsWatched >= 5) {
       toast.error("You have reached your daily limit!");
       return;
     }
@@ -26,7 +25,6 @@ export default function VTokens() {
       
       if (currentCount <= 0) {
         clearInterval(interval);
-        setAdsWatched(prev => prev + 1);
         setIsAdPlaying(false);
         watchAd();
       }
@@ -94,13 +92,23 @@ export default function VTokens() {
   return (
     <div className="space-y-8 fade-in relative pb-10">
       {/* Page Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 flex flex-col items-center">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-text-main dark:text-[#FBFAFC] font-serif transition-colors duration-200">
           V-Store
         </h1>
         <p className="text-sm mt-3 max-w-md mx-auto text-text-muted dark:text-[#94A3B8] transition-colors duration-200">
           Purchase V-Tokens to generate high-fidelity virtual try-ons. Each try-on costs 5 V-Tokens.
         </p>
+        
+        <div className="mt-6 inline-flex items-center gap-3 bg-white/80 dark:bg-[#1E1B2E]/80 backdrop-blur-sm border border-purple-100 dark:border-brand-purple/20 shadow-sm px-6 py-3 rounded-2xl">
+          <span className="text-gray-600 dark:text-[#94A3B8] font-medium">Your Current Balance:</span>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-brand-purple dark:to-brand-pink">
+              {vTokens}
+            </span>
+            <VTokenIcon size={28}/>
+          </div>
+        </div>
       </div>
 
       {/* 1. Daily Login Reward Section */}
@@ -282,24 +290,24 @@ export default function VTokens() {
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs font-bold mb-3 uppercase tracking-wider text-text-muted dark:text-[#94A3B8]">
               <span>5 Ads = 1 Free Try-On (5 Tokens)</span>
-              <span className="text-text-main dark:text-[#FBFAFC]">{adsWatched} / 5 ADS WATCHED</span>
+              <span className="text-text-main dark:text-[#FBFAFC]">{dailyAdsWatched} / 5 ADS WATCHED</span>
             </div>
             <div className="w-full h-3 rounded-full overflow-hidden bg-gray-200 dark:bg-[#2D2A45]">
               <div
                 className="h-full rounded-full transition-all duration-700 ease-out bg-brand-purple"
-                style={{ width: `${(adsWatched / 5) * 100}%` }}
+                style={{ width: `${(dailyAdsWatched / 5) * 100}%` }}
               />
             </div>
           </div>
           <button
             onClick={handleWatchAd}
-            disabled={isAdPlaying || adsWatched >= 5}
+            disabled={isAdPlaying || dailyAdsWatched >= 5}
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
           >
             {isAdPlaying ? (
               <span className="flex items-center gap-2"><Play size={18} fill="currentColor" /> Playing Ad...</span>
-            ) : adsWatched >= 5 ? (
-              <span className="flex items-center gap-2"><CheckCircle size={18} /> Limit Reached</span>
+            ) : dailyAdsWatched >= 5 ? (
+              <span className="flex items-center gap-2"><CheckCircle size={18} /> Daily Limit Reached</span>
             ) : (
               <span className="flex items-center gap-2"><Play size={18} fill="currentColor" /> Watch Ad</span>
             )}
