@@ -36,12 +36,13 @@ const uploadToImgBB = async (base64String) => {
 export default function Studio() {
   const { userPhotoBase64, setUserPhotoBase64, clothingPhotoBase64, setClothingPhotoBase64, currentResult, setCurrentResult } = useStudio();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('T-Shirt');
+  const [progress, setProgress] = useState(0);
+  const [activeCategory, setActiveCategory] = useState(null);
   
   const personInputRef = useRef(null);
   const clothInputRef = useRef(null);
   const { addToHistory, history, isHistoryLoading } = useHistory();
-  const { displayBalance, balance: vTokens, spendTokens } = useTokens();
+  const { displayBalance, balance: vTokens, spendTokens, addTokens } = useTokens();
   const { user } = useAuth();
   const router = useRouter();
 
@@ -100,6 +101,17 @@ export default function Studio() {
     }
     toast.success("5 V-Tokens deducted. Generating try-on...");
     
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
+    
+    setProgress(0);
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 90) return 90;
+        return prev + Math.floor(Math.random() * 5) + 1; // Randomly increment up to 90%
+      });
+    }, 1000);
+    
     try {
       // 1. Upload to ImgBB
       toast.success("Uploading secure images...");
@@ -114,8 +126,10 @@ export default function Studio() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userImageUrl,
-          clothingImageUrl
-        })
+          clothingImageUrl,
+          category: activeCategory || 'Auto-Detect'
+        }),
+        signal: controller.signal
       });
 
       if (!response.ok) {
@@ -126,24 +140,34 @@ export default function Studio() {
       const data = await response.json();
       const actualResult = data.result;
 
-      setCurrentResult(actualResult);
+      setProgress(100);
       
-      addToHistory({
-        personImage: userPhotoBase64,
-        clothImage: clothingPhotoBase64,
-        resultImage: actualResult,
-        type: activeCategory
-      });
+      setTimeout(() => {
+        setCurrentResult(actualResult);
+        addToHistory({
+          personImage: userPhotoBase64,
+          clothImage: clothingPhotoBase64,
+          resultImage: actualResult,
+          type: activeCategory || 'Auto-Detect'
+        });
+      }, 500);
+
     } catch (error) {
       console.error(error);
-      toast.error(error.message || 'Error generating try-on. Please try again.');
-      // Optionally refund the tokens here if API fails
+      if (error.message === "Safety Filter Triggered" || error.message?.includes('Safety Filter')) {
+        toast.error("⚠️ AI Safety Filter Triggered: Please upload a photo with more modest clothing to comply with AI guidelines.", { duration: 5000 });
+      } else {
+        toast.error("Generation failed or timed out. Don't worry, your 5 V-Tokens have been refunded!");
+      }
+      await addTokens(5);
     } finally {
-      setIsProcessing(false);
+      clearInterval(progressInterval);
+      clearTimeout(timeoutId);
+      setTimeout(() => setIsProcessing(false), 500); // Small delay to show 100%
     }
   };
 
-  const categories = ['T-Shirt', 'Shirt', 'Hoodie', 'Dress', 'Jacket'];
+  const categories = ['Auto', 'T-Shirt', 'Shirt', 'Hoodie', 'Dress', 'Jacket'];
 
   return (
     <div className="max-w-7xl mx-auto pb-10">
@@ -277,15 +301,19 @@ export default function Studio() {
 
             {/* Categories */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-               {categories.map(cat => (
-                 <button 
-                   key={cat} 
-                   onClick={() => setActiveCategory(cat)}
-                   className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-200 border ${activeCategory === cat ? 'border-brand-purple bg-[#F0E9FF] text-brand-purple dark:bg-[#8B5CF6] dark:border-[#8B5CF6] dark:text-[#FFFFFF]' : 'border-border-soft bg-surface hover:bg-surface-soft text-text-muted dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#E2EBF0]'}`}
-                 >
-                   {cat}
-                 </button>
-               ))}
+                {categories.map(cat => {
+                  const isAuto = cat === 'Auto';
+                  const isSelected = activeCategory === cat || (isAuto && !activeCategory);
+                  return (
+                   <button 
+                     key={cat} 
+                     onClick={() => setActiveCategory(isAuto ? null : cat)}
+                     className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-200 border ${isSelected ? 'border-brand-purple bg-[#F0E9FF] text-brand-purple dark:bg-[#8B5CF6] dark:border-[#8B5CF6] dark:text-[#FFFFFF]' : 'border-border-soft bg-surface hover:bg-surface-soft text-text-muted dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#E2EBF0]'}`}
+                   >
+                     {cat}
+                   </button>
+                  )
+                })}
             </div>
           </div>
 
@@ -349,13 +377,24 @@ export default function Studio() {
              </div>
 
              <div className="flex-1 bg-preview-bg rounded-xl border border-border-soft dark:bg-[#161324] flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-200">
-                {isProcessing ? (
-                  <div className="text-center animate-pulse">
-                    <div className="w-20 h-20 mx-auto rounded-full bg-brand-purple/10 flex items-center justify-center mb-4">
-                      <Loader2 size={32} className="animate-spin text-brand-purple" />
+                {isProcessing && !currentResult ? (
+                  <div className="text-center w-full max-w-xs mx-auto">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-brand-purple/10 flex items-center justify-center mb-6 shadow-inner">
+                      <Sparkles size={28} className="text-brand-purple animate-pulse" />
                     </div>
-                    <h3 className="font-bold text-text-main dark:text-[#F8FAFC] mb-1 transition-colors duration-200">Generating Magic...</h3>
-                    <p className="text-sm text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Fitting the clothes perfectly to your body</p>
+                    <h3 className="font-bold text-text-main dark:text-[#F8FAFC] mb-3 transition-colors duration-200 text-lg">Generating Magic...</h3>
+                    
+                    {/* Progress Bar Container */}
+                    <div className="w-full bg-surface-soft dark:bg-[#2D2A45] rounded-full h-3 mb-2 overflow-hidden shadow-inner border border-border-soft dark:border-transparent">
+                      <div 
+                        className="bg-gradient-to-r from-brand-indigo via-brand-purple to-brand-pink h-full rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                    <div className="flex justify-between items-center text-xs text-text-muted dark:text-[#94A3B8] font-semibold">
+                      <span>Fitting clothes</span>
+                      <span>{progress}%</span>
+                    </div>
                   </div>
                 ) : currentResult ? (
                   <div className="relative w-full h-full flex flex-col items-center justify-center p-4">

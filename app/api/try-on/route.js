@@ -90,6 +90,13 @@ export async function POST(request) {
            }
         } 
         
+        if (currentStatus === 'FAIL' || statusData.statusCode === 5041 || statusData.message === 'INVALID_PROMPTS_DETECTED') {
+          return NextResponse.json(
+            { error: "Safety Filter Triggered", details: "The AI detected potentially unsafe content or restricted clothing (e.g., too much skin exposure). Please try a different photo." },
+            { status: 400 }
+          );
+        }
+        
         if (currentStatus === 'failed') {
           return NextResponse.json(
             { error: 'LightX generation task failed on the server.' },
