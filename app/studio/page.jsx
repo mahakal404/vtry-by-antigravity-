@@ -45,6 +45,27 @@ export default function Studio() {
   const { user } = useAuth();
   const router = useRouter();
 
+  useEffect(() => {
+    const savedUser = localStorage.getItem('vtry_user_photo');
+    if (savedUser) setUserPhotoBase64(savedUser);
+    
+    const savedCloth = localStorage.getItem('vtry_cloth_photo');
+    if (savedCloth) setClothingPhotoBase64(savedCloth);
+  }, []);
+
+  const handleClearImage = (e, type) => {
+    e.stopPropagation();
+    if (type === 'person') {
+      setUserPhotoBase64(null);
+      localStorage.removeItem('vtry_user_photo');
+      if (personInputRef.current) personInputRef.current.value = '';
+    } else {
+      setClothingPhotoBase64(null);
+      localStorage.removeItem('vtry_cloth_photo');
+      if (clothInputRef.current) clothInputRef.current.value = '';
+    }
+  };
+
   const handleImageUpload = async (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -53,8 +74,10 @@ export default function Studio() {
       const base64 = await fileToBase64(file);
       if (type === 'person') {
         setUserPhotoBase64(base64);
+        localStorage.setItem('vtry_user_photo', base64);
       } else {
         setClothingPhotoBase64(base64);
+        localStorage.setItem('vtry_cloth_photo', base64);
       }
     } catch (error) {
       toast.error('Failed to process image');
@@ -179,7 +202,16 @@ export default function Studio() {
             >
               <input ref={personInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'person')} />
               {userPhotoBase64 ? (
-                <img src={userPhotoBase64} alt="Person" className="max-h-40 mx-auto rounded-lg object-contain" />
+                <div className="relative inline-block w-full">
+                  <img src={userPhotoBase64} alt="Person" className="max-h-40 mx-auto rounded-lg object-contain" />
+                  <button
+                    onClick={(e) => handleClearImage(e, 'person')}
+                    className="absolute top-2 right-2 bg-white/90 backdrop-blur p-1.5 rounded-full text-gray-500 hover:text-red-500 hover:bg-white shadow-sm transition-colors z-10"
+                    title="Remove Photo"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               ) : (
                 <div className="py-4">
                   <div className="w-14 h-14 mx-auto rounded-full bg-white border border-border-soft flex items-center justify-center mb-3 shadow-sm group-hover:scale-105 transition-transform">
@@ -218,7 +250,16 @@ export default function Studio() {
             >
               <input ref={clothInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, 'cloth')} />
               {clothingPhotoBase64 ? (
-                <img src={clothingPhotoBase64} alt="Cloth" className="max-h-40 mx-auto rounded-lg object-contain" />
+                <div className="relative inline-block w-full">
+                  <img src={clothingPhotoBase64} alt="Cloth" className="max-h-40 mx-auto rounded-lg object-contain" />
+                  <button
+                    onClick={(e) => handleClearImage(e, 'cloth')}
+                    className="absolute top-2 right-2 bg-white/90 backdrop-blur p-1.5 rounded-full text-gray-500 hover:text-red-500 hover:bg-white shadow-sm transition-colors z-10"
+                    title="Remove Clothing"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               ) : (
                 <div className="py-4">
                   <div className="w-14 h-14 mx-auto rounded-full bg-white border border-border-soft flex items-center justify-center mb-3 shadow-sm group-hover:scale-105 transition-transform">
