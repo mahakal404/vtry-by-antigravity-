@@ -41,6 +41,7 @@ export default function Studio() {
   
   const personInputRef = useRef(null);
   const clothInputRef = useRef(null);
+  const previewRef = useRef(null);
   const { addToHistory, history, isHistoryLoading } = useHistory();
   const { displayBalance, balance: vTokens, spendTokens, addTokens } = useTokens();
   const { user } = useAuth();
@@ -100,17 +101,19 @@ export default function Studio() {
       return;
     }
     toast.success("5 V-Tokens deducted. Generating try-on...");
+    setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000);
     
     setProgress(0);
     const progressInterval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 90) return 90;
-        return prev + Math.floor(Math.random() * 5) + 1; // Randomly increment up to 90%
+      setProgress((prev) => {
+        const remaining = 90 - prev;
+        const increment = remaining * 0.08; // Moves 8% of the remaining distance each tick
+        return Math.min(prev + increment, 90);
       });
-    }, 1000);
+    }, 800);
     
     try {
       // 1. Upload to ImgBB
@@ -141,16 +144,13 @@ export default function Studio() {
       const actualResult = data.result;
 
       setProgress(100);
-      
-      setTimeout(() => {
-        setCurrentResult(actualResult);
-        addToHistory({
-          personImage: userPhotoBase64,
-          clothImage: clothingPhotoBase64,
-          resultImage: actualResult,
-          type: activeCategory || 'Auto-Detect'
-        });
-      }, 500);
+      setCurrentResult(actualResult);
+      addToHistory({
+        personImage: userPhotoBase64,
+        clothImage: clothingPhotoBase64,
+        resultImage: actualResult,
+        type: activeCategory || 'Auto-Detect'
+      });
 
     } catch (error) {
       console.error(error);
@@ -163,25 +163,25 @@ export default function Studio() {
     } finally {
       clearInterval(progressInterval);
       clearTimeout(timeoutId);
-      setTimeout(() => setIsProcessing(false), 500); // Small delay to show 100%
+      setIsProcessing(false);
     }
   };
 
   const categories = ['Auto', 'T-Shirt', 'Shirt', 'Hoodie', 'Dress', 'Jacket'];
 
   return (
-    <div className="max-w-7xl mx-auto pb-10">
+    <div className="max-w-7xl mx-auto pb-32 lg:pb-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-main dark:text-[#F8FAFC] flex items-center gap-2 transition-colors duration-200">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
+        <div className="text-center lg:text-left">
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-main dark:text-[#F8FAFC] flex items-center justify-center lg:justify-start gap-2 transition-colors duration-200">
             Virtual <span className="text-brand-purple">Try-On</span> Studio
           </h1>
           <p className="text-sm mt-1 text-text-muted dark:text-[#94A3B8] transition-colors duration-200">
             See it. Try it. Love it.
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border-soft shadow-sm text-sm font-medium">
             <VTokenIcon size={24} className="mr-2" />
             <span className="text-text-main font-bold">{displayBalance} <span className="font-normal text-text-muted hidden sm:inline">V-Tokens</span></span>
@@ -209,7 +209,7 @@ export default function Studio() {
           <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand-indigo text-white flex items-center justify-center font-bold text-sm">1</div>
+                <div className="w-8 h-8 rounded-full bg-brand-indigo text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
                 <div>
                   <h2 className="font-bold text-text-main dark:text-[#F8FAFC] text-base transition-colors duration-200">Your Photo</h2>
                   <p className="text-xs text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Upload a clear photo of yourself</p>
@@ -261,7 +261,7 @@ export default function Studio() {
           {/* Card 2: Clothing */}
           <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-full bg-brand-pink text-white flex items-center justify-center font-bold text-sm">2</div>
+              <div className="w-8 h-8 rounded-full bg-brand-pink text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
               <div>
                 <h2 className="font-bold text-text-main dark:text-[#F8FAFC] text-base transition-colors duration-200">Clothing</h2>
                 <p className="text-xs text-text-muted dark:text-[#94A3B8] transition-colors duration-200">Upload a clothing item</p>
@@ -300,7 +300,7 @@ export default function Studio() {
             </div>
 
             {/* Categories */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <div className="hidden md:flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
                 {categories.map(cat => {
                   const isAuto = cat === 'Auto';
                   const isSelected = activeCategory === cat || (isAuto && !activeCategory);
@@ -316,10 +316,35 @@ export default function Studio() {
                 })}
             </div>
           </div>
+          
+          {/* Photo Guidelines Info Box (Desktop) */}
+          <div className="hidden lg:block bg-[#F8F5FF] dark:bg-[#2A243F] rounded-[20px] p-5 shadow-sm border border-[#E9D5FF] dark:border-[#4C1D95] transition-colors duration-200">
+            <h3 className="font-bold text-brand-purple dark:text-[#C4B5FD] text-sm mb-3 flex items-center gap-2">
+              💡 Tips & AI Guidelines
+            </h3>
+            <ul className="space-y-2 text-xs text-text-main dark:text-[#E2EBF0] font-medium">
+              <li className="flex items-start gap-2 leading-relaxed">
+                <span className="text-green-500 mt-0.5 flex-shrink-0">✅</span>
+                <span><strong>Best Results:</strong> Use clear, well-lit, front-facing photos.</span>
+              </li>
+              <li className="flex items-start gap-2 leading-relaxed">
+                <span className="text-green-500 mt-0.5 flex-shrink-0">✅</span>
+                <span><strong>Clothing Fit:</strong> Upload flat-lay or front-facing clothing items on a plain background for accurate try-ons.</span>
+              </li>
+              <li className="flex items-start gap-2 leading-relaxed">
+                <span className="text-red-500 mt-0.5 flex-shrink-0">❌</span>
+                <span><strong>AI Safety Filters:</strong> Avoid swimwear, lingerie, or heavily skin-exposing outfits. The AI will reject these.</span>
+              </li>
+              <li className="flex items-start gap-2 leading-relaxed">
+                <span className="text-red-500 mt-0.5 flex-shrink-0">❌</span>
+                <span><strong>Avoid:</strong> Blurry images, extreme poses, or multiple people in one frame.</span>
+              </li>
+            </ul>
+          </div>
 
           {/* Action Button */}
-          <div>
-            <div className="mb-4 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900/30 rounded-xl p-3 flex items-start gap-3 shadow-sm transition-colors duration-200">
+          <div className="fixed bottom-16 left-0 w-full px-4 py-3 bg-white/90 dark:bg-[#1E1B2E]/90 backdrop-blur-md z-40 border-t border-border-soft dark:border-[#2D2A45] lg:static lg:bg-transparent lg:border-none lg:p-0">
+            <div className="hidden lg:flex mb-4 bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900/30 rounded-xl p-3 items-start gap-3 shadow-sm transition-colors duration-200">
               <ShieldCheck className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
               <p className="text-xs font-medium text-green-800 dark:text-green-400/90 leading-relaxed">
                 <strong className="block mb-0.5">100% Private & Secure</strong>
@@ -347,7 +372,7 @@ export default function Studio() {
                 </>
               )}
             </button>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500 font-medium mt-3">
+            <div className="hidden lg:flex items-center justify-center gap-2 text-sm text-gray-500 font-medium mt-3">
               <span>Current Balance:</span>
               <span className="font-bold text-brand-purple">{vTokens}</span>
               <VTokenIcon size={20}/>
@@ -360,7 +385,7 @@ export default function Studio() {
         <div className="lg:col-span-7 flex flex-col gap-6">
           
           {/* Preview Card */}
-          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] flex flex-col flex-1 min-h-[500px] transition-colors duration-200">
+          <div ref={previewRef} className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] flex flex-col flex-1 min-h-[500px] transition-colors duration-200">
              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#F0E9FF] text-brand-purple flex items-center justify-center">
@@ -378,7 +403,7 @@ export default function Studio() {
 
              <div className="flex-1 bg-preview-bg rounded-xl border border-border-soft dark:bg-[#161324] flex flex-col items-center justify-center relative overflow-hidden transition-colors duration-200">
                 {isProcessing && !currentResult ? (
-                  <div className="text-center w-full max-w-xs mx-auto">
+                  <div className="text-center w-full max-w-md mx-auto px-4">
                     <div className="w-16 h-16 mx-auto rounded-full bg-brand-purple/10 flex items-center justify-center mb-6 shadow-inner">
                       <Sparkles size={28} className="text-brand-purple animate-pulse" />
                     </div>
@@ -393,7 +418,7 @@ export default function Studio() {
                     </div>
                     <div className="flex justify-between items-center text-xs text-text-muted dark:text-[#94A3B8] font-semibold">
                       <span>Fitting clothes</span>
-                      <span>{progress}%</span>
+                      <span>{Math.round(progress)}%</span>
                     </div>
                   </div>
                 ) : currentResult ? (
@@ -435,7 +460,7 @@ export default function Studio() {
           </div>
 
           {/* Recent Try-Ons */}
-          <div className="bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
+          <div className="hidden lg:block bg-surface rounded-[20px] p-5 shadow-[0_4px_20px_rgba(31,16,64,0.06)] border border-border-soft dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <HistoryIcon size={16} className="text-text-main dark:text-[#F8FAFC]" />
@@ -472,6 +497,43 @@ export default function Studio() {
         </div>
 
       </div>
+
+      <div className="lg:hidden flex flex-col gap-4 mt-6">
+        {/* Privacy Banner (Mobile) */}
+        <div className="bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900/30 rounded-xl p-3 flex items-start gap-3 shadow-sm transition-colors duration-200">
+          <ShieldCheck className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+          <p className="text-xs font-medium text-green-800 dark:text-green-400/90 leading-relaxed">
+            <strong className="block mb-0.5">100% Private & Secure</strong>
+            Your photos stay on your local device and are never stored in the cloud.
+          </p>
+        </div>
+
+        {/* Photo Guidelines Info Box (Mobile) */}
+        <div className="bg-[#F8F5FF] dark:bg-[#2A243F] rounded-[20px] p-5 shadow-sm border border-[#E9D5FF] dark:border-[#4C1D95] transition-colors duration-200">
+          <h3 className="font-bold text-brand-purple dark:text-[#C4B5FD] text-sm mb-3 flex items-center gap-2">
+            💡 Tips & AI Guidelines
+          </h3>
+          <ul className="space-y-2 text-xs text-text-main dark:text-[#E2EBF0] font-medium">
+            <li className="flex items-start gap-2 leading-relaxed">
+              <span className="text-green-500 mt-0.5 flex-shrink-0">✅</span>
+              <span><strong>Best Results:</strong> Use clear, well-lit, front-facing photos.</span>
+            </li>
+            <li className="flex items-start gap-2 leading-relaxed">
+              <span className="text-green-500 mt-0.5 flex-shrink-0">✅</span>
+              <span><strong>Clothing Fit:</strong> Upload flat-lay or front-facing clothing items on a plain background for accurate try-ons.</span>
+            </li>
+            <li className="flex items-start gap-2 leading-relaxed">
+              <span className="text-red-500 mt-0.5 flex-shrink-0">❌</span>
+              <span><strong>AI Safety Filters:</strong> Avoid swimwear, lingerie, or heavily skin-exposing outfits. The AI will reject these.</span>
+            </li>
+            <li className="flex items-start gap-2 leading-relaxed">
+              <span className="text-red-500 mt-0.5 flex-shrink-0">❌</span>
+              <span><strong>Avoid:</strong> Blurry images, extreme poses, or multiple people in one frame.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   );
 }

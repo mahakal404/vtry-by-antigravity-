@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Search, ChevronDown, Heart, MoreVertical, RefreshCcw, Download, History as HistoryIcon, Trash2 } from 'lucide-react';
+import { Search, ChevronDown, Heart, MoreVertical, RefreshCcw, Download, History as HistoryIcon, Trash2, X } from 'lucide-react';
 import { handleDownload } from '@/utils/download';
 import { useHistory } from '@/contexts/HistoryContext';
 
@@ -8,10 +8,11 @@ const tabs = ['All', 'Try-On Results', 'My Photos', 'Clothing Items'];
 
 export default function History() {
   const [activeTab, setActiveTab] = useState('All');
+  const [selectedImage, setSelectedImage] = useState(null);
   const { history, removeFromHistory, isHistoryLoading } = useHistory();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-32 lg:pb-10">
       {/* Page Header */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold font-serif text-slate-900 dark:text-[#FBFAFC]">
@@ -23,7 +24,7 @@ export default function History() {
       </div>
 
       {/* Top Header & Controls */}
-      <div className="flex flex-col xl:flex-row gap-4 justify-between items-start xl:items-center mt-8">
+      <div className="hidden lg:flex flex-col xl:flex-row gap-4 justify-between items-start xl:items-center mt-8">
         {/* Tabs */}
         <div className="flex gap-2 overflow-x-auto w-full xl:w-auto pb-2 xl:pb-0 hide-scrollbar">
           {tabs.map((tab) => (
@@ -41,8 +42,8 @@ export default function History() {
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
-          <div className="relative flex-1 sm:w-64">
+        <div className="flex flex-col lg:flex-row gap-3 w-full xl:w-auto">
+          <div className="relative w-full lg:w-64">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-[#94A3B8]" />
             <input
               type="text"
@@ -50,11 +51,11 @@ export default function History() {
               className="w-full bg-[#FFFFFF] border border-[#E5E7EB] rounded-lg pl-9 pr-4 py-2 text-sm outline-none focus:border-[#8B5CF6] transition-colors duration-200 dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#FBFAFC] dark:placeholder-[#94A3B8]"
             />
           </div>
-          <div className="flex gap-2">
-            <button className="flex items-center justify-center gap-2 bg-[#FFFFFF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors duration-200 dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#94A3B8] whitespace-nowrap flex-1 sm:flex-none">
+          <div className="flex flex-col lg:flex-row gap-2">
+            <button className="flex items-center justify-center gap-2 bg-[#FFFFFF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors duration-200 dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#94A3B8] whitespace-nowrap flex-1 lg:flex-none">
               All Types <ChevronDown size={14} />
             </button>
-            <button className="flex items-center justify-center gap-2 bg-[#FFFFFF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors duration-200 dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#94A3B8] whitespace-nowrap flex-1 sm:flex-none">
+            <button className="flex items-center justify-center gap-2 bg-[#FFFFFF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors duration-200 dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#94A3B8] whitespace-nowrap flex-1 lg:flex-none">
               Latest First <ChevronDown size={14} />
             </button>
           </div>
@@ -71,44 +72,46 @@ export default function History() {
           history.map((item) => (
             <div
               key={item.id}
-              className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-[16px] p-4 transition-all duration-200 hover:border-[#D8B4FE] hover:shadow-[0_8px_24px_rgba(139,92,246,0.08)] dark:bg-[#1E1B2E] dark:border-[#2D2A45] hover:dark:border-[#3B3663]"
+              className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden transition-all duration-200 hover:border-[#D8B4FE] hover:shadow-[0_8px_24px_rgba(139,92,246,0.08)] dark:bg-[#1E1B2E] dark:border-[#2D2A45] hover:dark:border-[#3B3663]"
             >
               {/* Image Area */}
-              <div className="aspect-[4/5] rounded-[12px] relative overflow-hidden mb-4 bg-gray-100 dark:bg-[#161324]">
-                <img src={item.resultImage} alt={item.type || 'Result'} className="w-full h-full object-cover" />
-                <button className="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-colors duration-200">
+              <div className="h-48 lg:h-auto lg:aspect-[4/5] relative overflow-hidden bg-gray-100 dark:bg-[#161324] group cursor-pointer" onClick={() => setSelectedImage(item.resultImage)}>
+                <img src={item.resultImage} alt={item.type || 'Result'} className="w-full h-full object-cover object-top group-hover:opacity-90 transition-opacity duration-200" />
+                <button className="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-colors duration-200" onClick={(e) => e.stopPropagation()}>
                   <Heart size={16} fill={item.isFavorite ? '#EC4899' : 'transparent'} color={item.isFavorite ? '#EC4899' : '#94A3B8'} />
                 </button>
               </div>
 
-              {/* Row 1 (Date & Menu) */}
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[#94A3B8] text-sm dark:text-[#94A3B8]">{new Date(item.timestamp).toLocaleString()}</span>
-                <button className="text-[#94A3B8] hover:text-[#6366F1] transition-colors duration-200 p-1">
-                  <MoreVertical size={16} />
-                </button>
-              </div>
+              {/* Content Area */}
+              <div className="p-4">
+                {/* Row 1 (Date & Menu) */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[#94A3B8] text-xs font-medium dark:text-[#94A3B8]">{new Date(item.timestamp).toLocaleString()}</span>
+                  <button className="text-[#94A3B8] hover:text-[#6366F1] transition-colors duration-200">
+                    <MoreVertical size={16} />
+                  </button>
+                </div>
 
-              {/* Row 2 (Tag & Action) */}
-              <div className="flex items-center justify-between">
-                <span className="bg-[#F1F5FF] text-[#6366F1] px-2.5 py-1 rounded-md text-xs font-medium border border-transparent dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#E2EBF0]">
-                  {item.type || 'Clothing'}
-                </span>
-                <div className="flex items-center gap-2">
+                {/* Row 2 (Tag & Action) */}
+                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
+                  <span className="bg-[#F1F5FF] text-[#6366F1] px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap border border-transparent dark:bg-[#161324] dark:border-[#2D2A45] dark:text-[#E2EBF0]">
+                    {item.type || 'Clothing'}
+                  </span>
+                  
                   <button 
                     onClick={() => removeFromHistory(item.id)}
-                    className="bg-[#FFF0F2] border border-[#FECDD3] text-[#E11D48] p-1.5 rounded-lg flex items-center justify-center hover:bg-[#FFE4E6] transition-colors duration-200 dark:bg-[#4C1D95]/10 dark:border-[#4C1D95]/30 dark:text-[#F43F5E] hover:dark:bg-[#4C1D95]/20"
+                    className="bg-[#FFF0F2] border border-[#FECDD3] text-[#E11D48] p-1.5 rounded-lg flex items-center justify-center hover:bg-[#FFE4E6] transition-colors duration-200 dark:bg-[#4C1D95]/10 dark:border-[#4C1D95]/30 dark:text-[#F43F5E] hover:dark:bg-[#4C1D95]/20 flex-shrink-0 ml-auto"
                     title="Delete History"
                   >
                     <Trash2 size={16} />
                   </button>
                   <button 
                     onClick={() => handleDownload(item.resultImage, `vtry-${item.id}.jpg`)}
-                    className="bg-[#F8FAFF] border border-[#E5E7EB] text-[#6366F1] p-1.5 rounded-lg flex items-center justify-center hover:bg-[#F1F5FF] transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] dark:text-[#FBFAFC] hover:dark:bg-[#2D2A45]"
+                    className="bg-[#F8FAFF] border border-[#E5E7EB] text-[#6366F1] p-1.5 rounded-lg flex items-center justify-center hover:bg-[#F1F5FF] transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] dark:text-[#FBFAFC] hover:dark:bg-[#2D2A45] flex-shrink-0"
                   >
                     <Download size={16} />
                   </button>
-                  <button className="bg-[#F8FAFF] border border-[#E5E7EB] text-[#6366F1] px-3 py-1 rounded-lg text-sm flex items-center gap-1.5 hover:bg-[#F1F5FF] transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] dark:text-[#FBFAFC] hover:dark:bg-[#2D2A45]">
+                  <button className="bg-[#F8FAFF] border border-[#E5E7EB] text-[#6366F1] px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 hover:bg-[#F1F5FF] transition-colors duration-200 dark:bg-[#161324] dark:border-[#3B3663] dark:text-[#FBFAFC] hover:dark:bg-[#2D2A45] flex-shrink-0">
                     <RefreshCcw size={14} /> Reuse
                   </button>
                 </div>
@@ -125,6 +128,28 @@ export default function History() {
           </div>
         )}
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 fade-in"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button 
+            className="absolute top-4 right-4 text-white bg-white/20 hover:bg-white/40 p-2 rounded-full z-[101] transition-colors"
+            onClick={() => setSelectedImage(null)}
+          >
+            <X size={24} />
+          </button>
+          
+          <img 
+            src={selectedImage} 
+            alt="Full size result" 
+            className="max-w-full max-h-full rounded-lg object-contain shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

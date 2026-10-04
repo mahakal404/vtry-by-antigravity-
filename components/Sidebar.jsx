@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTokens } from '../contexts/TokenContext';
 import {
   Wand2, History, Coins, Settings, ShieldCheck,
-  LogOut, Sparkles, ChevronLeft, ChevronRight, Crown
+  LogOut, Sparkles, ChevronLeft, ChevronRight, Crown, X
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -237,8 +237,16 @@ export default function Sidebar() {
             V-TRY
           </span>
         </div>
+        
+        <div className="flex flex-1 justify-center">
+          <Link href="/vtokens" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface border border-border-soft shadow-sm text-xs font-bold text-text-main">
+             <img src="/v-coin.png" alt="V-Coin" className="w-5 h-5 object-contain" />
+             {displayBalance}
+             <span className="ml-1 w-4 h-4 rounded-full bg-brand-purple text-white flex items-center justify-center text-[10px]">+</span>
+          </Link>
+        </div>
 
-        <div className="relative z-50" ref={dropdownRef}>
+        <div className="relative z-50">
           <button
             onClick={() => setProfileOpen(!profileOpen)}
             className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg transition-transform active:scale-95 overflow-hidden bg-brand-indigo border-2 border-white"
@@ -249,32 +257,44 @@ export default function Sidebar() {
               user?.avatar || 'U'
             )}
           </button>
+        </div>
+      </header>
 
-          {profileOpen && (
-            <div className="absolute top-12 right-0 w-56 rounded-2xl shadow-[0_4px_20px_rgba(31,16,64,0.1)] p-2 z-50 fade-in bg-surface border border-border-soft">
-              <div className="p-3 mb-1">
-                <div className="text-sm font-bold truncate text-text-main">
-                  {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'Guest User'}
-                </div>
-                <div className="flex items-center gap-1.5 mt-2 text-xs font-medium text-text-muted">
-                  <Coins size={12} className="text-brand-pink" />
-                  Tokens: <span className="text-brand-purple font-bold">{displayBalance}</span>
-                </div>
-              </div>
-              
-              <div className="h-px w-full my-1 bg-border-soft" />
-              
+      {profileOpen && (
+        <div className="lg:hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 fade-in" onClick={() => setProfileOpen(false)}>
+          <div className="relative bg-surface rounded-3xl p-6 w-[90%] max-w-sm shadow-2xl text-center border border-border-soft" onClick={(e) => e.stopPropagation()}>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg overflow-hidden bg-brand-indigo">
+              {user?.avatar?.startsWith('http') ? (
+                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                user?.avatar || 'U'
+              )}
+            </div>
+            
+            <h2 className="text-xl font-bold mb-2 text-text-main">
+              Sign Out
+            </h2>
+            <p className="text-sm mb-6 text-text-muted">
+              Are you sure you want to log out of your account, {user?.firstName || 'User'}?
+            </p>
+            
+            <div className="flex gap-3">
               <button
-                onClick={handleSignOutClick}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-surface-soft text-brand-pink mt-1"
+                onClick={() => setProfileOpen(false)}
+                className="flex-1 py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-surface-soft text-text-main border border-border-soft bg-transparent"
               >
-                <LogOut size={16} />
+                Cancel
+              </button>
+              <button
+                onClick={confirmSignOut}
+                className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 shadow-md bg-brand-pink"
+              >
                 Sign Out
               </button>
             </div>
-          )}
+          </div>
         </div>
-      </header>
+      )}
     </>
   );
 

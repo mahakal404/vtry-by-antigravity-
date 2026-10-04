@@ -16,9 +16,9 @@ export default function Settings() {
   ];
 
   return (
-    <div className="space-y-6 pb-10">
+    <div className="space-y-6 pb-32 lg:pb-12">
       {/* Page Header */}
-      <div>
+      <div className="text-center lg:text-left">
         <h1 className="text-2xl sm:text-3xl font-bold font-serif text-slate-900 dark:text-[#FBFAFC] transition-colors duration-200">
           Settings
         </h1>
@@ -28,7 +28,7 @@ export default function Settings() {
       </div>
 
       {/* Top Horizontal Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="hidden lg:flex gap-2 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -120,7 +120,7 @@ export default function Settings() {
                   {/* Light Mode Palette */}
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">Primary Colors (Brand)</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-4">
                       {[
                         { hex: '#8B5CF6', name: 'Primary Purple', usage: '(Buttons, Active)' },
                         { hex: '#EC4899', name: 'Primary Pink', usage: '(Highlights, CTA)' },
@@ -139,7 +139,7 @@ export default function Settings() {
 
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">Background Colors</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-4">
                       {[
                         { hex: '#F8FAFF', name: 'Page Background', usage: '(Soft)' },
                         { hex: '#FFFFFF', name: 'Card Background', usage: '(White)' },
@@ -158,7 +158,7 @@ export default function Settings() {
 
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">Text Colors</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-4">
                       {[
                         { hex: '#0F172A', name: 'Primary Text', usage: '(Headings)' },
                         { hex: '#475569', name: 'Secondary Text', usage: '(Subtext)' },
@@ -180,7 +180,7 @@ export default function Settings() {
                   {/* Dark Mode Palette */}
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-[#FBFAFC] mb-4">Primary Colors</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-4">
                       {[
                         { hex: '#8B5CF6', name: 'Primary Purple' },
                         { hex: '#EC4899', name: 'Primary Pink' },
@@ -199,7 +199,7 @@ export default function Settings() {
 
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-[#FBFAFC] mb-4">Background Colors</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-4">
                       {[
                         { hex: '#0B0F1A', name: 'Page Background' },
                         { hex: '#111827', name: 'Sidebar BG' },
@@ -218,7 +218,7 @@ export default function Settings() {
 
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-[#FBFAFC] mb-4">Text & Border Colors</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-3 lg:gap-4">
                       {[
                         { hex: '#FBFAFC', name: 'Primary Text' },
                         { hex: '#94A3B8', name: 'Secondary Text' },
@@ -244,7 +244,7 @@ export default function Settings() {
           <div className="xl:col-span-5 flex flex-col gap-6">
             
             {/* Live Preview Card */}
-            <div className="rounded-[20px] p-5 sm:p-6 bg-surface border border-border-soft shadow-sm dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200">
+            <div className="rounded-[20px] p-5 sm:p-6 bg-surface border border-border-soft shadow-sm dark:bg-[#1E1B2E] dark:border-[#2D2A45] transition-colors duration-200 order-last xl:order-none">
               <div className="flex items-center gap-2 mb-2">
                 <Eye size={18} className="text-brand-purple" />
                 <h2 className="font-bold text-lg font-serif text-slate-900 dark:text-[#FBFAFC] transition-colors duration-200">
@@ -331,7 +331,7 @@ export default function Settings() {
                 Main gradients used in buttons and highlights.
               </p>
 
-              <div className="flex gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="flex-1">
                   <div className="h-12 w-full rounded-lg bg-gradient-to-r from-brand-indigo to-brand-purple shadow-sm mb-2" />
                   <span className="text-xs font-medium text-text-main dark:text-[#FBFAFC]">Primary Gradient</span>
