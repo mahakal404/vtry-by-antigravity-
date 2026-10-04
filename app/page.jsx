@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { 
   Camera, Sparkles, Shirt, Zap, ShieldCheck, Clock, Image as ImageIcon, 
@@ -98,30 +99,15 @@ export default function LandingPage() {
             </motion.p>
           </motion.div>
 
-          <div className="relative h-[500px] w-full flex justify-center items-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#6D3DF5]/10 rounded-full blur-3xl"></div>
-            
-            <div className="relative w-full max-w-md h-[400px] bg-white rounded-3xl shadow-2xl border border-gray-100 flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-indigo-50/30"></div>
-              
-              <motion.div animate={{ y: [-10, 10, -10] }} transition={{ repeat: Infinity, duration: 4 }} className="absolute left-6 top-10 w-24 h-32 bg-white rounded-xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-2 z-20">
-                 <ImageIcon className="text-gray-300 w-8 h-8" />
-                 <span className="text-[10px] font-bold text-gray-400">User Photo</span>
-              </motion.div>
-
-              <motion.div animate={{ y: [10, -10, 10] }} transition={{ repeat: Infinity, duration: 5 }} className="absolute right-6 bottom-10 w-24 h-32 bg-white rounded-xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-2 z-20">
-                 <Shirt className="text-indigo-300 w-8 h-8" />
-                 <span className="text-[10px] font-bold text-gray-400">Garment</span>
-              </motion.div>
-
-              <div className="relative z-10 w-48 h-64 bg-white rounded-2xl shadow-xl border-4 border-[#F8F7FC] flex flex-col items-center justify-center overflow-hidden">
-                <Sparkles className="w-12 h-12 text-[#6D3DF5] mb-2 animate-pulse" />
-                <span className="text-sm font-bold text-gray-800">Processing...</span>
-                <div className="w-3/4 h-1.5 bg-gray-100 rounded-full mt-4 overflow-hidden">
-                  <motion.div className="h-full bg-gradient-to-r from-[#6D3DF5] to-indigo-600" animate={{ width: ["0%", "100%"] }} transition={{ repeat: Infinity, duration: 2 }} />
-                </div>
-              </div>
-            </div>
+          <div className="relative w-full flex justify-center items-center lg:justify-end">
+            <Image 
+              src="/hero.png" 
+              alt="V-Try AI Virtual Try-On" 
+              width={900} 
+              height={700} 
+              className="w-full h-auto max-w-lg lg:max-w-xl object-contain drop-shadow-2xl" 
+              priority 
+            />
           </div>
         </div>
       </section>
