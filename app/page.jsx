@@ -22,7 +22,7 @@ const staggerContainer = {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#F8F7FC] font-sans selection:bg-[#6D3DF5]/20 text-gray-900 overflow-x-hidden">
+    <div className="bg-[#F8F7FC] font-sans selection:bg-[#6D3DF5]/20 text-gray-900 overflow-x-hidden">
       
       {/* 1. Premium Sticky Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F8F7FC]/80 backdrop-blur-md border-b border-gray-200">
@@ -39,7 +39,6 @@ export default function LandingPage() {
             <a href="#features" className="hover:text-[#6D3DF5] transition-colors">Features</a>
             <a href="#experience" className="hover:text-[#6D3DF5] transition-colors">Experience</a>
             <a href="#brands" className="hover:text-[#6D3DF5] transition-colors">For Brands</a>
-            <a href="#pricing" className="hover:text-[#6D3DF5] transition-colors">Pricing</a>
           </div>
 
           <div className="flex items-center gap-4">
@@ -59,10 +58,9 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* 2. Split Visual Hero Section */}
-      <section className="relative pt-32 pb-20 px-6 lg:pt-40 lg:pb-32 overflow-hidden">
+      {/* 2. Hero Section */}
+      <section className="relative pt-32 pb-24 px-6 lg:pt-40 lg:pb-32 overflow-hidden bg-[#F8F7FC]">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          
           <motion.div 
             initial="hidden" animate="visible" variants={staggerContainer}
             className="max-w-2xl z-10"
@@ -103,7 +101,6 @@ export default function LandingPage() {
           <div className="relative h-[500px] w-full flex justify-center items-center">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#6D3DF5]/10 rounded-full blur-3xl"></div>
             
-            {/* Visual Mockup Container */}
             <div className="relative w-full max-w-md h-[400px] bg-white rounded-3xl shadow-2xl border border-gray-100 flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-indigo-50/30"></div>
               
@@ -129,7 +126,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. Brand Trust Bar */}
+      {/* Brand Trust Bar */}
       <section className="w-full py-10 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Trusted by the next generation of fashion shoppers</p>
@@ -141,28 +138,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. The Problem Section */}
-      <section className="w-full py-24 bg-[#F8F7FC] px-6">
+      {/* 3. How It Works Section */}
+      <section id="how-it-works" className="w-full py-24 bg-[#F8F7FC] px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Online shopping shouldn't be a guessing game.</h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {["Will it fit me?", "Will it actually look good?", "Should I buy it?"].map((q, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center flex flex-col items-center justify-center h-48">
-                <h3 className="text-2xl font-bold text-gray-800 italic">"{q}"</h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. How It Works (4 Steps) */}
-      <section id="how-it-works" className="w-full py-24 bg-white px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Your new fitting room is one click away.</h2>
+            <p className="text-xl text-gray-500">Online shopping shouldn't be a guessing game. Follow these simple steps.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
@@ -173,8 +154,8 @@ export default function LandingPage() {
               { icon: <Sparkles />, title: "3. Let AI Work", desc: "AI maps the fabric." },
               { icon: <ImageIcon />, title: "4. See Yourself", desc: "Instant photorealism." }
             ].map((step, i) => (
-              <div key={i} className="flex flex-col items-center text-center relative z-10">
-                <div className="w-24 h-24 bg-white border-4 border-[#F8F7FC] rounded-full flex items-center justify-center text-[#6D3DF5] shadow-lg mb-6">
+              <div key={i} className="flex flex-col items-center text-center relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                <div className="w-16 h-16 bg-[#F8F7FC] border border-gray-100 rounded-full flex items-center justify-center text-[#6D3DF5] mb-6 shadow-sm">
                   <div className="w-8 h-8">{step.icon}</div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
@@ -185,7 +166,35 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Interactive Demo Mockup Section */}
+      {/* 4. Features Grid */}
+      <section id="features" className="w-full py-24 bg-white px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">More than a virtual try-on.</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: <ImageIcon />, title: "Photorealistic AI", desc: "Maintains lighting, skin tone, and body posture perfectly." },
+              { icon: <CheckCircle2 />, title: "Smart Clothing Fit", desc: "AI understands fabric draping and physics automatically." },
+              { icon: <Layers />, title: "Multiple Styles", desc: "Try on tops, bottoms, or full-body dresses effortlessly." },
+              { icon: <Zap />, title: "Instant Results", desc: "Generates ultra-realistic try-on images in mere seconds." },
+              { icon: <ShieldCheck />, title: "Privacy First", desc: "Your photos are processed securely and never sold." },
+              { icon: <ShoppingBag />, title: "Built for Fashion", desc: "Designed specifically to enhance the online apparel shopping experience." }
+            ].map((feat, i) => (
+              <div key={i} className="p-8 bg-[#F8F7FC] rounded-3xl border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                <div className="w-12 h-12 bg-white shadow-sm border border-gray-100 rounded-2xl flex items-center justify-center text-[#6D3DF5] mb-6">
+                  {feat.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{feat.title}</h3>
+                <p className="text-gray-500 leading-relaxed">{feat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Virtual Fitting Room Demo (Dark Section) */}
       <section id="experience" className="w-full py-24 bg-[#0B0F19] px-6 text-white overflow-hidden relative">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="max-w-6xl mx-auto relative z-10 text-center">
@@ -215,83 +224,45 @@ export default function LandingPage() {
                </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* 7. Features Grid */}
-      <section id="features" className="w-full py-24 bg-[#F8F7FC] px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">More than a virtual try-on.</h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: <ImageIcon />, title: "Photorealistic AI", desc: "Maintains lighting, skin tone, and body posture perfectly." },
-              { icon: <CheckCircle2 />, title: "Smart Clothing Fit", desc: "AI understands fabric draping and physics automatically." },
-              { icon: <Layers />, title: "Multiple Styles", desc: "Try on tops, bottoms, or full-body dresses effortlessly." },
-              { icon: <Zap />, title: "Instant Results", desc: "Generates ultra-realistic try-on images in mere seconds." },
-              { icon: <ShieldCheck />, title: "Privacy First", desc: "Your photos are processed securely and never sold." },
-              { icon: <ShoppingBag />, title: "Built for Fashion", desc: "Designed specifically to enhance the online apparel shopping experience." }
-            ].map((feat, i) => (
-              <div key={i} className="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-[#6D3DF5] mb-6">
-                  {feat.icon}
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{feat.title}</h3>
-                <p className="text-gray-500 leading-relaxed">{feat.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Before/After & AI Tech Pipeline */}
-      <section className="w-full py-24 bg-white px-6 border-b border-gray-100">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">From imagination to outfit</h2>
           
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-[#F8F7FC] p-4 rounded-full border border-gray-200 text-sm font-bold text-gray-500 overflow-x-auto hide-scrollbar whitespace-nowrap">
-            <span className="px-4 py-2 bg-white rounded-full shadow-sm text-gray-900 flex items-center gap-2"><ImageIcon size={16} className="text-[#6D3DF5]"/> Photo Input</span>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-12 text-sm font-bold text-gray-400 overflow-x-auto hide-scrollbar whitespace-nowrap">
+            <span className="px-4 py-2 bg-gray-800 rounded-full flex items-center gap-2"><ImageIcon size={16} className="text-[#A78BFA]"/> Photo Input</span>
             <ArrowRight size={16} className="hidden md:block"/>
             <span className="px-4 py-2 flex items-center gap-2"><Fingerprint size={16}/> Body Detection</span>
             <ArrowRight size={16} className="hidden md:block"/>
             <span className="px-4 py-2 flex items-center gap-2"><Scissors size={16}/> Clothing Analysis</span>
             <ArrowRight size={16} className="hidden md:block"/>
-            <span className="px-4 py-2 bg-[#6D3DF5] text-white rounded-full shadow-md flex items-center gap-2"><Sparkles size={16}/> Virtual Try-On</span>
+            <span className="px-4 py-2 bg-[#6D3DF5] text-white rounded-full flex items-center gap-2"><Sparkles size={16}/> Virtual Try-On</span>
           </div>
         </div>
       </section>
 
-      {/* 9. Target Audience (B2C & B2B) */}
+      {/* 6. For Brands & Shoppers + Stats */}
       <section id="brands" className="w-full py-24 bg-[#F8F7FC] px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8">
-          <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100">
-            <h3 className="text-3xl font-bold text-gray-900 mb-6">Shop with confidence</h3>
-            <ul className="space-y-4 mb-8 text-gray-600">
-              <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> Stop dealing with return shipping</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> See exactly how colors match your skin</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> Build your digital dream closet</li>
-            </ul>
-            <Link href="/login" className="text-[#6D3DF5] font-bold hover:underline flex items-center gap-1">For Shoppers <ArrowRight size={16}/></Link>
-          </div>
-          
-          <div className="bg-gray-900 p-12 rounded-[2.5rem] shadow-xl text-white">
-            <h3 className="text-3xl font-bold mb-6">Turn your store into a virtual fitting room</h3>
-            <ul className="space-y-4 mb-8 text-gray-400">
-              <li className="flex items-center gap-3"><CheckCircle2 className="text-[#A78BFA]"/> Reduce return rates by up to 40%</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="text-[#A78BFA]"/> Increase conversion rates instantly</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="text-[#A78BFA]"/> Seamless API integration</li>
-            </ul>
-            <Link href="/login" className="text-[#A78BFA] font-bold hover:underline flex items-center gap-1">For Brands <ArrowRight size={16}/></Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 10. Social Proof & Stats */}
-      <section className="w-full py-24 bg-white px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20 text-center divide-x divide-gray-100">
+          <div className="grid lg:grid-cols-2 gap-8 mb-24">
+            <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100 transition-all hover:shadow-md hover:-translate-y-1">
+              <h3 className="text-3xl font-bold text-gray-900 mb-6">Shop with confidence</h3>
+              <ul className="space-y-4 mb-8 text-gray-600">
+                <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> Stop dealing with return shipping</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> See exactly how colors match your skin</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> Build your digital dream closet</li>
+              </ul>
+              <Link href="/login" className="text-[#6D3DF5] font-bold hover:underline flex items-center gap-1">For Shoppers <ArrowRight size={16}/></Link>
+            </div>
+            
+            <div className="bg-gradient-to-br from-gray-900 to-indigo-950 p-12 rounded-[2.5rem] shadow-xl text-white transition-all hover:shadow-2xl hover:-translate-y-1">
+              <h3 className="text-3xl font-bold mb-6">Turn your store into a virtual fitting room</h3>
+              <ul className="space-y-4 mb-8 text-gray-300">
+                <li className="flex items-center gap-3"><CheckCircle2 className="text-[#A78BFA]"/> Reduce return rates by up to 40%</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="text-[#A78BFA]"/> Increase conversion rates instantly</li>
+                <li className="flex items-center gap-3"><CheckCircle2 className="text-[#A78BFA]"/> Seamless API integration</li>
+              </ul>
+              <Link href="/login" className="text-[#A78BFA] font-bold hover:underline flex items-center gap-1">For Brands <ArrowRight size={16}/></Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 text-center divide-x divide-gray-200 bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100">
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">10K+</h4><p className="text-gray-500 font-medium">Active Users</p></div>
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">98%</h4><p className="text-gray-500 font-medium">Satisfaction</p></div>
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">&lt;10s</h4><p className="text-gray-500 font-medium">Generation Time</p></div>
@@ -300,7 +271,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {[1,2,3].map((i) => (
-              <div key={i} className="p-8 bg-[#F8F7FC] rounded-3xl border border-gray-100">
+              <div key={i} className="p-8 bg-white rounded-3xl border border-gray-100 shadow-sm">
                 <div className="flex gap-1 text-yellow-400 mb-4"><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/></div>
                 <p className="text-gray-600 mb-6 italic">"V-Try completely changed how I shop online. I never buy a dress now without trying it on here first!"</p>
                 <div className="flex items-center gap-3">
@@ -313,7 +284,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 11. Final CTA */}
+      {/* Final CTA */}
       <section className="w-full py-24 px-6 bg-white border-b border-gray-200 text-center">
         <div className="max-w-5xl mx-auto bg-gradient-to-br from-gray-900 to-[#1e1b4b] rounded-[3rem] p-16 text-white shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#6D3DF5]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
@@ -330,7 +301,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 12. Mega Footer */}
+      {/* Mega Footer */}
       <footer className="w-full bg-[#F8F7FC] pt-20 pb-10 px-6 border-t border-gray-200">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 mb-16">
           <div className="col-span-2 md:col-span-2">
@@ -342,15 +313,9 @@ export default function LandingPage() {
             </Link>
             <p className="text-gray-500 mb-6 max-w-xs leading-relaxed">The premium AI-powered virtual try-on studio for modern fashion shoppers and brands.</p>
             <div className="flex gap-4 text-gray-400">
-              <svg className="w-5 h-5 hover:text-[#6D3DF5] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-              </svg>
-              <svg className="w-5 h-5 hover:text-[#6D3DF5] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-              </svg>
-              <svg className="w-5 h-5 hover:text-[#6D3DF5] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
-              </svg>
+              <svg className="w-5 h-5 hover:text-[#6D3DF5] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+              <svg className="w-5 h-5 hover:text-[#6D3DF5] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
+              <svg className="w-5 h-5 hover:text-[#6D3DF5] cursor-pointer transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" /></svg>
             </div>
           </div>
           
