@@ -2,6 +2,7 @@ import './globals.css';
 import Sidebar from '@/components/Sidebar';
 import ClientProviders from '@/components/ClientProviders';
 import { Toaster } from 'react-hot-toast';
+import { HistoryProvider } from '@/contexts/HistoryContext';
 
 export const metadata = {
   title: 'V-Try | Premium Virtual Try-On',
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning className="h-screen overflow-hidden antialiased">
         <Toaster position="top-center" />
         <ClientProviders>
+          <HistoryProvider>
           {/* Flex row: Sidebar (static) + Main (fills remaining space) */}
           <div className="flex h-screen w-full overflow-hidden">
             <Sidebar />
@@ -57,6 +59,7 @@ export default function RootLayout({ children }) {
               {children}
             </main>
           </div>
+          </HistoryProvider>
         </ClientProviders>
       </body>
     </html>
