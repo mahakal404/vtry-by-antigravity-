@@ -5,6 +5,16 @@ import { Gift, Zap, Star, Crown, Play, Shield, Clock, CheckCircle, Calendar, Che
 import VTokenIcon from "@/components/VTokenIcon";
 import { toast } from 'react-hot-toast';
 
+const loadRazorpayScript = (src) => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 export default function VTokens() {
   const { addTokens, claimDailyReward, canClaimReward, watchAd, balance: vTokens, dailyAdsWatched } = useTokens();
   const [isAdPlaying, setIsAdPlaying] = useState(false);
@@ -31,9 +41,45 @@ export default function VTokens() {
     }, 1000);
   };
 
-  // Simulate buying tokens
-  const handleBuy = async (amount) => {
-    await addTokens(amount);
+  const handlePayment = async (plan) => {
+    const res = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js");
+
+    if (!res) {
+      toast.error("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/razorpay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: plan.priceRaw }),
+      });
+      const data = await response.json();
+
+      if (data.error) throw new Error(data.error);
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: data.amount,
+        currency: data.currency,
+        name: "V-Try",
+        description: `${plan.name} Purchase`,
+        order_id: data.id,
+        handler: async function (response) {
+          console.log("Payment Success:", response);
+          toast.success(`Payment Successful! ${plan.tokens} V-Tokens added.`);
+          await addTokens(plan.tokens);
+        },
+        theme: { color: "#8a2be2" }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      toast.error("Failed to initiate payment. Please try again.");
+      console.error(error);
+    }
   };
 
   const pricingPlans = [
@@ -45,6 +91,7 @@ export default function VTokens() {
       originalUSD: '$7.99',
       priceINR: 'Rs. 349',
       originalINR: 'Rs. 699',
+      priceRaw: 349,
       tryons: '10 Try-Ons',
       icon: Zap,
       badge: 'SAVE 50%',
@@ -58,6 +105,7 @@ export default function VTokens() {
       originalUSD: '$35.99',
       priceINR: 'Rs. 1499',
       originalINR: 'Rs. 2999',
+      priceRaw: 1499,
       tryons: '50 Try-Ons',
       extra: 'Most popular choice',
       icon: Star,
@@ -72,6 +120,7 @@ export default function VTokens() {
       originalUSD: '$99.99',
       priceINR: 'Rs. 3999',
       originalINR: 'Rs. 7999',
+      priceRaw: 3999,
       tryons: '160 Try-Ons',
       icon: Crown,
       badge: 'SAVE 50%',
@@ -213,7 +262,7 @@ export default function VTokens() {
                   </div>
 
                   <button
-                    onClick={() => handleBuy(plan.tokens)}
+                    onClick={() => handlePayment(plan)}
                     className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 shadow-md transition-opacity"
                   >
                     Buy {plan.tokens} Tokens
@@ -259,7 +308,7 @@ export default function VTokens() {
               </div>
 
               <button
-                onClick={() => handleBuy(plan.tokens)}
+                onClick={() => handlePayment(plan)}
                 className="w-full py-3.5 rounded-xl text-sm font-bold border border-brand-purple text-brand-purple hover:bg-purple-50 dark:hover:bg-brand-purple/10 transition-colors"
               >
                 Buy {plan.tokens} Tokens
