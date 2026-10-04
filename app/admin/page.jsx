@@ -78,8 +78,11 @@ export default function AdminDashboard() {
     return <div className="flex items-center justify-center h-[50vh] text-text-muted">Loading Secure Dashboard...</div>;
   }
 
+  const totalUsers = users.length;
+  const totalTokens = users.reduce((acc, u) => acc + (Number(u.balance ?? u.tokens ?? u.vTokens ?? 0)), 0);
+
   return (
-    <div className="space-y-6 fade-in pb-10">
+    <div className="space-y-6 fade-in pb-32 lg:pb-10">
       <div className="flex items-center gap-3 mb-8">
         <div className="w-12 h-12 rounded-xl bg-brand-purple/10 flex items-center justify-center border border-brand-purple/20 shadow-sm">
           <ShieldCheck className="text-brand-purple" size={24} />
@@ -90,10 +93,25 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] rounded-2xl overflow-hidden shadow-sm transition-colors duration-200">
+      {/* Dynamic Top Stats Widget (Mobile Only) */}
+      <div className="flex lg:hidden mb-6 bg-surface dark:bg-[#1E1B2E] rounded-2xl shadow-sm border border-border-soft dark:border-[#2D2A45] p-4 items-center justify-around">
+        <div className="flex flex-col items-center">
+          <span className="text-xs text-text-muted dark:text-[#94A3B8] font-bold mb-1">Total Users</span>
+          <span className="text-xl font-black text-text-main dark:text-[#FBFAFC]">{totalUsers}</span>
+        </div>
+        <div className="w-px h-10 bg-border-soft dark:bg-[#2D2A45]"></div>
+        <div className="flex flex-col items-center">
+          <span className="text-xs text-text-muted dark:text-[#94A3B8] font-bold mb-1">Total V-Tokens</span>
+          <span className="text-xl font-black text-brand-purple flex items-center gap-1.5">
+            <img src="/v-coin.png" alt="V-Token" className="w-5 h-5 object-contain" /> {totalTokens}
+          </span>
+        </div>
+      </div>
+
+      <div className="bg-transparent lg:bg-surface dark:lg:bg-[#1E1B2E] border-none lg:border lg:border-border-soft dark:lg:border-[#2D2A45] rounded-none lg:rounded-2xl overflow-hidden shadow-none lg:shadow-sm transition-colors duration-200">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-text-main dark:text-[#FBFAFC]">
-            <thead className="bg-surface-soft dark:bg-[#161324] text-text-muted dark:text-[#94A3B8] font-bold border-b border-border-soft dark:border-[#2D2A45] uppercase tracking-wider text-[10px]">
+          <table className="w-full text-left text-sm text-text-main dark:text-[#FBFAFC] block lg:table">
+            <thead className="hidden lg:table-header-group bg-surface-soft dark:bg-[#161324] text-text-muted dark:text-[#94A3B8] font-bold border-b border-border-soft dark:border-[#2D2A45] uppercase tracking-wider text-[10px]">
               <tr>
                 <th className="px-6 py-4">User</th>
                 <th className="px-6 py-4">Email</th>
@@ -101,30 +119,37 @@ export default function AdminDashboard() {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border-soft dark:divide-[#2D2A45]">
+            <tbody className="block lg:table-row-group lg:divide-y lg:divide-border-soft dark:lg:divide-[#2D2A45]">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-surface-soft/50 dark:hover:bg-[#161324]/50 transition-colors">
-                  <td className="px-6 py-4">
+                <tr key={u.id} className="flex flex-col lg:table-row mb-4 lg:mb-0 bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] rounded-2xl lg:rounded-none lg:border-none p-4 lg:p-0 shadow-sm lg:shadow-none hover:bg-surface-soft/50 dark:hover:bg-[#161324]/50 transition-colors relative">
+                  <td className="block lg:table-cell p-0 lg:px-6 lg:py-4 mb-2 lg:mb-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-brand-indigo flex items-center justify-center text-white overflow-hidden shadow-sm">
-                        {u.avatar ? <img src={u.avatar} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <User size={16} />}
+                      {(u.photoURL || u.avatar) ? (
+                        <img src={u.photoURL || u.avatar} alt={u.displayName || 'User'} className="w-10 h-10 lg:w-9 lg:h-9 rounded-full object-cover shrink-0 shadow-sm" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-10 h-10 lg:w-9 lg:h-9 rounded-full bg-brand-indigo flex items-center justify-center text-white overflow-hidden shadow-sm flex-shrink-0">
+                          <User size={16} />
+                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <span className="font-semibold">{u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'No Name'}</span>
+                        <span className="text-xs text-text-muted dark:text-[#94A3B8] lg:hidden truncate max-w-[200px]">{u.email || u.id}</span>
                       </div>
-                      <span className="font-semibold">{u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'No Name'}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-text-muted dark:text-[#94A3B8]">{u.email || u.id}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1.5 font-black text-brand-purple">
-                      <Coins size={14} />
+                  <td className="hidden lg:table-cell px-6 py-4 text-text-muted dark:text-[#94A3B8]">{u.email || u.id}</td>
+                  <td className="block lg:table-cell p-0 lg:px-6 lg:py-4 absolute lg:static top-4 right-4">
+                    <div className="flex items-center justify-end lg:justify-start gap-1.5 font-black text-brand-purple">
+                      <img src="/v-coin.png" alt="V-Token" className="w-4 h-4 object-contain" />
                       {u.balance ?? u.tokens ?? u.vTokens ?? 0}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="block lg:table-cell p-0 lg:px-6 lg:py-4 text-right mt-4 lg:mt-0">
                     <button
                       onClick={() => handleOpenGiftModal(u)}
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-purple to-brand-pink text-white font-bold text-xs hover:opacity-90 transition-opacity shadow-md"
+                      className="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 lg:py-2 rounded-xl bg-gradient-to-r from-brand-purple to-brand-pink text-white font-bold text-sm lg:text-xs hover:opacity-90 transition-opacity shadow-md"
                     >
-                      <Gift size={14} /> Gift
+                      <Gift size={16} /> Gift
                     </button>
                   </td>
                 </tr>

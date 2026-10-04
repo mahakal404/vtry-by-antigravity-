@@ -1,0 +1,21 @@
+{
+  "name": "V-Try",
+  "short_name": "V-Try",
+  "description": "Premium Virtual Try-On Studio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F5FF",
+  "theme_color": "#8B5CF6",
+  "icons": [
+    {
+      "src": "/vt.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/vt.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
