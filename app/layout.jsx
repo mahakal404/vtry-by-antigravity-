@@ -45,7 +45,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body suppressHydrationWarning className="h-screen overflow-hidden antialiased">
+      <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col bg-app-bg text-text-main dark:bg-slate-900 dark:text-white">
         <Toaster position="top-center" />
         <ClientProviders>
           <HistoryProvider>
