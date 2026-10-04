@@ -33,12 +33,22 @@ export function AuthProvider({ children }) {
           isAdmin: false, 
         });
 
-        // Check and create user doc in Firestore
+        // Check and update user doc in Firestore
         const userRef = doc(db, 'users', firebaseUser.uid);
         try {
           const userSnap = await getDoc(userRef);
+          
+          const userDataToSave = {
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName || `${firstName} ${lastName}`.trim(),
+            firstName,
+            lastName,
+            photoURL: firebaseUser.photoURL || null,
+          };
+
           if (!userSnap.exists()) {
             await setDoc(userRef, {
+              ...userDataToSave,
               vTokens: 5,
               lastLoginDate: null,
               loginStreak: 0,
@@ -47,9 +57,15 @@ export function AuthProvider({ children }) {
               createdAt: serverTimestamp()
             });
             toast.success('Welcome! 5 Free V-Tokens credited. 🎉');
+          } else {
+            // Update latest basic details (merge true protects token balance)
+            await setDoc(userRef, {
+              ...userDataToSave,
+              lastLoginAt: serverTimestamp()
+            }, { merge: true });
           }
         } catch (error) {
-          console.error("Error creating user document", error);
+          console.error("Error creating or updating user document", error);
         }
       } else {
         setUser(null);

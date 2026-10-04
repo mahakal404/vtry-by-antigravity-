@@ -152,7 +152,7 @@ export default function Sidebar() {
           );
         })}
 
-        {user?.isAdmin && (() => {
+        {user?.email === 'rc6542698@gmail.com' && (() => {
           const isActive = pathname === '/admin' || pathname.startsWith('/admin/');
           return (
             <Link
@@ -299,7 +299,7 @@ export default function Sidebar() {
             </Link>
           )})}
           
-          {user?.isAdmin && (() => {
+          {user?.email === 'rc6542698@gmail.com' && (() => {
             const isActive = pathname === '/admin' || pathname.startsWith('/admin/');
             return (
             <Link
@@ -313,7 +313,7 @@ export default function Sidebar() {
                 Admin
               </span>
             </Link>
-          )})}
+          )})()}
         </nav>
       </div>
     </div>
