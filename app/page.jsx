@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { 
   Camera, Sparkles, Shirt, Zap, ShieldCheck, Clock, Image as ImageIcon, 
   CheckCircle2, ArrowRight, Star, ShoppingBag, Fingerprint, Scissors,
-  Layers, ArrowRightCircle
+  Layers, ArrowRightCircle, ChevronDown
 } from 'lucide-react';
 
 const fadeInUp = {
@@ -126,7 +126,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Brand Trust Bar */}
+      {/* 3. Brand Trust Bar */}
       <section className="w-full py-10 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Trusted by the next generation of fashion shoppers</p>
@@ -138,12 +138,37 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 3. How It Works Section */}
-      <section id="how-it-works" className="w-full py-24 bg-[#F8F7FC] px-6">
+      {/* 4. The Problem Section */}
+      <section className="w-full py-24 bg-[#F8F7FC] px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Online shopping shouldn't be a guessing game.</h2>
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Skip the hassle of returning clothes. Know exactly how it looks before you buy.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { q: "Will it fit me?", icon: <Scissors className="w-10 h-10 text-[#6D3DF5]" /> },
+              { q: "Will it actually look good?", icon: <Sparkles className="w-10 h-10 text-[#6D3DF5]" /> },
+              { q: "Should I buy it?", icon: <ShoppingBag className="w-10 h-10 text-[#6D3DF5]" /> }
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 text-center flex flex-col items-center justify-center gap-6 h-56 hover:-translate-y-1 transition-transform">
+                <div className="w-20 h-20 rounded-2xl bg-[#F8F7FC] flex items-center justify-center">
+                  {item.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 italic">"{item.q}"</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. How It Works Section */}
+      <section id="how-it-works" className="w-full py-24 bg-white px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Your new fitting room is one click away.</h2>
-            <p className="text-xl text-gray-500">Online shopping shouldn't be a guessing game. Follow these simple steps.</p>
+            <p className="text-xl text-gray-500">Four simple steps to your perfect digital outfit.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
@@ -154,8 +179,8 @@ export default function LandingPage() {
               { icon: <Sparkles />, title: "3. Let AI Work", desc: "AI maps the fabric." },
               { icon: <ImageIcon />, title: "4. See Yourself", desc: "Instant photorealism." }
             ].map((step, i) => (
-              <div key={i} className="flex flex-col items-center text-center relative z-10 bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                <div className="w-16 h-16 bg-[#F8F7FC] border border-gray-100 rounded-full flex items-center justify-center text-[#6D3DF5] mb-6 shadow-sm">
+              <div key={i} className="flex flex-col items-center text-center relative z-10 bg-[#F8F7FC] p-8 rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                <div className="w-16 h-16 bg-white border border-gray-100 rounded-full flex items-center justify-center text-[#6D3DF5] mb-6 shadow-sm">
                   <div className="w-8 h-8">{step.icon}</div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
@@ -166,35 +191,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 4. Features Grid */}
-      <section id="features" className="w-full py-24 bg-white px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">More than a virtual try-on.</h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: <ImageIcon />, title: "Photorealistic AI", desc: "Maintains lighting, skin tone, and body posture perfectly." },
-              { icon: <CheckCircle2 />, title: "Smart Clothing Fit", desc: "AI understands fabric draping and physics automatically." },
-              { icon: <Layers />, title: "Multiple Styles", desc: "Try on tops, bottoms, or full-body dresses effortlessly." },
-              { icon: <Zap />, title: "Instant Results", desc: "Generates ultra-realistic try-on images in mere seconds." },
-              { icon: <ShieldCheck />, title: "Privacy First", desc: "Your photos are processed securely and never sold." },
-              { icon: <ShoppingBag />, title: "Built for Fashion", desc: "Designed specifically to enhance the online apparel shopping experience." }
-            ].map((feat, i) => (
-              <div key={i} className="p-8 bg-[#F8F7FC] rounded-3xl border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                <div className="w-12 h-12 bg-white shadow-sm border border-gray-100 rounded-2xl flex items-center justify-center text-[#6D3DF5] mb-6">
-                  {feat.icon}
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{feat.title}</h3>
-                <p className="text-gray-500 leading-relaxed">{feat.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Virtual Fitting Room Demo (Dark Section) */}
+      {/* 6. Virtual Fitting Room Demo (Dark Section) */}
       <section id="experience" className="w-full py-24 bg-[#0B0F19] px-6 text-white overflow-hidden relative">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         <div className="max-w-6xl mx-auto relative z-10 text-center">
@@ -212,13 +209,15 @@ export default function LandingPage() {
                </div>
                
                <div className="grid grid-cols-3 gap-8 w-full max-w-3xl h-full items-center">
-                 <div className="bg-gray-800 rounded-2xl aspect-[3/4] flex items-center justify-center border border-gray-700">
-                    <span className="text-gray-500 font-medium">Your Photo</span>
+                 <div className="bg-gray-800 rounded-2xl aspect-[3/4] flex flex-col items-center justify-center border border-gray-700">
+                    <ImageIcon className="text-gray-600 w-12 h-12 mb-4" />
+                    <span className="text-gray-400 font-medium text-sm">Your Photo</span>
                  </div>
                  <div className="flex items-center justify-center text-gray-600">
                     <ArrowRightCircle size={40} className="animate-pulse text-[#6D3DF5]" />
                  </div>
-                 <div className="bg-gradient-to-br from-[#6D3DF5]/20 to-indigo-600/20 rounded-2xl aspect-[3/4] flex items-center justify-center border border-[#6D3DF5]/50 shadow-[0_0_30px_rgba(109,61,245,0.3)]">
+                 <div className="bg-gradient-to-br from-[#6D3DF5]/20 to-indigo-600/20 rounded-2xl aspect-[3/4] flex flex-col items-center justify-center border border-[#6D3DF5]/50 shadow-[0_0_30px_rgba(109,61,245,0.3)]">
+                    <Sparkles className="text-white w-12 h-12 mb-4 animate-pulse" />
                     <span className="text-white font-bold">Stunning Result</span>
                  </div>
                </div>
@@ -237,11 +236,39 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. For Brands & Shoppers + Stats */}
-      <section id="brands" className="w-full py-24 bg-[#F8F7FC] px-6">
+      {/* 7. Features Grid */}
+      <section id="features" className="w-full py-24 bg-[#F8F7FC] px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">More than a virtual try-on.</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: <ImageIcon />, title: "Photorealistic AI", desc: "Maintains lighting, skin tone, and body posture perfectly." },
+              { icon: <CheckCircle2 />, title: "Smart Clothing Fit", desc: "AI understands fabric draping and physics automatically." },
+              { icon: <Layers />, title: "Multiple Styles", desc: "Try on tops, bottoms, or full-body dresses effortlessly." },
+              { icon: <Zap />, title: "Instant Results", desc: "Generates ultra-realistic try-on images in mere seconds." },
+              { icon: <ShieldCheck />, title: "Privacy First", desc: "Your photos are processed securely and never sold." },
+              { icon: <ShoppingBag />, title: "Built for Fashion", desc: "Designed specifically to enhance the online apparel shopping experience." }
+            ].map((feat, i) => (
+              <div key={i} className="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                <div className="w-12 h-12 bg-[#F8F7FC] shadow-sm border border-gray-100 rounded-2xl flex items-center justify-center text-[#6D3DF5] mb-6">
+                  {feat.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{feat.title}</h3>
+                <p className="text-gray-500 leading-relaxed">{feat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. For Brands & Shoppers */}
+      <section id="brands" className="w-full py-24 bg-white px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-8 mb-24">
-            <div className="bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100 transition-all hover:shadow-md hover:-translate-y-1">
+            <div className="bg-[#F8F7FC] p-12 rounded-[2.5rem] shadow-sm border border-gray-100 transition-all hover:shadow-md hover:-translate-y-1">
               <h3 className="text-3xl font-bold text-gray-900 mb-6">Shop with confidence</h3>
               <ul className="space-y-4 mb-8 text-gray-600">
                 <li className="flex items-center gap-3"><CheckCircle2 className="text-green-500"/> Stop dealing with return shipping</li>
@@ -261,7 +288,12 @@ export default function LandingPage() {
               <Link href="/login" className="text-[#A78BFA] font-bold hover:underline flex items-center gap-1">For Brands <ArrowRight size={16}/></Link>
             </div>
           </div>
+        </div>
+      </section>
 
+      {/* 9. Stats & Testimonials */}
+      <section className="w-full py-24 bg-[#F8F7FC] px-6">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 text-center divide-x divide-gray-200 bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100">
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">10K+</h4><p className="text-gray-500 font-medium">Active Users</p></div>
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">98%</h4><p className="text-gray-500 font-medium">Satisfaction</p></div>
@@ -270,13 +302,19 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {[1,2,3].map((i) => (
+            {[
+              { name: "Sarah Jenkins", initial: "S", role: "Fashion Enthusiast", color: "bg-blue-100 text-blue-600" },
+              { name: "Emily Watson", initial: "E", role: "Daily Shopper", color: "bg-green-100 text-green-600" },
+              { name: "Michael Chang", initial: "M", role: "Boutique Owner", color: "bg-purple-100 text-purple-600" }
+            ].map((user, i) => (
               <div key={i} className="p-8 bg-white rounded-3xl border border-gray-100 shadow-sm">
                 <div className="flex gap-1 text-yellow-400 mb-4"><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/><Star fill="currentColor" size={16}/></div>
                 <p className="text-gray-600 mb-6 italic">"V-Try completely changed how I shop online. I never buy a dress now without trying it on here first!"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                  <div><p className="font-bold text-gray-900 text-sm">Sarah Jenkins</p><p className="text-xs text-gray-500">Fashion Enthusiast</p></div>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${user.color}`}>
+                    {user.initial}
+                  </div>
+                  <div><p className="font-bold text-gray-900 text-sm">{user.name}</p><p className="text-xs text-gray-500">{user.role}</p></div>
                 </div>
               </div>
             ))}
@@ -284,8 +322,38 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="w-full py-24 px-6 bg-white border-b border-gray-200 text-center">
+      {/* 10. FAQ Section */}
+      <section className="w-full py-24 bg-white px-6 border-b border-gray-100">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">Frequently Asked Questions</h2>
+          </div>
+          
+          <div className="space-y-4">
+            {[
+              { q: "Is the generated image realistic?", a: "Yes, V-Try uses state-of-the-art diffusion models to maintain your body shape, lighting, and skin tone for incredibly photorealistic results." },
+              { q: "What types of clothing are supported?", a: "We currently support tops, bottoms, and full-body dresses. For best results, use flat-lay or model photos of the garment." },
+              { q: "Is my data secure?", a: "Absolutely. We do not store your personal photos permanently unless you explicitly save them to your V-Try History." },
+              { q: "Do I get free tokens to start?", a: "Yes! Every new user receives a Welcome Bonus of 5 V-Tokens instantly upon signing up." }
+            ].map((faq, idx) => (
+              <details key={idx} className="group bg-[#F8F7FC] rounded-2xl border border-gray-100 cursor-pointer overflow-hidden transition-all duration-300">
+                <summary className="flex justify-between items-center font-bold text-lg p-6 text-gray-900 select-none">
+                  {faq.q}
+                  <span className="transition group-open:rotate-180">
+                    <ChevronDown size={20} className="text-gray-400" />
+                  </span>
+                </summary>
+                <div className="text-gray-600 px-6 pb-6 pt-0 leading-relaxed">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 11. Final CTA */}
+      <section className="w-full py-24 px-6 bg-[#F8F7FC] text-center">
         <div className="max-w-5xl mx-auto bg-gradient-to-br from-gray-900 to-[#1e1b4b] rounded-[3rem] p-16 text-white shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#6D3DF5]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="relative z-10">
@@ -301,8 +369,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Mega Footer */}
-      <footer className="w-full bg-[#F8F7FC] pt-20 pb-10 px-6 border-t border-gray-200">
+      {/* 12. Mega Footer */}
+      <footer className="w-full bg-white pt-20 pb-10 px-6 border-t border-gray-200">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 mb-16">
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-6">
@@ -342,8 +410,8 @@ export default function LandingPage() {
           <div>
             <h4 className="font-bold text-gray-900 mb-6">Stay Updated</h4>
             <p className="text-gray-500 text-sm mb-4">Subscribe to our newsletter.</p>
-            <div className="flex bg-white rounded-lg border border-gray-200 overflow-hidden focus-within:border-[#6D3DF5] transition-colors">
-              <input type="email" placeholder="Email address" className="w-full px-4 py-2 text-sm outline-none text-gray-900" />
+            <div className="flex bg-[#F8F7FC] rounded-lg border border-gray-200 overflow-hidden focus-within:border-[#6D3DF5] transition-colors">
+              <input type="email" placeholder="Email address" className="w-full px-4 py-2 text-sm outline-none text-gray-900 bg-transparent" />
               <button className="bg-[#F8F7FC] px-3 text-gray-500 hover:text-[#6D3DF5] border-l border-gray-200"><ArrowRight size={16}/></button>
             </div>
           </div>
