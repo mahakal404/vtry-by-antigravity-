@@ -257,9 +257,6 @@ export default function LandingPage() {
                <div className="w-3 h-3 rounded-full bg-green-500"></div>
             </div>
             <div className="flex-1 p-8 flex items-center justify-center relative">
-               <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold text-[#A78BFA] border border-white/10 flex items-center gap-2">
-                 <Zap size={14} /> AI Generated in 8.4s
-               </div>
                
                <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 w-full max-w-4xl h-full p-2 md:p-6">
                  {/* Left Column (Your Photo) */}
