@@ -146,9 +146,6 @@ export default function LandingPage() {
 
               {/* 4. Right Card ("V-Try Result") */}
               <div className="relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center shrink-0 z-10">
-                <div className="absolute -top-4 -right-4 bg-gradient-to-r from-[#6D3DF5] to-indigo-500 text-white font-bold text-xs px-3 py-1.5 rounded-full shadow-lg border border-white/20 flex items-center gap-1 z-20 whitespace-nowrap">
-                  <Zap size={14} className="text-yellow-300" /> AI Generated in 8.4s
-                </div>
                 <Image src="/t5.webp" alt="V-Try Result" width={240} height={350} className="rounded-xl object-cover object-top pointer-events-none select-none w-[190px] h-[280px] md:w-[240px] md:h-[350px]" draggable={false} priority />
                 <div className="absolute -bottom-5 bg-[#6D3DF5] text-white font-bold text-sm px-5 py-2 rounded-full shadow-lg border border-indigo-400 whitespace-nowrap z-10">
                   V-Try Result
