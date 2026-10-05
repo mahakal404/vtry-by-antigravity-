@@ -204,17 +204,40 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
             <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-purple-100 via-indigo-100 to-purple-100"></div>
             {[
-              { icon: <Camera />, title: "1. Upload Photo", desc: "Snap a clear selfie." },
-              { icon: <Shirt />, title: "2. Choose Style", desc: "Pick your garment." },
-              { icon: <Sparkles />, title: "3. Let AI Work", desc: "AI maps the fabric." },
-              { icon: <ImageIcon />, title: "4. See Yourself", desc: "Instant photorealism." }
+              { 
+                icon: <Camera />, title: "1. Upload Photo", desc: "Snap a clear selfie.",
+                visual: <Image src="/t1.webp" alt="Upload Photo" fill className="object-cover object-top pointer-events-none select-none" draggable={false} />
+              },
+              { 
+                icon: <Shirt />, title: "2. Choose Style", desc: "Pick your garment.",
+                visual: <Image src="/t2.webp" alt="Choose Style" fill className="object-contain p-4 drop-shadow-md pointer-events-none select-none" draggable={false} />
+              },
+              { 
+                icon: <Sparkles />, title: "3. Let AI Work", desc: "AI maps the fabric.",
+                visual: (
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-indigo-50 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-purple-600 shadow-[0_0_30px_rgba(147,51,234,0.5)] flex items-center justify-center animate-pulse">
+                      <Sparkles className="text-white" size={24} />
+                    </div>
+                  </div>
+                )
+              },
+              { 
+                icon: <ImageIcon />, title: "4. See Yourself", desc: "Instant photorealism.",
+                visual: <Image src="/t5.webp" alt="See Yourself" fill className="object-cover object-top pointer-events-none select-none" draggable={false} />
+              }
             ].map((step, i) => (
-              <div key={i} className="flex flex-col items-center text-center relative z-10 bg-[#F8F7FC] p-8 rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
-                <div className="w-16 h-16 bg-white border border-gray-100 rounded-full flex items-center justify-center text-[#6D3DF5] mb-6 shadow-sm">
-                  <div className="w-8 h-8">{step.icon}</div>
+              <div key={i} className="flex flex-col relative z-10 bg-white rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300 overflow-hidden">
+                <div className="relative w-full h-56 bg-slate-50 overflow-hidden">
+                  {step.visual}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-                <p className="text-gray-500">{step.desc}</p>
+                <div className="p-8 flex flex-col items-center text-center bg-[#F8F7FC] flex-1">
+                  <div className="w-12 h-12 bg-white border border-gray-100 rounded-full flex items-center justify-center text-[#6D3DF5] mb-4 shadow-sm z-10 -mt-14">
+                    <div className="w-6 h-6">{step.icon}</div>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                  <p className="text-gray-500">{step.desc}</p>
+                </div>
               </div>
             ))}
           </div>
