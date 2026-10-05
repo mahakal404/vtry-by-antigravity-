@@ -147,9 +147,11 @@ export default function LandingPage() {
       <section className="w-full py-8 lg:py-16 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Trusted by the next generation of fashion shoppers</p>
-          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-4 lg:gap-12 w-full max-w-sm mx-auto lg:max-w-none opacity-50 grayscale">
-            {['VOGUE', 'UrbanWear', 'StyleLab', 'NovaFashion', 'TrendSet'].map(brand => (
-              <span key={brand} className="text-xl md:text-2xl font-black font-serif text-gray-800 tracking-tighter w-[40%] lg:w-auto text-center flex justify-center">{brand}</span>
+          <div className="flex flex-wrap justify-center items-center gap-y-6 gap-x-4 lg:gap-12 w-full opacity-50 grayscale">
+            {['VOGUE', 'UrbanWear', 'StyleLab', 'NovaFashion', 'TrendSet'].map((brand, idx) => (
+              <span key={brand} className={`text-xl md:text-2xl font-black font-serif text-gray-800 tracking-tighter flex justify-center ${idx === 2 ? 'w-full sm:w-auto lg:w-auto' : 'w-[40%] sm:w-auto lg:w-auto'}`}>
+                {brand}
+              </span>
             ))}
           </div>
         </div>
