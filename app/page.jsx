@@ -261,17 +261,40 @@ export default function LandingPage() {
                  <Zap size={14} /> AI Generated in 8.4s
                </div>
                
-               <div className="grid grid-cols-3 gap-8 w-full max-w-3xl h-full items-center">
-                 <div className="bg-gray-800 rounded-2xl aspect-[3/4] flex flex-col items-center justify-center border border-gray-700">
-                    <ImageIcon className="text-gray-600 w-12 h-12 mb-4" />
-                    <span className="text-gray-400 font-medium text-sm">Your Photo</span>
+               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 w-full max-w-4xl h-full p-2 md:p-6">
+                 {/* Left Column (Your Photo) */}
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 flex flex-col items-center shrink-0">
+                   <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-[140px] h-[200px] md:w-[220px] md:h-[320px]" draggable={false} />
+                   <div className="absolute -bottom-4 bg-gray-800 text-gray-200 font-bold text-sm px-4 py-1.5 rounded-full shadow-lg border border-gray-700 whitespace-nowrap">
+                     Your Photo
+                   </div>
                  </div>
-                 <div className="flex items-center justify-center text-gray-600">
-                    <ArrowRightCircle size={40} className="animate-pulse text-[#6D3DF5]" />
+
+                 {/* Visual Connection */}
+                 <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-gray-600">
+                   <ArrowRight size={24} />
                  </div>
-                 <div className="bg-gradient-to-br from-[#6D3DF5]/20 to-indigo-600/20 rounded-2xl aspect-[3/4] flex flex-col items-center justify-center border border-[#6D3DF5]/50 shadow-[0_0_30px_rgba(109,61,245,0.3)]">
-                    <Sparkles className="text-white w-12 h-12 mb-4 animate-pulse" />
-                    <span className="text-white font-bold">Stunning Result</span>
+
+                 {/* Middle Column (Garment Selection) */}
+                 <div className="flex flex-col gap-2 md:gap-3 shrink-0">
+                   {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
+                     <div key={idx} className={`relative rounded-md overflow-hidden flex items-center justify-center transition-all ${idx === 0 ? 'bg-white ring-2 ring-purple-500 scale-110 opacity-100 shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-white/10 opacity-60 hover:opacity-100 scale-95 hover:scale-100'}`}>
+                       <Image src={src} alt="Garment" width={56} height={64} className="w-10 h-12 md:w-14 md:h-16 object-contain p-1 pointer-events-none select-none" draggable={false} />
+                     </div>
+                   ))}
+                 </div>
+
+                 {/* Visual Connection */}
+                 <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-gray-600">
+                   <ArrowRight size={24} />
+                 </div>
+
+                 {/* Right Column (Stunning Result) */}
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 flex flex-col items-center shrink-0">
+                   <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-[140px] h-[200px] md:w-[220px] md:h-[320px]" draggable={false} />
+                   <div className="absolute -bottom-4 bg-[#6D3DF5] text-white font-bold text-sm px-5 py-1.5 rounded-full shadow-[0_0_15px_rgba(109,61,245,0.5)] border border-[#6D3DF5] whitespace-nowrap">
+                     V-Try Result
+                   </div>
                  </div>
                </div>
             </div>
