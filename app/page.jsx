@@ -60,7 +60,7 @@ export default function LandingPage() {
       </nav>
 
       {/* 2. Hero Section */}
-      <section className="relative pt-32 pb-24 px-6 lg:pt-40 lg:pb-32 overflow-hidden bg-[#F8F7FC]">
+      <section className="relative pt-32 pb-24 px-6 lg:pt-40 lg:pb-32 overflow-hidden bg-gradient-to-br from-[#F8F7FC] via-white to-purple-50/50">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <motion.div 
             initial="hidden" animate="visible" variants={staggerContainer}
@@ -100,12 +100,14 @@ export default function LandingPage() {
           </motion.div>
 
           <div className="relative w-full flex justify-center items-center lg:justify-end">
+            <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/40 to-indigo-100/40 blur-3xl rounded-full scale-150 -z-10"></div>
             <Image 
               src="/hero.png" 
               alt="V-Try AI Virtual Try-On" 
               width={900} 
               height={700} 
-              className="w-full h-auto max-w-lg lg:max-w-xl object-contain drop-shadow-2xl" 
+              className="w-full h-auto max-w-2xl scale-110 origin-center object-contain drop-shadow-2xl select-none pointer-events-none" 
+              draggable={false}
               priority 
             />
           </div>
