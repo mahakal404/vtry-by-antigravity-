@@ -109,7 +109,7 @@ export default function LandingPage() {
               <div className="flex flex-row lg:flex-col order-1 lg:order-2 w-full lg:w-auto justify-center items-center gap-2 lg:gap-4 mb-4 lg:mb-0">
                 {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
                   <div key={idx} className={`relative rounded-md overflow-hidden bg-white/50 shadow-sm border border-gray-100 flex items-center justify-center ${idx === 0 ? 'ring-4 ring-[#6D3DF5] shadow-lg scale-110 z-10 bg-white' : 'opacity-70 scale-95 hover:opacity-100 hover:scale-100 transition-all'}`}>
-                    <Image src={src} alt="Garment" width={48} height={64} className="w-10 h-12 lg:w-14 lg:h-16 object-cover rounded-md bg-white pointer-events-none select-none" style={{ width: 'auto', height: 'auto' }} draggable={false} />
+                    <Image src={src} alt="Garment" width={56} height={80} className="w-12 h-16 lg:w-14 lg:h-20 object-contain rounded-md bg-white pointer-events-none select-none" draggable={false} />
                   </div>
                 ))}
               </div>
