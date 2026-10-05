@@ -61,10 +61,10 @@ export default function LandingPage() {
 
       {/* 2. Hero Section */}
       <section className="relative pt-32 pb-24 px-6 lg:pt-40 lg:pb-32 overflow-hidden bg-gradient-to-br from-[#F8F7FC] via-white to-purple-50/50">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <motion.div 
             initial="hidden" animate="visible" variants={staggerContainer}
-            className="max-w-2xl z-10"
+            className="col-span-1 lg:col-span-5 z-10"
           >
             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100/50 text-[#6D3DF5] text-xs font-bold tracking-wider mb-8 border border-purple-200">
               <Sparkles size={14} />
@@ -99,10 +99,10 @@ export default function LandingPage() {
             </motion.p>
           </motion.div>
 
-          <div className="relative w-full hidden sm:flex items-center justify-end justify-self-end ml-auto lg:pr-4">
+          <div className="col-span-1 lg:col-span-7 flex justify-end relative w-full hidden sm:flex items-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/40 to-indigo-100/40 blur-3xl rounded-full scale-150 -z-10"></div>
             
-            <div className="relative flex items-center gap-2 md:gap-4 lg:gap-6 scale-75 md:scale-90 lg:scale-100 origin-center lg:origin-right w-full justify-end max-w-2xl mt-8 lg:mt-0">
+            <div className="w-full max-w-[800px] transform origin-right scale-75 sm:scale-90 lg:scale-90 xl:scale-100 flex items-center justify-center gap-2 lg:gap-4 mt-8 lg:mt-0 relative hidden sm:flex">
               {/* 1. Left Card ("Your Photo") */}
               <div className="relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center shrink-0">
                 <Image src="/t1.webp" alt="Your Photo" width={200} height={300} className="rounded-xl object-cover object-top pointer-events-none select-none w-[160px] h-[240px] md:w-[200px] md:h-[300px]" draggable={false} priority />
@@ -120,7 +120,7 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center items-center gap-2 md:gap-3 shrink-0 h-full">
                 {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
                   <div key={idx} className={`relative rounded-md overflow-hidden bg-white/50 shadow-sm border border-gray-100 flex items-center justify-center ${idx === 0 ? 'ring-4 ring-[#6D3DF5] shadow-lg scale-110 z-10 bg-white' : 'opacity-70 scale-95 hover:opacity-100 hover:scale-100 transition-all'}`}>
-                    <Image src={src} alt="Garment" width={56} height={64} className="w-[45px] h-[55px] md:w-[56px] md:h-[64px] object-contain p-1 pointer-events-none select-none" draggable={false} />
+                    <Image src={src} alt="Garment" width={48} height={64} className="w-12 h-16 object-cover rounded-md bg-white pointer-events-none select-none" draggable={false} />
                   </div>
                 ))}
               </div>
