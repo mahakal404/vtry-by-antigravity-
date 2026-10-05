@@ -103,36 +103,27 @@ export default function LandingPage() {
           <div className="col-span-1 lg:col-span-7 flex justify-end relative w-full items-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/40 to-indigo-100/40 blur-3xl rounded-full scale-150 -z-10"></div>
             
-            <div className="w-full max-w-[800px] transform origin-center lg:origin-right scale-100 lg:scale-90 xl:scale-100 grid grid-cols-[1fr_auto_1fr] grid-rows-[auto_auto] gap-x-2 gap-y-4 lg:flex lg:flex-row lg:items-center lg:gap-4 justify-items-center mt-8 lg:mt-0 relative">
-              {/* 1. Left Card ("Your Photo") */}
-              <div className="col-start-1 row-start-2 lg:order-1 relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center shrink-0 w-28 h-40 lg:w-48 lg:h-64 justify-center">
+            <div className="flex flex-wrap lg:flex-nowrap justify-center items-center gap-2 sm:gap-4 lg:gap-8 w-full max-w-md lg:max-w-none mx-auto mt-8 lg:mt-0 relative transform origin-center lg:origin-right scale-100 lg:scale-90 xl:scale-100">
+              
+              {/* Garments Column (The 5 small dresses) */}
+              <div className="flex flex-row lg:flex-col order-1 lg:order-2 w-full lg:w-auto justify-center items-center gap-2 lg:gap-4 mb-4 lg:mb-0">
+                {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
+                  <div key={idx} className={`relative rounded-md overflow-hidden bg-white/50 shadow-sm border border-gray-100 flex items-center justify-center ${idx === 0 ? 'ring-4 ring-[#6D3DF5] shadow-lg scale-110 z-10 bg-white' : 'opacity-70 scale-95 hover:opacity-100 hover:scale-100 transition-all'}`}>
+                    <Image src={src} alt="Garment" width={48} height={64} className="w-10 h-12 lg:w-14 lg:h-16 object-cover rounded-md bg-white pointer-events-none select-none" style={{ width: 'auto', height: 'auto' }} draggable={false} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Your Photo Card */}
+              <div className="order-2 lg:order-1 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center">
                 <Image src="/t1.webp" alt="Your Photo" width={200} height={300} className="w-full h-full object-cover object-top rounded-xl pointer-events-none select-none" draggable={false} priority />
                 <div className="absolute -bottom-3 lg:-bottom-4 bg-white text-[#6D3DF5] font-bold text-[10px] lg:text-sm px-3 lg:px-4 py-1.5 rounded-full shadow-lg border border-purple-100 whitespace-nowrap z-10">
                   Your Photo
                 </div>
               </div>
 
-              {/* Connecting Line */}
-              <div className="hidden lg:flex flex-col items-center justify-center shrink-0 text-purple-300 lg:order-2">
-                <ArrowRight size={20} />
-              </div>
-
-              {/* 2. Garment Selection Column */}
-              <div className="col-span-3 row-start-1 flex flex-row lg:flex-col justify-center items-center gap-2 lg:order-3 w-full shrink-0">
-                {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
-                  <div key={idx} className={`relative rounded-md overflow-hidden bg-white/50 shadow-sm border border-gray-100 flex items-center justify-center ${idx === 0 ? 'ring-4 ring-[#6D3DF5] shadow-lg scale-110 z-10 bg-white' : 'opacity-70 scale-95 hover:opacity-100 hover:scale-100 transition-all'}`}>
-                    <Image src={src} alt="Garment" width={48} height={64} className="w-10 h-12 lg:w-14 lg:h-16 object-cover rounded-md bg-white pointer-events-none select-none" draggable={false} />
-                  </div>
-                ))}
-              </div>
-
-              {/* Connecting Line */}
-              <div className="hidden lg:flex flex-col items-center justify-center shrink-0 text-purple-300 lg:order-4">
-                <ArrowRight size={20} />
-              </div>
-
-              {/* 3. Center AI Node */}
-              <div className="col-start-2 row-start-2 flex items-center justify-center lg:order-5 relative shrink-0 z-20">
+              {/* AI Node */}
+              <div className="order-3 lg:order-3 flex-shrink-0 mx-2 lg:mx-0 relative z-20">
                 <div className="w-10 h-10 lg:w-16 lg:h-16 bg-gradient-to-r from-[#6D3DF5] to-indigo-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(109,61,245,0.4)] border-2 lg:border-4 border-white">
                   <span className="text-white font-black text-xs lg:text-base tracking-wider">AI</span>
                 </div>
@@ -140,13 +131,8 @@ export default function LandingPage() {
                 <div className="absolute -bottom-1 -left-1 lg:-bottom-2 lg:-left-2 text-purple-300 animate-pulse" style={{ animationDelay: '0.5s' }}><Sparkles size={16} /></div>
               </div>
 
-              {/* Connecting Line */}
-              <div className="hidden lg:flex flex-col items-center justify-center shrink-0 text-purple-300 lg:order-6">
-                <ArrowRight size={20} />
-              </div>
-
-              {/* 4. Right Card ("V-Try Result") */}
-              <div className="col-start-3 row-start-2 lg:order-7 relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center shrink-0 w-28 h-40 lg:w-48 lg:h-64 justify-center z-10">
+              {/* V-Try Result Card */}
+              <div className="order-4 lg:order-4 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center z-10">
                 <Image src="/t5.webp" alt="V-Try Result" width={240} height={350} className="w-full h-full object-cover object-top rounded-xl pointer-events-none select-none" draggable={false} priority />
                 <div className="absolute -bottom-3 lg:-bottom-5 bg-[#6D3DF5] text-white font-bold text-[10px] lg:text-sm px-3 lg:px-5 py-1.5 lg:py-2 rounded-full shadow-lg border border-indigo-400 whitespace-nowrap z-10">
                   V-Try Result
