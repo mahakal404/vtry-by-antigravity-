@@ -99,17 +99,62 @@ export default function LandingPage() {
             </motion.p>
           </motion.div>
 
-          <div className="relative w-full flex justify-center items-center lg:justify-end">
+          <div className="relative w-full hidden sm:flex items-center justify-end justify-self-end ml-auto lg:pr-4">
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/40 to-indigo-100/40 blur-3xl rounded-full scale-150 -z-10"></div>
-            <Image 
-              src="/hero.png" 
-              alt="V-Try AI Virtual Try-On" 
-              width={900} 
-              height={700} 
-              className="w-full h-auto max-w-2xl scale-110 origin-center object-contain drop-shadow-2xl select-none pointer-events-none" 
-              draggable={false}
-              priority 
-            />
+            
+            <div className="relative flex items-center gap-2 md:gap-4 lg:gap-6 scale-75 md:scale-90 lg:scale-100 origin-center lg:origin-right w-full justify-end max-w-2xl mt-8 lg:mt-0">
+              {/* 1. Left Card ("Your Photo") */}
+              <div className="relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center shrink-0">
+                <Image src="/t1.webp" alt="Your Photo" width={200} height={300} className="rounded-xl object-cover object-top pointer-events-none select-none w-[160px] h-[240px] md:w-[200px] md:h-[300px]" draggable={false} priority />
+                <div className="absolute -bottom-4 bg-white text-[#6D3DF5] font-bold text-sm px-4 py-1.5 rounded-full shadow-lg border border-purple-100 whitespace-nowrap z-10">
+                  Your Photo
+                </div>
+              </div>
+
+              {/* Connecting Line */}
+              <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-purple-300">
+                <ArrowRight size={20} />
+              </div>
+
+              {/* 2. Garment Selection Column */}
+              <div className="flex flex-col justify-center items-center gap-2 md:gap-3 shrink-0 h-full">
+                {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
+                  <div key={idx} className={`relative rounded-md overflow-hidden bg-white/50 shadow-sm border border-gray-100 flex items-center justify-center ${idx === 0 ? 'ring-4 ring-[#6D3DF5] shadow-lg scale-110 z-10 bg-white' : 'opacity-70 scale-95 hover:opacity-100 hover:scale-100 transition-all'}`}>
+                    <Image src={src} alt="Garment" width={56} height={64} className="w-[45px] h-[55px] md:w-[56px] md:h-[64px] object-contain p-1 pointer-events-none select-none" draggable={false} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Connecting Line */}
+              <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-purple-300">
+                <ArrowRight size={20} />
+              </div>
+
+              {/* 3. Center AI Node */}
+              <div className="relative shrink-0 z-20 mx-0 md:mx-1">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-[#6D3DF5] to-indigo-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(109,61,245,0.4)] border-4 border-white">
+                  <span className="text-white font-black text-base md:text-lg tracking-wider">AI</span>
+                </div>
+                <div className="absolute -top-2 -right-2 text-yellow-400 animate-pulse"><Sparkles size={20} /></div>
+                <div className="absolute -bottom-2 -left-2 text-purple-300 animate-pulse" style={{ animationDelay: '0.5s' }}><Sparkles size={16} /></div>
+              </div>
+
+              {/* Connecting Line */}
+              <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-purple-300">
+                <ArrowRight size={20} />
+              </div>
+
+              {/* 4. Right Card ("V-Try Result") */}
+              <div className="relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center shrink-0 z-10">
+                <div className="absolute -top-4 -right-4 bg-gradient-to-r from-[#6D3DF5] to-indigo-500 text-white font-bold text-xs px-3 py-1.5 rounded-full shadow-lg border border-white/20 flex items-center gap-1 z-20 whitespace-nowrap">
+                  <Zap size={14} className="text-yellow-300" /> AI Generated in 8.4s
+                </div>
+                <Image src="/t5.webp" alt="V-Try Result" width={240} height={350} className="rounded-xl object-cover object-top pointer-events-none select-none w-[190px] h-[280px] md:w-[240px] md:h-[350px]" draggable={false} priority />
+                <div className="absolute -bottom-5 bg-[#6D3DF5] text-white font-bold text-sm px-5 py-2 rounded-full shadow-lg border border-indigo-400 whitespace-nowrap z-10">
+                  V-Try Result
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
