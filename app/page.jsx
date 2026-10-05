@@ -71,9 +71,10 @@ export default function LandingPage() {
               <span>AI-POWERED VIRTUAL TRY-ON</span>
             </motion.div>
             
-            <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] text-gray-900 mb-6">
-              See It. Wear It. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6D3DF5] to-indigo-600">Love It.</span>
+            <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] text-gray-900 mb-6 flex flex-col lg:block w-full">
+              <span className="self-start lg:inline">See it. </span>
+              <span className="self-end lg:inline">Try it. </span>
+              <span className="self-start lg:block text-transparent bg-clip-text bg-gradient-to-r from-[#6D3DF5] to-indigo-600">Love it.</span>
             </motion.h1>
             
             <motion.p variants={fadeInUp} className="text-lg md:text-xl text-gray-500 mb-10 max-w-lg leading-relaxed">
