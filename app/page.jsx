@@ -158,12 +158,12 @@ export default function LandingPage() {
       </section>
 
       {/* 3. Brand Trust Bar */}
-      <section className="w-full py-10 bg-white border-y border-gray-100">
+      <section className="w-full py-8 lg:py-16 bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Trusted by the next generation of fashion shoppers</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale">
+          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-4 lg:gap-12 w-full max-w-sm mx-auto lg:max-w-none opacity-50 grayscale">
             {['VOGUE', 'UrbanWear', 'StyleLab', 'NovaFashion', 'TrendSet'].map(brand => (
-              <span key={brand} className="text-xl md:text-2xl font-black font-serif text-gray-800 tracking-tighter">{brand}</span>
+              <span key={brand} className="text-xl md:text-2xl font-black font-serif text-gray-800 tracking-tighter w-[40%] lg:w-auto text-center flex justify-center">{brand}</span>
             ))}
           </div>
         </div>
