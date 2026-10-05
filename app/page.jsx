@@ -99,10 +99,10 @@ export default function LandingPage() {
             </motion.p>
           </motion.div>
 
-          <div className="col-span-1 lg:col-span-7 flex justify-end relative w-full hidden sm:flex items-center">
+          <div className="col-span-1 lg:col-span-7 flex justify-end relative w-full items-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/40 to-indigo-100/40 blur-3xl rounded-full scale-150 -z-10"></div>
             
-            <div className="w-full max-w-[800px] transform origin-right scale-75 sm:scale-90 lg:scale-90 xl:scale-100 flex items-center justify-center gap-2 lg:gap-4 mt-8 lg:mt-0 relative hidden sm:flex">
+            <div className="w-full max-w-[800px] transform origin-center lg:origin-right scale-90 lg:scale-90 xl:scale-100 flex flex-col sm:flex-row items-center justify-center gap-2 lg:gap-4 mt-8 lg:mt-0 relative">
               {/* 1. Left Card ("Your Photo") */}
               <div className="relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center shrink-0">
                 <Image src="/t1.webp" alt="Your Photo" width={200} height={300} className="rounded-xl object-cover object-top pointer-events-none select-none w-[160px] h-[240px] md:w-[200px] md:h-[300px]" draggable={false} priority />
@@ -201,7 +201,7 @@ export default function LandingPage() {
             <p className="text-xl text-gray-500">Four simple steps to your perfect digital outfit.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
             <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-purple-100 via-indigo-100 to-purple-100"></div>
             {[
               { 
@@ -258,7 +258,7 @@ export default function LandingPage() {
             </div>
             <div className="flex-1 p-8 flex items-center justify-center relative">
                
-               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 w-full max-w-4xl h-full p-2 md:p-6">
+               <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-4xl h-full p-2 md:p-6">
                  {/* Left Column (Your Photo) */}
                  <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 flex flex-col items-center shrink-0">
                    <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-[140px] h-[200px] md:w-[220px] md:h-[320px]" draggable={false} />
@@ -273,7 +273,7 @@ export default function LandingPage() {
                  </div>
 
                  {/* Middle Column (Garment Selection) */}
-                 <div className="flex flex-col gap-2 md:gap-3 shrink-0">
+                 <div className="flex flex-row lg:flex-col flex-wrap justify-center gap-2 md:gap-3 shrink-0">
                    {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
                      <div key={idx} className={`relative rounded-md overflow-hidden flex items-center justify-center transition-all ${idx === 0 ? 'bg-white ring-2 ring-purple-500 scale-110 opacity-100 shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-white/10 opacity-60 hover:opacity-100 scale-95 hover:scale-100'}`}>
                        <Image src={src} alt="Garment" width={56} height={64} className="w-10 h-12 md:w-14 md:h-16 object-contain p-1 pointer-events-none select-none" draggable={false} />
@@ -316,7 +316,7 @@ export default function LandingPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">More than a virtual try-on.</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { icon: <ImageIcon />, title: "Photorealistic AI", desc: "Maintains lighting, skin tone, and body posture perfectly." },
               { icon: <CheckCircle2 />, title: "Smart Clothing Fit", desc: "AI understands fabric draping and physics automatically." },
@@ -367,7 +367,7 @@ export default function LandingPage() {
       {/* 9. Stats & Testimonials */}
       <section className="w-full py-24 bg-[#F8F7FC] px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 text-center divide-x divide-gray-200 bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-24 text-center divide-x divide-gray-200 bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100">
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">10K+</h4><p className="text-gray-500 font-medium">Active Users</p></div>
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">98%</h4><p className="text-gray-500 font-medium">Satisfaction</p></div>
             <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">&lt;10s</h4><p className="text-gray-500 font-medium">Generation Time</p></div>
@@ -444,7 +444,7 @@ export default function LandingPage() {
 
       {/* 12. Mega Footer */}
       <footer className="w-full bg-white pt-20 pb-10 px-6 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 mb-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 flex-wrap gap-8 mb-16">
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-gradient-to-br from-[#6D3DF5] to-indigo-600 rounded-lg flex items-center justify-center">
