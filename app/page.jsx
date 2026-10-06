@@ -239,7 +239,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-16 tracking-tight">Meet your virtual fitting room.</h2>
           
-          <div className="w-full aspect-video bg-gray-900 rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden flex flex-col">
+          <div className="w-full lg:aspect-video h-auto min-h-[450px] pb-10 lg:pb-0 bg-gray-900 rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden flex flex-col">
             <div className="h-12 border-b border-gray-800 flex items-center px-6 gap-2">
                <div className="w-3 h-3 rounded-full bg-red-500"></div>
                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -249,8 +249,8 @@ export default function LandingPage() {
                
                <div className="grid grid-cols-[1fr_auto_1fr] grid-rows-[auto_auto] gap-x-2 gap-y-6 lg:flex lg:flex-row lg:items-center lg:justify-center lg:gap-12 w-full justify-items-center p-4 lg:p-8">
                  {/* Left Column (Your Photo) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 shrink-0 col-start-1 row-start-2 lg:order-1 flex flex-col items-center">
-                   <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-28 h-40 lg:w-48 lg:h-72" draggable={false} />
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 shrink-0 col-start-1 row-start-2 lg:order-1 flex flex-col items-center h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48">
+                   <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="h-full w-full object-cover object-top rounded-lg pointer-events-none select-none" draggable={false} />
                    <div className="absolute -bottom-4 bg-gray-800 text-gray-200 font-bold px-4 py-1.5 rounded-full shadow-lg border border-gray-700 whitespace-nowrap text-[10px] lg:text-sm">
                      Your Photo
                    </div>
@@ -276,8 +276,8 @@ export default function LandingPage() {
                  </div>
 
                  {/* Right Column (Stunning Result) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center">
-                   <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-28 h-40 lg:w-48 lg:h-72" draggable={false} />
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48">
+                   <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="h-full w-full object-cover object-top rounded-lg pointer-events-none select-none" draggable={false} />
                    <div className="absolute -bottom-4 bg-[#6D3DF5] text-white font-bold px-5 py-1.5 rounded-full shadow-[0_0_15px_rgba(109,61,245,0.5)] border border-[#6D3DF5] whitespace-nowrap text-[10px] lg:text-sm">
                      V-Try Result
                    </div>
