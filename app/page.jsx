@@ -502,7 +502,7 @@ export default function LandingPage() {
               <li><Link href="#" className="hover:text-[#6D3DF5]">About Us</Link></li>
               <li><Link href="#" className="hover:text-[#6D3DF5]">Careers</Link></li>
               <li><Link href="#" className="hover:text-[#6D3DF5]">Blog</Link></li>
-              <li><Link href="#" className="hover:text-[#6D3DF5]">Contact</Link></li>
+              <li><Link href="/contact" className="hover:text-[#6D3DF5]">Contact</Link></li>
             </ul>
           </div>
 
@@ -518,9 +518,10 @@ export default function LandingPage() {
         
         <div className="max-w-7xl mx-auto pt-8 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400 font-medium">
           <p>© {new Date().getFullYear()} V-Try AI. All rights reserved.</p>
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-[#6D3DF5]">Privacy Policy</Link>
-            <Link href="#" className="hover:text-[#6D3DF5]">Terms of Service</Link>
+          <div className="flex flex-wrap gap-4 md:gap-6 justify-center">
+            <Link href="/privacy-policy" className="hover:text-[#6D3DF5]">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-[#6D3DF5]">Terms of Service</Link>
+            <Link href="/refund-policy" className="hover:text-[#6D3DF5]">Refund Policy</Link>
           </div>
         </div>
       </footer>
