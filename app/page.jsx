@@ -321,7 +321,7 @@ export default function LandingPage() {
                  </div>
                </div>
             </div>
-          </div>
+           </motion.div>
           
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-12 text-sm font-bold text-gray-400 overflow-x-auto hide-scrollbar whitespace-nowrap">
             <span className="px-4 py-2 bg-gray-800 rounded-full flex items-center gap-2"><ImageIcon size={16} className="text-[#A78BFA]"/> Photo Input</span>
