@@ -1,11 +1,12 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { 
   Camera, Sparkles, Shirt, Zap, ShieldCheck, Clock, Image as ImageIcon, 
   CheckCircle2, ArrowRight, Star, ShoppingBag, Fingerprint, Scissors,
-  Layers, ArrowRightCircle, ChevronDown
+  Layers, ArrowRightCircle, ChevronDown, Menu, X
 } from 'lucide-react';
 
 const fadeInUp = {
@@ -22,11 +23,30 @@ const staggerContainer = {
 };
 
 export default function LandingPage() {
+  const [activeSection, setActiveSection] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['how-it-works', 'features', 'experience', 'brands'];
+      let current = '';
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element && element.getBoundingClientRect().top <= 100) {
+          current = section;
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="bg-[#F8F7FC] font-sans selection:bg-[#6D3DF5]/20 text-gray-900 overflow-x-hidden">
       
       {/* 1. Premium Sticky Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F8F7FC]/80 backdrop-blur-md border-b border-gray-200">
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 bg-gradient-to-br from-[#6D3DF5] to-indigo-600 rounded-xl flex items-center justify-center shadow-md shadow-[#6D3DF5]/20 group-hover:scale-105 transition-transform">
@@ -36,10 +56,10 @@ export default function LandingPage() {
           </Link>
           
           <div className="hidden lg:flex items-center gap-8 font-medium text-sm text-gray-600">
-            <a href="#how-it-works" className="hover:text-[#6D3DF5] transition-colors">How It Works</a>
-            <a href="#features" className="hover:text-[#6D3DF5] transition-colors">Features</a>
-            <a href="#experience" className="hover:text-[#6D3DF5] transition-colors">Experience</a>
-            <a href="#brands" className="hover:text-[#6D3DF5] transition-colors">For Brands</a>
+            <a href="#how-it-works" className={`hover:text-[#6D3DF5] transition-colors ${activeSection === 'how-it-works' ? 'text-purple-600 font-semibold' : ''}`}>How It Works</a>
+            <a href="#features" className={`hover:text-[#6D3DF5] transition-colors ${activeSection === 'features' ? 'text-purple-600 font-semibold' : ''}`}>Features</a>
+            <a href="#experience" className={`hover:text-[#6D3DF5] transition-colors ${activeSection === 'experience' ? 'text-purple-600 font-semibold' : ''}`}>Experience</a>
+            <a href="#brands" className={`hover:text-[#6D3DF5] transition-colors ${activeSection === 'brands' ? 'text-purple-600 font-semibold' : ''}`}>For Brands</a>
           </div>
 
           <div className="flex items-center gap-4">
@@ -53,10 +73,22 @@ export default function LandingPage() {
               href="/login" 
               className="px-5 py-2.5 bg-gradient-to-r from-[#6D3DF5] to-indigo-600 text-white font-medium rounded-full shadow-md shadow-[#6D3DF5]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
             >
-              Try V-Try Free &rarr;
+              <span className="sm:hidden">Try it</span><span className="hidden sm:inline">Try V-Try Free &rarr;</span>
             </Link>
+            <button className="lg:hidden p-2 text-gray-600" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+        {isMobileMenuOpen && (
+          <div className="lg:hidden bg-white border-b border-gray-100 flex flex-col items-center py-4 space-y-4 shadow-lg absolute w-full left-0 top-full">
+            <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'how-it-works' ? 'text-purple-600 font-bold' : ''}`}>How It Works</a>
+            <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'features' ? 'text-purple-600 font-bold' : ''}`}>Features</a>
+            <a href="#experience" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'experience' ? 'text-purple-600 font-bold' : ''}`}>Experience</a>
+            <a href="#brands" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'brands' ? 'text-purple-600 font-bold' : ''}`}>For Brands</a>
+            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 font-medium hover:text-[#6D3DF5]">Log In</Link>
+          </div>
+        )}
       </nav>
 
       {/* 2. Hero Section */}
@@ -106,7 +138,7 @@ export default function LandingPage() {
             <div className="flex flex-wrap lg:flex-nowrap justify-center items-center gap-2 sm:gap-4 lg:gap-8 w-full max-w-md lg:max-w-none mx-auto mt-8 lg:mt-0 relative transform origin-center lg:origin-right scale-100 lg:scale-90 xl:scale-100">
               
               {/* Garments Column (The 5 small dresses) */}
-              <div className="flex flex-row lg:flex-col order-1 lg:order-2 w-full lg:w-auto justify-center items-center gap-2 lg:gap-4 mb-4 lg:mb-0">
+              <div className="flex flex-row lg:flex-col order-1 lg:order-2 w-full lg:w-auto justify-center items-center gap-2 lg:gap-4 mb-4 lg:mb-0 lg:col-auto lg:row-auto lg:w-auto">
                 {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
                   <div key={idx} className={`relative rounded-md overflow-hidden bg-white/50 shadow-sm border border-gray-100 flex items-center justify-center ${idx === 0 ? 'ring-4 ring-[#6D3DF5] shadow-lg scale-110 z-10 bg-white' : 'opacity-70 scale-95 hover:opacity-100 hover:scale-100 transition-all'}`}>
                     <Image src={src} alt="Garment" width={56} height={80} className="w-12 h-16 lg:w-14 lg:h-20 object-contain rounded-md bg-white pointer-events-none select-none" draggable={false} />
@@ -115,7 +147,7 @@ export default function LandingPage() {
               </div>
 
               {/* Your Photo Card */}
-              <div className="order-2 lg:order-1 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center">
+              <div className="order-2 lg:order-1 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center lg:col-auto lg:row-auto lg:w-auto">
                 <Image src="/t1.webp" alt="Your Photo" width={200} height={300} className="w-full h-full object-cover object-top rounded-xl pointer-events-none select-none" draggable={false} priority />
                 <div className="absolute -bottom-3 lg:-bottom-4 bg-white text-[#6D3DF5] font-bold text-[10px] lg:text-sm px-3 lg:px-4 py-1.5 rounded-full shadow-lg border border-purple-100 whitespace-nowrap z-10">
                   Your Photo
@@ -123,7 +155,7 @@ export default function LandingPage() {
               </div>
 
               {/* AI Node */}
-              <div className="order-3 lg:order-3 flex-shrink-0 mx-2 lg:mx-0 relative z-20">
+              <div className="order-3 lg:order-3 flex-shrink-0 mx-2 lg:mx-0 relative z-20 lg:col-auto lg:row-auto lg:w-auto">
                 <div className="w-10 h-10 lg:w-16 lg:h-16 bg-gradient-to-r from-[#6D3DF5] to-indigo-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(109,61,245,0.4)] border-2 lg:border-4 border-white">
                   <span className="text-white font-black text-xs lg:text-base tracking-wider">AI</span>
                 </div>
@@ -132,7 +164,7 @@ export default function LandingPage() {
               </div>
 
               {/* V-Try Result Card */}
-              <div className="order-4 lg:order-4 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center z-10">
+              <div className="order-4 lg:order-4 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center z-10 lg:col-auto lg:row-auto lg:w-auto">
                 <Image src="/t5.webp" alt="V-Try Result" width={240} height={350} className="w-full h-full object-cover object-top rounded-xl pointer-events-none select-none" draggable={false} priority />
                 <div className="absolute -bottom-3 lg:-bottom-5 bg-[#6D3DF5] text-white font-bold text-[10px] lg:text-sm px-3 lg:px-5 py-1.5 lg:py-2 rounded-full shadow-lg border border-indigo-400 whitespace-nowrap z-10">
                   V-Try Result
@@ -248,7 +280,7 @@ export default function LandingPage() {
             <div className="flex-1 p-8 flex items-center justify-center relative">
                <div className="grid grid-cols-[1fr_auto_1fr] grid-rows-[auto_auto] gap-x-2 gap-y-6 lg:flex lg:flex-row lg:items-center lg:justify-center lg:gap-12 w-full max-w-sm lg:max-w-4xl mx-auto justify-items-center place-items-center px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
                  {/* Left Column (Your Photo) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 shrink-0 col-start-1 row-start-2 lg:order-1 flex flex-col items-center justify-center w-full h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48">
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 shrink-0 col-start-1 row-start-2 lg:order-1 flex flex-col items-center justify-center w-full h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48 lg:col-auto lg:row-auto lg:w-auto lg:transform-none lg:translate-x-0 lg:translate-y-0">
                    <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="h-full w-full object-cover object-top rounded-lg pointer-events-none select-none" draggable={false} />
                    <div className="absolute -bottom-4 bg-gray-800 text-gray-200 font-bold px-4 py-1.5 rounded-full shadow-lg border border-gray-700 whitespace-nowrap text-[10px] lg:text-sm">
                      Your Photo
@@ -256,12 +288,12 @@ export default function LandingPage() {
                  </div>
 
                  {/* Visual Connection */}
-                 <div className="col-start-2 row-start-2 flex flex-col items-center justify-center w-full lg:order-2 shrink-0 text-gray-600">
+                 <div className="col-start-2 row-start-2 flex flex-col items-center justify-center w-full lg:order-2 shrink-0 text-gray-600 lg:col-auto lg:row-auto lg:w-auto lg:transform-none lg:translate-x-0 lg:translate-y-0">
                    <ArrowRight size={24} />
                  </div>
 
                  {/* Middle Column (Garment Selection) */}
-                 <div className="shrink-0 col-span-3 row-start-1 w-full flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-3 lg:order-2">
+                 <div className="shrink-0 col-span-3 row-start-1 w-full flex flex-row lg:flex-col justify-center items-center gap-2 lg:gap-3 lg:order-2 lg:col-auto lg:row-auto lg:w-auto lg:transform-none lg:translate-x-0 lg:translate-y-0">
                    {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
                      <div key={idx} className={`relative rounded-md overflow-hidden flex items-center justify-center transition-all ${idx === 0 ? 'bg-white ring-2 ring-purple-500 scale-110 opacity-100 shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-white/10 opacity-60 hover:opacity-100 scale-95 hover:scale-100'}`}>
                        <Image src={src} alt="Garment" width={56} height={64} className="p-1 pointer-events-none select-none w-10 h-12 lg:w-14 lg:h-16 object-contain" draggable={false} />
@@ -275,7 +307,7 @@ export default function LandingPage() {
                  </div>
 
                  {/* Right Column (Stunning Result) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center justify-center w-full h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48">
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center justify-center w-full h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48 lg:col-auto lg:row-auto lg:w-auto lg:transform-none lg:translate-x-0 lg:translate-y-0">
                    <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="h-full w-full object-cover object-top rounded-lg pointer-events-none select-none" draggable={false} />
                    <div className="absolute -bottom-4 bg-[#6D3DF5] text-white font-bold px-5 py-1.5 rounded-full shadow-[0_0_15px_rgba(109,61,245,0.5)] border border-[#6D3DF5] whitespace-nowrap text-[10px] lg:text-sm">
                      V-Try Result
