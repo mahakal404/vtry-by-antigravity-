@@ -8,6 +8,7 @@ import {
   CheckCircle2, ArrowRight, Star, ShoppingBag, Fingerprint, Scissors,
   Layers, ArrowRightCircle, ChevronDown, Menu, X
 } from 'lucide-react';
+import ContactSection from '@/components/ContactSection';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -468,6 +469,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <ContactSection />
       {/* 12. Mega Footer */}
       <footer className="w-full bg-white pt-20 pb-10 px-6 border-t border-gray-200">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 flex-wrap gap-8 mb-16">
