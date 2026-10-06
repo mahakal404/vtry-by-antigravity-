@@ -25,9 +25,18 @@ const staggerContainer = {
 export default function LandingPage() {
   const [activeSection, setActiveSection] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
     const handleScroll = () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) {
+        setIsVisible(false);
+      } else if (window.scrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+      lastScrollY = window.scrollY;
+
       const sections = ['how-it-works', 'features', 'experience', 'brands'];
       let current = '';
       for (const section of sections) {
@@ -46,7 +55,7 @@ export default function LandingPage() {
     <div className="bg-[#F8F7FC] font-sans selection:bg-[#6D3DF5]/20 text-gray-900 overflow-x-hidden">
       
       {/* 1. Premium Sticky Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-in-out bg-white/90 backdrop-blur-md border-b border-gray-100 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 bg-gradient-to-br from-[#6D3DF5] to-indigo-600 rounded-xl flex items-center justify-center shadow-md shadow-[#6D3DF5]/20 group-hover:scale-105 transition-transform">
@@ -81,12 +90,12 @@ export default function LandingPage() {
           </div>
         </div>
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-gray-100 flex flex-col items-center py-4 space-y-4 shadow-lg absolute w-full left-0 top-full">
+          <div className="lg:hidden bg-white border-b border-gray-100 flex flex-col items-center py-4 px-6 space-y-4 shadow-lg absolute w-full left-0 top-full">
             <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'how-it-works' ? 'text-purple-600 font-bold' : ''}`}>How It Works</a>
             <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'features' ? 'text-purple-600 font-bold' : ''}`}>Features</a>
             <a href="#experience" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'experience' ? 'text-purple-600 font-bold' : ''}`}>Experience</a>
             <a href="#brands" onClick={() => setIsMobileMenuOpen(false)} className={`text-gray-600 font-medium hover:text-[#6D3DF5] ${activeSection === 'brands' ? 'text-purple-600 font-bold' : ''}`}>For Brands</a>
-            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-600 font-medium hover:text-[#6D3DF5]">Log In</Link>
+            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="block w-full text-center mt-4 py-2 px-4 border-2 border-purple-600 text-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors">Log In</Link>
           </div>
         )}
       </nav>
