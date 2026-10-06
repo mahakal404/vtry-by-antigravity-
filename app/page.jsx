@@ -247,38 +247,38 @@ export default function LandingPage() {
             </div>
             <div className="flex-1 p-8 flex items-center justify-center relative">
                
-               <div className="flex flex-col lg:flex-row items-center justify-center gap-6 w-full max-w-4xl h-full p-2 md:p-6">
+               <div className="grid grid-cols-[1fr_auto_1fr] grid-rows-[auto_auto] gap-x-2 gap-y-6 lg:flex lg:flex-row lg:items-center lg:justify-center lg:gap-12 w-full justify-items-center p-4 lg:p-8">
                  {/* Left Column (Your Photo) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 flex flex-col items-center shrink-0">
-                   <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-[140px] h-[200px] md:w-[220px] md:h-[320px]" draggable={false} />
-                   <div className="absolute -bottom-4 bg-gray-800 text-gray-200 font-bold text-sm px-4 py-1.5 rounded-full shadow-lg border border-gray-700 whitespace-nowrap">
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-xl border border-white/10 shrink-0 col-start-1 row-start-2 lg:order-1 flex flex-col items-center">
+                   <Image src="/t1.webp" alt="Your Photo" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-28 h-40 lg:w-48 lg:h-72" draggable={false} />
+                   <div className="absolute -bottom-4 bg-gray-800 text-gray-200 font-bold px-4 py-1.5 rounded-full shadow-lg border border-gray-700 whitespace-nowrap text-[10px] lg:text-sm">
                      Your Photo
                    </div>
                  </div>
 
                  {/* Visual Connection */}
-                 <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-gray-600">
+                 <div className="col-start-2 row-start-2 flex items-center justify-center lg:order-2 shrink-0 text-gray-600">
                    <ArrowRight size={24} />
                  </div>
 
                  {/* Middle Column (Garment Selection) */}
-                 <div className="flex flex-row lg:flex-col flex-wrap justify-center gap-2 md:gap-3 shrink-0">
+                 <div className="shrink-0 col-span-3 row-start-1 flex flex-row lg:flex-col justify-center gap-2 lg:gap-3 lg:order-2 w-full">
                    {['/t2.webp', '/t3.webp', '/t4.webp', '/t6.webp', '/t7.webp'].map((src, idx) => (
                      <div key={idx} className={`relative rounded-md overflow-hidden flex items-center justify-center transition-all ${idx === 0 ? 'bg-white ring-2 ring-purple-500 scale-110 opacity-100 shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-white/10 opacity-60 hover:opacity-100 scale-95 hover:scale-100'}`}>
-                       <Image src={src} alt="Garment" width={56} height={64} className="w-10 h-12 md:w-14 md:h-16 object-contain p-1 pointer-events-none select-none" draggable={false} />
+                       <Image src={src} alt="Garment" width={56} height={64} className="p-1 pointer-events-none select-none w-10 h-12 lg:w-14 lg:h-16 object-contain" draggable={false} />
                      </div>
                    ))}
                  </div>
 
                  {/* Visual Connection */}
-                 <div className="hidden md:flex flex-col items-center justify-center shrink-0 text-gray-600">
+                 <div className="hidden lg:flex flex-col items-center justify-center shrink-0 text-gray-600 lg:order-2">
                    <ArrowRight size={24} />
                  </div>
 
                  {/* Right Column (Stunning Result) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 flex flex-col items-center shrink-0">
-                   <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-[140px] h-[200px] md:w-[220px] md:h-[320px]" draggable={false} />
-                   <div className="absolute -bottom-4 bg-[#6D3DF5] text-white font-bold text-sm px-5 py-1.5 rounded-full shadow-[0_0_15px_rgba(109,61,245,0.5)] border border-[#6D3DF5] whitespace-nowrap">
+                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center">
+                   <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="object-cover object-top rounded-lg pointer-events-none select-none w-28 h-40 lg:w-48 lg:h-72" draggable={false} />
+                   <div className="absolute -bottom-4 bg-[#6D3DF5] text-white font-bold px-5 py-1.5 rounded-full shadow-[0_0_15px_rgba(109,61,245,0.5)] border border-[#6D3DF5] whitespace-nowrap text-[10px] lg:text-sm">
                      V-Try Result
                    </div>
                  </div>
