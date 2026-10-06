@@ -355,11 +355,11 @@ export default function LandingPage() {
       {/* 9. Stats & Testimonials */}
       <section className="w-full py-24 bg-[#F8F7FC] px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-24 text-center divide-x divide-gray-200 bg-white p-12 rounded-[2.5rem] shadow-sm border border-gray-100">
-            <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">10K+</h4><p className="text-gray-500 font-medium">Active Users</p></div>
-            <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">98%</h4><p className="text-gray-500 font-medium">Satisfaction</p></div>
-            <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">&lt;10s</h4><p className="text-gray-500 font-medium">Generation Time</p></div>
-            <div><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">24/7</h4><p className="text-gray-500 font-medium">Fitting Room</p></div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-4 lg:gap-8 mb-24 text-center divide-x-0 lg:divide-x divide-gray-200/50 bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+            <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">10K+</h4><p className="text-gray-500 font-medium">Active Users</p></div>
+            <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">98%</h4><p className="text-gray-500 font-medium">Satisfaction</p></div>
+            <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">&lt;10s</h4><p className="text-gray-500 font-medium">Generation Time</p></div>
+            <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">24/7</h4><p className="text-gray-500 font-medium">Fitting Room</p></div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
