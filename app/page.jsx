@@ -80,7 +80,7 @@ export default function LandingPage() {
             </Link>
             <Link 
               href="/login" 
-              className="px-5 py-2.5 bg-gradient-to-r from-[#6D3DF5] to-indigo-600 text-white font-medium rounded-full shadow-md shadow-[#6D3DF5]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm"
+              className="px-5 py-2.5 bg-gradient-to-r from-[#6D3DF5] to-indigo-600 text-white font-medium rounded-full shadow-md shadow-[#6D3DF5]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm active:scale-95 hover:scale-105 transition-transform"
             >
               <span className="sm:hidden">Try it</span><span className="hidden sm:inline">Try V-Try Free &rarr;</span>
             </Link>
@@ -103,10 +103,7 @@ export default function LandingPage() {
       {/* 2. Hero Section */}
       <section className="relative pt-32 pb-24 px-6 lg:pt-40 lg:pb-32 overflow-hidden bg-gradient-to-br from-[#F8F7FC] via-white to-purple-50/50">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <motion.div 
-            initial="hidden" animate="visible" variants={staggerContainer}
-            className="col-span-1 lg:col-span-5 z-10"
-          >
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut" }} className="col-span-1 lg:col-span-5 z-10">
             <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100/50 text-[#6D3DF5] text-xs font-bold tracking-wider mb-8 border border-purple-200">
               <Sparkles size={14} />
               <span>AI-POWERED VIRTUAL TRY-ON</span>
@@ -125,7 +122,7 @@ export default function LandingPage() {
             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center gap-4 mb-6">
               <Link 
                 href="/login"
-                className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-lg hover:bg-gray-800 transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-lg hover:bg-gray-800 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 active:scale-95 hover:scale-105 transition-transform"
               >
                 Try V-Try Free <ArrowRight size={20} />
               </Link>
@@ -141,7 +138,7 @@ export default function LandingPage() {
             </motion.p>
           </motion.div>
 
-          <div className="col-span-1 lg:col-span-7 flex justify-end relative w-full items-center">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut" }} className="col-span-1 lg:col-span-7 flex justify-end relative w-full items-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-200/40 to-indigo-100/40 blur-3xl rounded-full scale-150 -z-10"></div>
             
             <div className="flex flex-wrap lg:flex-nowrap justify-center items-center gap-2 sm:gap-4 lg:gap-8 w-full max-w-md lg:max-w-none mx-auto mt-8 lg:mt-0 relative transform origin-center lg:origin-right scale-100 lg:scale-90 xl:scale-100">
@@ -173,14 +170,14 @@ export default function LandingPage() {
               </div>
 
               {/* V-Try Result Card */}
-              <div className="order-4 lg:order-4 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center z-10 lg:col-auto lg:row-auto lg:w-auto">
+              <div className={"order-4 lg:order-4 flex-shrink-0 relative bg-white/60 backdrop-blur-xl p-2.5 rounded-2xl shadow-2xl border border-white/80 flex flex-col items-center w-28 h-40 lg:w-48 lg:h-64 justify-center z-10 lg:col-auto lg:row-auto lg:w-auto" + " transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(139,92,246,0.3)] hover:border-purple-200 cursor-pointer"}>
                 <Image src="/t5.webp" alt="V-Try Result" width={240} height={350} className="w-full h-full object-cover object-top rounded-xl pointer-events-none select-none" draggable={false} priority />
                 <div className="absolute -bottom-3 lg:-bottom-5 bg-[#6D3DF5] text-white font-bold text-[10px] lg:text-sm px-3 lg:px-5 py-1.5 lg:py-2 rounded-full shadow-lg border border-indigo-400 whitespace-nowrap z-10">
                   V-Try Result
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -257,7 +254,7 @@ export default function LandingPage() {
                 visual: <Image src="/t5.webp" alt="See Yourself" fill className="object-cover object-top pointer-events-none select-none" draggable={false} />
               }
             ].map((step, i) => (
-              <div key={i} className="flex flex-col relative z-10 bg-white rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300 overflow-hidden">
+              <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }} className={"flex flex-col relative z-10 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden" + " transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(139,92,246,0.3)] hover:border-purple-200 cursor-pointer"}>
                 <div className="relative w-full h-56 bg-slate-50 overflow-hidden">
                   {step.visual}
                 </div>
@@ -268,7 +265,7 @@ export default function LandingPage() {
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
                   <p className="text-gray-500">{step.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -280,7 +277,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-16 tracking-tight">Meet your virtual fitting room.</h2>
           
-          <div className="w-full lg:aspect-video h-auto min-h-[450px] pb-10 lg:pb-0 bg-gray-900 rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden flex flex-col">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut" }} className="w-full lg:aspect-video h-auto min-h-[450px] pb-10 lg:pb-0 bg-gray-900 rounded-[2rem] border border-gray-800 shadow-2xl overflow-hidden flex flex-col">
             <div className="h-12 border-b border-gray-800 flex items-center px-6 gap-2">
                <div className="w-3 h-3 rounded-full bg-red-500"></div>
                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -316,7 +313,7 @@ export default function LandingPage() {
                  </div>
 
                  {/* Right Column (Stunning Result) */}
-                 <div className="relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center justify-center w-full h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48 lg:col-auto lg:row-auto lg:w-auto lg:transform-none lg:translate-x-0 lg:translate-y-0">
+                 <div className={"relative bg-white/5 backdrop-blur-xl p-2 rounded-xl shadow-2xl border border-white/10 shrink-0 col-start-3 row-start-2 lg:order-3 flex flex-col items-center justify-center w-full h-48 sm:h-56 lg:h-72 w-28 sm:w-36 lg:w-48 lg:col-auto lg:row-auto lg:w-auto lg:transform-none lg:translate-x-0 lg:translate-y-0" + " transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(139,92,246,0.3)] hover:border-purple-200 cursor-pointer"}>
                    <Image src="/t5.webp" alt="Stunning Result" width={220} height={320} className="h-full w-full object-cover object-top rounded-lg pointer-events-none select-none" draggable={false} />
                    <div className="absolute -bottom-4 bg-[#6D3DF5] text-white font-bold px-5 py-1.5 rounded-full shadow-[0_0_15px_rgba(109,61,245,0.5)] border border-[#6D3DF5] whitespace-nowrap text-[10px] lg:text-sm">
                      V-Try Result
@@ -354,13 +351,13 @@ export default function LandingPage() {
               { icon: <ShieldCheck />, title: "Privacy First", desc: "Your photos are processed securely and never sold." },
               { icon: <ShoppingBag />, title: "Built for Fashion", desc: "Designed specifically to enhance the online apparel shopping experience." }
             ].map((feat, i) => (
-              <div key={i} className="p-8 bg-white rounded-3xl shadow-sm border border-gray-100 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+              <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.1 }} className={"p-8 bg-white rounded-3xl shadow-sm border border-gray-100" + " transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(139,92,246,0.3)] hover:border-purple-200 cursor-pointer"}>
                 <div className="w-12 h-12 bg-[#F8F7FC] shadow-sm border border-gray-100 rounded-2xl flex items-center justify-center text-[#6D3DF5] mb-6">
                   {feat.icon}
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{feat.title}</h3>
                 <p className="text-gray-500 leading-relaxed">{feat.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -396,12 +393,12 @@ export default function LandingPage() {
       {/* 9. Stats & Testimonials */}
       <section className="w-full py-24 bg-[#F8F7FC] px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-4 lg:gap-8 mb-24 text-center divide-x-0 lg:divide-x divide-gray-200/50 bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut" }} className="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-4 lg:gap-8 mb-24 text-center divide-x-0 lg:divide-x divide-gray-200/50 bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-sm border border-gray-100">
             <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">10K+</h4><p className="text-gray-500 font-medium">Active Users</p></div>
             <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">98%</h4><p className="text-gray-500 font-medium">Satisfaction</p></div>
             <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">&lt;10s</h4><p className="text-gray-500 font-medium">Generation Time</p></div>
             <div className="flex flex-col items-center justify-center"><h4 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">24/7</h4><p className="text-gray-500 font-medium">Fitting Room</p></div>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
