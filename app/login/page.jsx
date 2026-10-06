@@ -150,16 +150,13 @@ export default function Login() {
 
       {/* Right Column (Auth Form) */}
       <div className="w-full lg:w-[40%] xl:w-[45%] flex items-center justify-center p-6 sm:p-12 relative overflow-hidden">
-        {/* Top Nav (Theme & Language) */}
-        <div className="absolute top-8 right-8 flex items-center gap-4 z-20">
+        {/* Top Nav (Theme) */}
+        <div className="absolute top-8 right-8 flex justify-end z-20">
           <button 
             onClick={toggleTheme}
             className="p-2 bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] rounded-full text-text-muted hover:text-brand-purple transition-colors shadow-sm"
           >
             {isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
-          </button>
-          <button className="flex items-center gap-2 px-3 py-1.5 bg-surface dark:bg-[#1E1B2E] border border-border-soft dark:border-[#2D2A45] rounded-full text-xs font-bold text-text-muted hover:text-brand-purple transition-colors shadow-sm">
-            English <ChevronDown size={14} />
           </button>
         </div>
 
