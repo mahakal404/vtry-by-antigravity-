@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState, useRef, useEffect } from 'react';
 import { useHistory } from '@/contexts/HistoryContext';
 import { useTokens } from '@/contexts/TokenContext';

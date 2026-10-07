@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Sparkles, Moon, Sun, User, Bell, Shield, Globe, Check, Eye, Upload, Box, Droplet, RotateCcw } from 'lucide-react';
 import { useState } from 'react';

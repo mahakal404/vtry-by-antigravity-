@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState, useEffect } from 'react';
 import { useTokens } from '@/contexts/TokenContext';
 import { Zap, Star, Crown, Shield, Clock, Zap as Lightning, RefreshCw, Headset } from 'lucide-react';

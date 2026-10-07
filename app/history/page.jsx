@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import { useState } from 'react';
 import { Search, ChevronDown, Heart, MoreVertical, RefreshCcw, Download, History as HistoryIcon, Trash2, X } from 'lucide-react';
 import { handleDownload } from '@/utils/download';
