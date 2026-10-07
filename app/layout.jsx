@@ -5,12 +5,13 @@ import { HistoryProvider } from '@/contexts/HistoryContext';
 import AppLayout from '@/components/AppLayout';
 
 export const metadata = {
-  title: 'V-Try | Premium Virtual Try-On',
-  description: 'Experience the future of fashion. AI-powered virtual try-on studio for premium outfits.',
   metadataBase: new URL('https://vtry-app.netlify.app'),
+  title: 'V-Try | AI-Powered Virtual Try-On Studio',
+  description: 'Stop guessing your size. Use our state-of-the-art AI to instantly visualize how any garment looks on your unique body shape. Try V-Try free today.',
+  keywords: 'Virtual Try-on, AI fashion, AI try on clothes online, V-Try studio, virtual fitting room',
   openGraph: {
-    title: 'V-Try | Premium Virtual Try-On',
-    description: 'Experience the future of fashion. AI-powered virtual try-on studio for premium outfits.',
+    title: 'V-Try | AI-Powered Virtual Try-On Studio',
+    description: 'Stop guessing your size. Use our state-of-the-art AI to instantly visualize how any garment looks on your unique body shape. Try V-Try free today.',
     url: 'https://vtry-app.netlify.app/',
     siteName: 'V-Try',
     images: [
@@ -26,8 +27,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'V-Try | Premium Virtual Try-On',
-    description: 'Experience the future of fashion. AI-powered virtual try-on studio for premium outfits.',
+    title: 'V-Try | AI-Powered Virtual Try-On Studio',
+    description: 'Stop guessing your size. Use our state-of-the-art AI to instantly visualize how any garment looks on your unique body shape. Try V-Try free today.',
     images: ['/v.jpg'],
   },
   icons: {

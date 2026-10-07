@@ -55,6 +55,59 @@ export default function LandingPage() {
   return (
     <div className="bg-[#F8F7FC] font-sans selection:bg-[#6D3DF5]/20 text-gray-900 overflow-x-hidden">
       
+      {/* SEO AEO/GEO JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "SoftwareApplication",
+                "name": "V-Try",
+                "operatingSystem": "Web",
+                "applicationCategory": "DesignApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                },
+                "description": "Premium AI-powered virtual try-on studio for modern fashion shoppers and brands."
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Is the generated image realistic?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes, our state-of-the-art AI maintains lighting, skin tone, and body posture perfectly to generate photorealistic try-on images in mere seconds."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Is my data secure?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Absolutely. Privacy is our priority. Your photos are processed securely, stay on your local device for rendering, and are never sold to third parties."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Do I get free tokens to start?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes, you get 5 free tokens instantly when you sign up today, with no credit card required."
+                    }
+                  }
+                ]
+              }
+            ]
+          })
+        }}
+      />
+
       {/* 1. Premium Sticky Navbar */}
       <nav className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ease-in-out bg-white/90 backdrop-blur-md border-b border-gray-100 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
