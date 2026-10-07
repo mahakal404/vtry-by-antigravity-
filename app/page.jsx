@@ -102,28 +102,30 @@ export default function LandingPage() {
       </nav>
 
       {/* 2. Hero Section */}
-      <section className="relative pt-32 pb-24 px-6 lg:pt-40 lg:pb-32 overflow-hidden bg-gradient-to-br from-[#F8F7FC] via-white to-purple-50/50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <section className="relative bg-gradient-to-br from-purple-50 via-white to-purple-100 overflow-hidden">
+        <div className="px-4 pt-12 pb-20 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6, ease: "easeOut" }} className="col-span-1 lg:col-span-5 z-10">
-            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100/50 text-[#6D3DF5] text-xs font-bold tracking-wider mb-8 border border-purple-200">
-              <Sparkles size={14} />
-              <span>AI-POWERED VIRTUAL TRY-ON</span>
+            <motion.div variants={fadeInUp} className="inline-block px-5 py-2 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-xs sm:text-sm font-bold tracking-widest uppercase mb-8">
+              <span className="flex items-center gap-2">
+                <Sparkles size={14} />
+                AI-POWERED VIRTUAL TRY-ON
+              </span>
             </motion.div>
             
-            <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] text-gray-900 mb-6 flex flex-col lg:block w-full">
-              <span className="self-start lg:inline">See it. </span>
-              <span className="self-end lg:inline">Try it. </span>
-              <span className="self-start lg:block text-transparent bg-clip-text bg-gradient-to-r from-[#6D3DF5] to-indigo-600">Love it.</span>
+            <motion.h1 variants={fadeInUp} className="flex flex-col text-left mb-6">
+              <span className="text-[5rem] sm:text-[6rem] md:text-8xl font-black leading-[0.85] tracking-tighter text-slate-900">See it.</span>
+              <span className="text-[5rem] sm:text-[6rem] md:text-8xl font-black leading-[0.85] tracking-tighter text-purple-600">Try it.</span>
+              <span className="text-[5rem] sm:text-[6rem] md:text-8xl font-black leading-[0.85] tracking-tighter text-slate-900">Love it.</span>
             </motion.h1>
             
-            <motion.p variants={fadeInUp} className="text-lg md:text-xl text-gray-500 mb-10 max-w-lg leading-relaxed">
+            <motion.p variants={fadeInUp} className="text-slate-600 text-lg md:text-xl max-w-lg mb-10 leading-relaxed font-medium">
               Stop guessing your size or fit. Use our state-of-the-art AI to instantly visualize how any garment looks on your unique body shape.
             </motion.p>
             
             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center gap-4 mb-6">
               <Link 
                 href="/login"
-                className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white rounded-full font-bold text-lg hover:bg-gray-800 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 active:scale-95 hover:scale-105 transition-transform"
+                className="w-full sm:w-auto px-8 py-4 bg-[#0F172A] hover:bg-black text-white rounded-full font-semibold text-xl transition-all duration-300 hover:scale-105 shadow-xl shadow-slate-900/20 flex items-center justify-center gap-3"
               >
                 Try V-Try Free <ArrowRight size={20} />
               </Link>
