@@ -12,23 +12,23 @@ import { useStudio } from '@/contexts/StudioContext';
 import VTokenIcon from "@/components/VTokenIcon";
 import Link from "next/link";
 import { toast } from 'react-hot-toast';
-const uploadToImgBB = async (base64String) => {
+const uploadToCloudinary = async (base64String) => {
   try {
-    const base64Data = base64String.split(',')[1] || base64String;
     const formData = new FormData();
-    formData.append('image', base64Data);
+    formData.append('file', base64String);
+    formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
     
-    const response = await fetch('https://api.imgbb.com/1/upload?expiration=60&key=fa825ab975e3fcb424464ee54e7d9b17', {
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
       method: 'POST',
       body: formData
     });
     
-    const data = await response.json();
-    if (data.success) {
-      return data.data.url;
-    } else {
-      throw new Error(data.error?.message || 'Failed to upload image securely.');
+    if (!response.ok) {
+      throw new Error(`Upload failed with status ${response.status}`);
     }
+    
+    const data = await response.json();
+    return data.secure_url;
   } catch (error) {
     console.error('Upload Error:', error);
     throw error;
@@ -117,10 +117,10 @@ export default function Studio() {
     }, 800);
     
     try {
-      // 1. Upload to ImgBB
+      // 1. Upload to Cloudinary
       toast.success("Uploading secure images...");
-      const userImageUrl = await uploadToImgBB(userPhotoBase64);
-      const clothingImageUrl = await uploadToImgBB(clothingPhotoBase64);
+      const userImageUrl = await uploadToCloudinary(userPhotoBase64);
+      const clothingImageUrl = await uploadToCloudinary(clothingPhotoBase64);
 
       toast.success("Generating magic...");
 
