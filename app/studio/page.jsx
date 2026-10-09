@@ -124,7 +124,7 @@ export default function Studio() {
 
       toast.success("Generating magic...");
 
-      // 2. Call API
+      // 2. Call API to initiate
       const response = await fetch('/api/try-on', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -141,8 +141,47 @@ export default function Studio() {
         throw new Error(errorData.error || 'Failed to generate try-on');
       }
 
-      const data = await response.json();
-      const actualResult = data.result;
+      const initData = await response.json();
+      const orderId = initData.orderId;
+      
+      if (!orderId) {
+        throw new Error('Failed to retrieve order ID');
+      }
+
+      // 3. Poll for status
+      let isCompleted = false;
+      let actualResult = null;
+      let attempts = 0;
+      const maxAttempts = 24; // 120 seconds with 5s polling, matching server constraints (less likely to time out on client)
+
+      while (!isCompleted && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 3000)); // 3s polling as requested
+        attempts++;
+        
+        const statusResponse = await fetch('/api/check-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId }),
+          signal: controller.signal
+        });
+        
+        const statusData = await statusResponse.json();
+        
+        if (!statusResponse.ok) {
+           throw new Error(statusData.error || 'Failed to check status');
+        }
+
+        if (statusData.status === 'completed' && statusData.result) {
+          isCompleted = true;
+          actualResult = statusData.result;
+        } else if (statusData.status === 'failed') {
+          throw new Error(statusData.error || 'Generation failed');
+        }
+      }
+      
+      if (!isCompleted) {
+        throw new Error('Generation timed out. Please try again later.');
+      }
 
       setProgress(100);
       setCurrentResult(actualResult);
